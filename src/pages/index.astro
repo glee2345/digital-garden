@@ -1,7 +1,6 @@
 ---
-// Home: the intro — what a digital garden is and why this one exists —
-// then the few latest thoughts and what's growing. The intro text comes
-// from the sheet's settings tab.
+// Home: a short welcome, the latest few thoughts, what's growing.
+// The deeper story lives on /about/.
 import Garden from '../layouts/Garden.astro';
 import ThoughtCard from '../components/ThoughtCard.astro';
 import Growing from '../components/Growing.astro';
@@ -9,13 +8,12 @@ import { loadGarden } from '../lib/garden.js';
 const g = loadGarden();
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const latest = g.stream.filter((t) => !t.filing).slice(0, 3);
-const paras = String(g.site.intro || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 ---
 <Garden current="home">
   <section class="intro">
     <p class="hello">{g.site.tagline}</p>
-    {paras.map((p, i) => <p class={i === 0 ? 'lede' : undefined} set:html={p.replace(/\n/g, '<br>')} />)}
-    <p><a class="btn" href={`${base}/stream/`}>read the stream →</a> <a class="btn" href={`${base}/roots/`} style="margin-left:8px">see the roots →</a></p>
+    {g.site.welcome && <p class="lede">{g.site.welcome}</p>}
+    <p style="display:flex;flex-wrap:wrap;gap:8px"><a class="btn" href={`${base}/stream/`}>read the stream →</a> <a class="btn" href={`${base}/roots/`}>see the roots →</a> <a class="btn" href={`${base}/about/`}>what is this? →</a></p>
   </section>
 
   {latest.length > 0 && (

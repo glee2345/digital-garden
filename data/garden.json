@@ -3,8 +3,9 @@
   "site": {
     "name": "digital garden",
     "author": "[your name]",
-    "tagline": "welcome to my digital garden",
-    "intro": "A digital garden is a website where thoughts are allowed to be unfinished. Instead of polished posts in reverse order, it's a growing pile of notes, photos and links that get connected to each other over time — more like a notebook you tend than a blog you publish.\n\nI started this one because most of what I think about never makes it anywhere. It gets said once, or sketched on something I lose. Here it gets planted: I write a thought down, and the garden names it, files it, and finds the other thoughts near it. I don't organize anything. When it gets something wrong, I nudge it.\n\nEvery thought starts as a seedling. Some grow roots into other topics. A few become evergreen. Most stay small, and that's fine — the point is that they're here, next to each other, where I can wander back through them."
+    "tagline": "welcome to my digital garden!",
+    "welcome": "explore what I'm thinking and learning about in this little corner of the internet.",
+    "about": "A digital garden is a website where thoughts are allowed to be unfinished. Instead of polished posts in reverse order, it's a growing pile of notes, photos and links that get connected to each other over time — more like a notebook you tend than a blog you publish.\n\nI started this one because most of what I think about never makes it anywhere. It gets said once, or sketched on something I lose. Here it gets planted: I write a thought down, and the garden names it, files it, and finds the other thoughts near it. I don't organize anything. When it gets something wrong, I nudge it.\n\nEvery thought starts as a seedling. Some grow roots into other topics. A few become evergreen. Most stay small, and that's fine — the point is that they're here, next to each other, where I can wander back through them."
   },
   "thoughts": [
     {

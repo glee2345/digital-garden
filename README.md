@@ -49,7 +49,7 @@ From then on it tends itself every hour.
 - **A photo**: drop it in the `images` folder (phone: share → Drive → that folder). It becomes a thought on its own; or mention the filename on its own line inside a thought to place it there. Several filenames in a row make a gallery; a line starting with `—` right after is a caption.
 - **Fix the garden**: type in the cream `title` / `topic` / `stage` columns to override. Untick `published` to keep something off the site.
 - **Topics**: the `topics` tab fills itself. `rename to` renames everywhere (old links redirect). `merge into` folds one into another. `garden suggests` is where it proposes merges — approve by typing the name into `merge into`.
-- **Site name, your name, the tagline, and the intro on the home page**: the `settings` tab. The intro is plain text; a blank line starts a new paragraph.
+- **Site name, your name, the home-page welcome, and the "about" text**: the `settings` tab. `about` is plain text; a blank line starts a new paragraph. The "how this site was made" section under it is fixed.
 
 ## The pieces
 

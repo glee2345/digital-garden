@@ -21,7 +21,7 @@ const HIDDEN = ['_hash', '_link', '_alt', '_textHash'];
 const TOPIC_HIDDEN = ['_aliases'];
 const IMAGE_RE = /^[\w.\- ()]+\.(jpe?g|png|gif|webp|heic|heif)$/i;
 const URL_RE = /^https?:\/\/\S+$/i;
-const DEFAULT_INTRO = "A digital garden is a website where thoughts are allowed to be unfinished. Instead of polished posts in reverse order, it's a growing pile of notes, photos and links that get connected to each other over time \u2014 more like a notebook you tend than a blog you publish.\n\nI started this one because most of what I think about never makes it anywhere. It gets said once, or sketched on something I lose. Here it gets planted: I write a thought down, and the garden names it, files it, and finds the other thoughts near it. I don't organize anything. When it gets something wrong, I nudge it.\n\nEvery thought starts as a seedling. Some grow roots into other topics. A few become evergreen. Most stay small, and that's fine \u2014 the point is that they're here, next to each other, where I can wander back through them.";
+const DEFAULT_ABOUT = "A digital garden is a website where thoughts are allowed to be unfinished. Instead of polished posts in reverse order, it's a growing pile of notes, photos and links that get connected to each other over time \u2014 more like a notebook you tend than a blog you publish.\n\nI started this one because most of what I think about never makes it anywhere. It gets said once, or sketched on something I lose. Here it gets planted: I write a thought down, and the garden names it, files it, and finds the other thoughts near it. I don't organize anything. When it gets something wrong, I nudge it.\n\nEvery thought starts as a seedling. Some grow roots into other topics. A few become evergreen. Most stay small, and that's fine \u2014 the point is that they're here, next to each other, where I can wander back through them.";
 
 // ---------------------------------------------------------------- menu
 function onOpen() {
@@ -89,8 +89,8 @@ function ensureStructure_() {
   let st = ss.getSheetByName(SHEET_SETTINGS);
   if (!st) {
     st = ss.insertSheet(SHEET_SETTINGS);
-    st.getRange(1, 1, 5, 2).setValues([['setting', 'value'], ['site name', 'digital garden'], ['author', ''], ['tagline', 'welcome to my digital garden'], ['intro', DEFAULT_INTRO]]);
-    st.getRange(5, 2).setWrap(true); st.setRowHeight(5, 220);
+    st.getRange(1, 1, 6, 2).setValues([['setting', 'value'], ['site name', 'digital garden'], ['author', ''], ['tagline', 'welcome to my digital garden!'], ['welcome', "explore what I'm thinking and learning about in this little corner of the internet."], ['about', DEFAULT_ABOUT]]);
+    st.getRange(6, 2).setWrap(true); st.setRowHeight(6, 220);
     st.setColumnWidth(2, 360);
   }
 }
@@ -512,7 +512,7 @@ function buildGardenJson_(rows, col, topics) {
   });
   return {
     tended: new Date().toISOString(),
-    site: { name: settings['site name'] || 'digital garden', author: settings['author'] || '', tagline: settings['tagline'] || 'welcome to my digital garden', intro: settings['intro'] || DEFAULT_INTRO },
+    site: { name: settings['site name'] || 'digital garden', author: settings['author'] || '', tagline: settings['tagline'] || 'welcome to my digital garden!', welcome: settings['welcome'] || '', about: settings['about'] || DEFAULT_ABOUT },
     thoughts,
     topics: topics.map((t) => ({ name: t.name, firstPlanted: fmt(t.firstPlanted), mergedFrom: t.aliases, suggested: t.suggests || '' })),
   };

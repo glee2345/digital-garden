@@ -34,6 +34,7 @@ const shown = topics.slice(0, 12);
         <a href={`${base}/stream/`} aria-current={current === 'stream' ? 'page' : undefined}>Stream</a>
         <button type="button" class="nav-btn" id="topics-btn" aria-expanded="false" aria-controls="topics-drawer">Topics <span class="caret" aria-hidden="true">▾</span></button>
         <a href={`${base}/map/`} aria-current={current === 'map' ? 'page' : undefined}>Map</a>
+        <a href={`${base}/about/`} aria-current={current === 'about' ? 'page' : undefined}>About</a>
         <a href={`${base}/wander/`} class="wander" title="Wander: a random thought"><span class="word">wander</span> <span class="tilde" aria-hidden="true">~</span></a>
         <form class="search" id="search" role="search" autocomplete="off" onsubmit="return false">
           <button type="button" class="search-open" id="search-open" aria-label="Search" style="background:none;border:none;padding:0;color:inherit;font-size:14px;display:inline-flex">⌕</button>
