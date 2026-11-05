@@ -12,7 +12,7 @@ const hidden = g.topics.length - shown.length;
 const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/${page + 1}/`;
 ---
 <section style="display:flex;flex-direction:column;gap:22px">
-  <p class="hello">{topic ? topic.name : 'the stream'}</p>
+  <h1 class="hello">{topic ? topic.name : 'the stream'}</h1>
   <div class="chips-scroll">
     <div class="chips">
       <a class:list={['chip', { on: !topic }]} href={`${base}/stream/`}>everything</a>

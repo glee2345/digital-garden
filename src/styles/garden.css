@@ -37,6 +37,8 @@ a:hover { color: var(--ink); }
 button { font-family: inherit; cursor: pointer; }
 img { display: block; max-width: 100%; height: auto; }
 :focus-visible { outline: 2px solid var(--green-ink); outline-offset: 2px; border-radius: 4px; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--cream); padding: 10px 14px; border-radius: 8px; }
+.skip:focus { top: 12px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 20px; }
@@ -133,10 +135,12 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .card.photo .title { font-size: 21px; }
 .card p { margin: 0; font-size: 18px; line-height: 1.55; color: var(--body); }
 .card p.soft { font-size: 14px; color: var(--faint); font-style: italic; }
-.nearby { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 15px; color: var(--muted); padding-top: 2px; }
-.nearby .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; }
-.nearby a { color: var(--brown); }
-.nearby .more { color: var(--muted); font-style: italic; }
+.nearby { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 10px; font-size: 16px; color: var(--muted); padding-top: 4px; }
+.nearby .lab { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+.nearby .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; align-self: center; }
+.nearby a { color: var(--brown); text-decoration: underline; text-decoration-color: #B8C2A9; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.nearby a:hover { color: var(--ink); text-decoration-color: var(--green-ink); }
+.nearby a.more { color: var(--muted); font-style: italic; text-decoration-color: var(--line); }
 .nearby .looking { font-style: italic; color: var(--faint); }
 .linkcard { display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; border: 1px solid var(--card-line); border-radius: 10px; overflow: hidden; background: var(--paper-2); color: var(--text); }
 .linkcard .pic { flex: 0 0 120px; min-height: 92px; background: #D8CFBF center/cover no-repeat; }
@@ -233,7 +237,7 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .roots-panel { overflow: auto; }
 .roots-panel pre { margin: 0; padding: 20px; font-family: var(--mono); font-size: 10px; line-height: 12.5px; color: var(--root-soft); white-space: pre; min-width: max-content; }
 .roots-panel pre .node { font-weight: 700; color: var(--green-ink); text-decoration: none; }
-.roots-panel pre .node.photo { color: var(--green); }
+.roots-panel pre .node.photo { color: var(--green-ink); }
 .roots-panel pre .node:hover, .roots-panel pre .node:focus { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 .roots-panel pre .root-label { color: var(--brown); font-style: italic; font-family: var(--serif); font-size: 13px; text-decoration: none; }
 .roots-panel pre .root-label:hover { color: var(--ink); }
@@ -288,3 +292,5 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .home-row { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
 .home-row .latest { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
 .home-row h2.sec { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+
+@media (prefers-reduced-motion: reduce) { .drawer, .scrim, .map-panel .dot, * { transition: none !important; scroll-behavior: auto !important; } }

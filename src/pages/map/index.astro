@@ -37,7 +37,7 @@ const size = (t) => 10 + Math.min(10, (t.nearbyThoughts.length + t.mentionedBy.l
   <div class="view-head">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px">
       <div class="view-toggle"><a href={`${base}/map/`} aria-current="page">Map</a><a href={`${base}/roots/`}>Roots</a></div>
-      <p class="lede">Each thought, next to what it's about.</p>
+      <h1 class="lede">Each thought, next to what it's about.</h1>
     </div>
     <div class="legend">
       {topics.slice(0, 8).map((tp) => <a href={tp.url} style="color:inherit">{tp.name}</a>)}

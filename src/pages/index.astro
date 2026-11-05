@@ -11,7 +11,7 @@ const latest = g.stream.filter((t) => !t.filing).slice(0, 3);
 ---
 <Garden current="home">
   <section class="intro">
-    <p class="hello">{g.site.tagline}</p>
+    <h1 class="hello">{g.site.tagline}</h1>
     {g.site.welcome && <p class="lede">{g.site.welcome}</p>}
     <p style="display:flex;flex-wrap:wrap;gap:8px"><a class="btn" href={`${base}/stream/`}>read the stream →</a> <a class="btn" href={`${base}/roots/`}>see the roots →</a> <a class="btn" href={`${base}/about/`}>what is this? →</a></p>
   </section>

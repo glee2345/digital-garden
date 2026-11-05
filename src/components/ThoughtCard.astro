@@ -38,11 +38,11 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
       </a>
     )}
     {t.excerpt && <p>{t.excerpt}</p>}
-    {t.filing && <div class="nearby"><span>nearby</span><span class="looking">looking for neighbors…</span></div>}
+    {t.filing && <div class="nearby"><span class="lab">Nearby</span><span class="looking">looking for neighbors…</span></div>}
     {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
     {!t.filing && t.topic && near.length > 0 && (
-      <div class="nearby">
-        <span>nearby</span>
+      <nav class="nearby" aria-label="Nearby thoughts">
+        <span class="lab" aria-hidden="true">Nearby</span>
         {near.map((n, i) => (
           <Fragment>
             {i !== 0 && <span class="dot" aria-hidden="true"></span>}
@@ -55,7 +55,7 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
             <a class="more" href={`${base}/map/?t=${t.id}`}>{`${extra} more on the map`}</a>
           </Fragment>
         )}
-      </div>
+      </nav>
     )}
   </div>
 </article>

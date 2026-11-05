@@ -27,6 +27,7 @@ const shown = topics.slice(0, 12);
   <slot name="head" />
 </head>
 <body data-base={base}>
+  <a class="skip" href="#main">Skip to content</a>
   <div class="wrap">
     <header class="site-header">
       <a class="logo" href={`${base}/`} aria-label="Home"><Clover /></a>
@@ -40,13 +41,13 @@ const shown = topics.slice(0, 12);
           <button type="button" class="search-open" id="search-open" aria-label="Search" style="background:none;border:none;padding:0;color:inherit;font-size:14px;display:inline-flex">⌕</button>
           <input type="search" id="search-input" placeholder="search the garden" aria-label="Search the garden" />
           <kbd aria-hidden="true">/</kbd>
-          <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+          <div class="search-results" id="search-results" role="listbox" aria-label="Search results" aria-live="polite"></div>
         </form>
       </nav>
     </header>
   </div>
 
-  <div class="wrap"><main class="page"><slot /></main></div>
+  <div class="wrap"><main class="page" id="main" tabindex="-1"><slot /></main></div>
 
   <div class="wrap">
     <footer class="site-footer">
@@ -56,7 +57,7 @@ const shown = topics.slice(0, 12);
   </div>
 
   <div class="scrim" id="scrim" data-open="false"></div>
-  <aside class="drawer" id="topics-drawer" data-open="false" aria-label="Topics" aria-hidden="true">
+  <aside class="drawer" id="topics-drawer" data-open="false" role="dialog" aria-modal="true" aria-label="Topics" aria-hidden="true">
     <div class="dh">
       <h2>Topics</h2>
       <button type="button" class="close" id="topics-close" aria-label="Close topics">×</button>
@@ -79,7 +80,7 @@ const shown = topics.slice(0, 12);
     <div class="foot"><a class="btn" href={`${base}/roots/`}>see them as roots →</a></div>
   </aside>
 
-  <div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-label="Image">
+  <div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Image">
     <button type="button" id="lightbox-close" aria-label="Close">×</button>
     <img alt="" />
   </div>
@@ -93,8 +94,16 @@ const shown = topics.slice(0, 12);
     const setDrawer = (open) => {
       drawer.dataset.open = String(open); scrim.dataset.open = String(open);
       drawer.setAttribute('aria-hidden', String(!open)); btn.setAttribute('aria-expanded', String(open));
-      if (open) drawer.querySelector('a, button')?.focus();
+      if (open) drawer.querySelector('a, button')?.focus(); else if (document.activeElement && drawer.contains(document.activeElement)) btn.focus();
     };
+    // keep Tab inside the drawer while it's open
+    drawer.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const f = [...drawer.querySelectorAll('a[href], button')].filter((el) => !el.hidden);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); }
+      else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); }
+    });
     btn.addEventListener('click', () => setDrawer(drawer.dataset.open !== 'true'));
     document.getElementById('topics-close').addEventListener('click', () => setDrawer(false));
     scrim.addEventListener('click', () => setDrawer(false));
@@ -150,11 +159,12 @@ const shown = topics.slice(0, 12);
 
     // lightbox
     const lb = document.getElementById('lightbox');
-    const closeLightbox = () => { lb.dataset.open = 'false'; };
+    let lbReturn = null;
+    const closeLightbox = () => { if (lb.dataset.open === 'true') { lb.dataset.open = 'false'; lbReturn?.focus(); } };
     document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
     lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
     document.querySelectorAll('a[data-full]').forEach((a) => a.addEventListener('click', (e) => {
-      e.preventDefault(); const img = lb.querySelector('img'); img.src = a.dataset.full; img.alt = a.dataset.alt || ''; lb.dataset.open = 'true';
+      e.preventDefault(); const img = lb.querySelector('img'); img.src = a.dataset.full; img.alt = a.dataset.alt || ''; lb.dataset.open = 'true'; lbReturn = a; document.getElementById('lightbox-close').focus();
     }));
 
     // "last tended" stays honest as the tab sits open

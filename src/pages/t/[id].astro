@@ -62,12 +62,12 @@ const ogImage = t.firstImage?.full ? img(t.firstImage.full) : null;
         })}
       </div>
       {!t.filing && topic && (
-        <div class="nearby" style="font-size:14px">
-          <span>nearby</span>
+        <nav class="nearby" style="font-size:16px" aria-label="Nearby thoughts">
+          <span class="lab" aria-hidden="true">Nearby</span>
           {inline.map((n, i) => (<Fragment>{i !== 0 && <span class="dot" aria-hidden="true"></span>}<a href={n.url}>{n.title}</a></Fragment>))}
           {extra > 0 && <Fragment><span class="dot" aria-hidden="true"></span><a class="more" href={`${base}/map/?t=${t.id}`}>{extra} more on the map</a></Fragment>}
           {inline.length === 0 && <span class="looking">nothing close yet</span>}
-        </div>
+        </nav>
       )}
       <p class="filed">{t.filing ? 'not filed yet — the garden is reading it' : t.topicBy === 'you' ? `filed under ${topic ? topic.name : 'nothing'} by hand` : topic ? <Fragment>filed under <a href={topic.url}>{topic.name}</a> by the garden</Fragment> : 'no root yet'}</p>
     </article>

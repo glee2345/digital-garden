@@ -145,13 +145,13 @@ export function growRoots(topics, opts = {}) {
       const ch = g[r][c];
       if (marks.has(ch)) {
         const { t, who } = marks.get(ch);
-        line += `<a class="node${t.kind === 'photo' ? ' photo' : ''}" href="${esc(t.url)}" data-root="${esc(mains[who].tp.slug)}" data-id="${esc(t.id)}" data-title="${esc(t.title)}" data-topic="${esc(t.topic)}" data-stage="${esc(t.stage)}" data-near="${t.nearbyThoughts.length}">${t.kind === 'photo' ? 'o' : '@'}</a>`;
+        line += `<a class="node${t.kind === 'photo' ? ' photo' : ''}" href="${esc(t.url)}" aria-label="${esc(t.title)} (${esc(t.topic)}${t.kind === 'photo' ? ', photo' : ''})" data-root="${esc(mains[who].tp.slug)}" data-id="${esc(t.id)}" data-title="${esc(t.title)}" data-topic="${esc(t.topic)}" data-stage="${esc(t.stage)}" data-near="${t.nearbyThoughts.length}">${t.kind === 'photo' ? 'o' : '@'}</a>`;
         c++; continue;
       }
       // a run of plain cells with the same owner
       const who = cellOwner[r][c]; let run = '';
       while (c < COLS && !marks.has(g[r][c]) && cellOwner[r][c] === who && !lab.find((l) => l.c === c)) { run += g[r][c]; c++; }
-      line += who >= 0 ? `<span data-root="${esc(mains[who].tp.slug)}">${esc(run)}</span>` : esc(run);
+      line += who >= 0 ? `<span data-root="${esc(mains[who].tp.slug)}" aria-hidden="true">${esc(run)}</span>` : (run.trim() ? `<span aria-hidden="true">${esc(run)}</span>` : esc(run));
     }
     html += line.replace(/\s+$/, '') + '\n';
   }
