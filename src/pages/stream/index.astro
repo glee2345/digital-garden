@@ -1,0 +1,9 @@
+---
+import Garden from '../../layouts/Garden.astro';
+import Stream from '../../components/Stream.astro';
+import { loadGarden } from '../../lib/garden.js';
+const g = loadGarden();
+---
+<Garden current="stream" title="stream">
+  <Stream g={g} page={1} />
+</Garden>

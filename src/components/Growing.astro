@@ -69,7 +69,7 @@ const young = g.stats.thoughts < 8 || g.topics.length < 3;
     <section>
       <span class="lab">Recently tended</span>
       <ul>
-        {g.growing.recentlyTended.map((t) => (<li><a href={t.url}>{t.title}</a> <span class="when">· {ago(t.tended)}</span></li>))}
+        {g.growing.recentlyTended.map((t) => (<li><a href={t.url}>{t.title}</a><span class="when">{` · ${ago(t.tended)}`}</span></li>))}
       </ul>
     </section>
     {g.growing.deepest && (

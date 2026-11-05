@@ -18,8 +18,8 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
   <div class={photo ? 'rest' : undefined} style={photo ? undefined : 'display:contents'}>
     <div class="meta">
       {t.filing && <span class="filing-note">still being filed · usually within the hour</span>}
-      {!t.filing && t.topic && <a class="topic" href={t.topicUrl}><span class="mark" aria-hidden="true">//</span>{t.topic}</a>}
-      {!t.filing && !t.topic && <span class="noroot"><span class="mark" aria-hidden="true">:</span>no root yet</span>}
+      {!t.filing && t.topic && <a class="topic" href={t.topicUrl}>{t.topic}</a>}
+      {!t.filing && !t.topic && <span class="noroot">no root yet</span>}
       {!t.filing && <span aria-hidden="true">·</span>}
       {!t.filing && <span>{`planted ${fmtDate(t.planted)}`}</span>}
       {!t.filing && (showKind || showStage) && <span aria-hidden="true">·</span>}

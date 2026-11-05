@@ -5,8 +5,8 @@ import { readFileSync, existsSync } from 'node:fs';
 const cname = existsSync('./CNAME') ? readFileSync('./CNAME', 'utf8').trim() : '';
 const repo = process.env.GITHUB_REPOSITORY || 'glee2345/digital-garden';
 const [owner, name] = repo.split('/');
-const site = cname ? `https://${cname}` : `https://${owner}.github.io`;
-const base = cname ? '/' : `/${name}`;
+const site = process.env.GARDEN_SITE || (cname ? `https://${cname}` : `https://${owner}.github.io`);
+const base = process.env.GARDEN_BASE || (cname ? '/' : `/${name}`);
 
 export default defineConfig({
   site,

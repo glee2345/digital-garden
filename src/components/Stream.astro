@@ -9,21 +9,21 @@ const pages = Math.max(1, Math.ceil(all.length / perPage));
 const items = all.slice((page - 1) * perPage, page * perPage);
 const shown = g.topics.slice(0, 7);
 const hidden = g.topics.length - shown.length;
-const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/page/${page + 1}/`;
+const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/${page + 1}/`;
 ---
 <section style="display:flex;flex-direction:column;gap:22px">
-  <p class="hello">{g.site.tagline}</p>
+  <p class="hello">{topic ? topic.name : 'the stream'}</p>
   <div class="chips-scroll">
     <div class="chips">
-      <a class:list={['chip', { on: !topic }]} href={`${base}/`}>everything</a>
+      <a class:list={['chip', { on: !topic }]} href={`${base}/stream/`}>everything</a>
       {shown.map((tp) => (
-        <a class:list={['chip', { on: topic?.name === tp.name, new: tp.isNew && topic?.name !== tp.name }]} href={topic?.name === tp.name ? `${base}/` : tp.url}>
+        <a class:list={['chip', { on: topic?.name === tp.name, new: tp.isNew && topic?.name !== tp.name }]} href={topic?.name === tp.name ? `${base}/stream/` : tp.url}>
           {tp.name} <span class="n">{tp.isNew && topic?.name !== tp.name ? 'new' : tp.count}</span>
           {topic?.name === tp.name && <span class="x" aria-hidden="true">×</span>}
         </a>
       ))}
       {topic && !shown.includes(topic) && (
-        <a class="chip on" href={`${base}/`}>{topic.name} <span class="n">{topic.count}</span> <span class="x" aria-hidden="true">×</span></a>
+        <a class="chip on" href={`${base}/stream/`}>{topic.name} <span class="n">{topic.count}</span> <span class="x" aria-hidden="true">×</span></a>
       )}
       {hidden > 0 && <button type="button" class="chip more" data-open-topics>+ {hidden} more</button>}
       {g.topics.length > 0 && g.topics.length <= 3 && <span class="chips-hint">topics appear once a few thoughts cluster</span>}
@@ -32,7 +32,7 @@ const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/page/${page +
   {topic && (
     <div class="filter-bar">
       <span>showing <strong>{topic.name}</strong>{` · ${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'} · `}<a href={`${base}/roots/?root=${topic.slug}`}>see this root</a></span>
-      <a class="clear" href={`${base}/`}>clear <span aria-hidden="true">×</span></a>
+      <a class="clear" href={`${base}/stream/`}>clear <span aria-hidden="true">×</span></a>
     </div>
   )}
 </section>

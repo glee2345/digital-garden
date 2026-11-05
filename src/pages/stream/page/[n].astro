@@ -1,7 +1,7 @@
 ---
-import Garden from '../../layouts/Garden.astro';
-import Stream from '../../components/Stream.astro';
-import { loadGarden } from '../../lib/garden.js';
+import Garden from '../../../layouts/Garden.astro';
+import Stream from '../../../components/Stream.astro';
+import { loadGarden } from '../../../lib/garden.js';
 export function getStaticPaths() {
   const g = loadGarden();
   const pages = Math.max(1, Math.ceil(g.stream.length / 20));

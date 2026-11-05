@@ -23,14 +23,14 @@ const ogImage = t.firstImage?.full ? img(t.firstImage.full) : null;
   </Fragment>
   <div class="cols" style="gap:56px">
     <article class="thought">
-      <a class="back" href={topic ? topic.url : `${base}/`}>← {topic ? topic.name : 'stream'}</a>
+      <a class="back" href={topic ? topic.url : `${base}/stream/`}>← {topic ? topic.name : 'stream'}</a>
       <div class="meta">
         {t.filing ? (
           <span class="filing-note">still being filed · usually within the hour</span>
         ) : topic ? (
-          <a class="topic-tag" href={topic.url} aria-label={`All thoughts in ${topic.name}`}><span class="mark" aria-hidden="true">//</span>{topic.name} <span class="arrow">{`· ${topic.count} →`}</span></a>
+          <a class="topic-tag" href={topic.url} aria-label={`All thoughts in ${topic.name}`}>{topic.name} <span class="arrow">{`· ${topic.count} →`}</span></a>
         ) : (
-          <span class="noroot"><span class="mark" aria-hidden="true">:</span>no root yet</span>
+          <span class="noroot">no root yet</span>
         )}
         <span>planted {fmtDate(t.planted, { year: true })}</span>
         {t.tended && t.tended !== t.planted && <Fragment><span aria-hidden="true">·</span><span>tended {fmtDate(t.tended)}</span></Fragment>}
@@ -69,16 +69,7 @@ const ogImage = t.firstImage?.full ? img(t.firstImage.full) : null;
           {inline.length === 0 && <span class="looking">nothing close yet</span>}
         </div>
       )}
-      <div class="filed">
-        <div>
-          <span class="lab">Filed as</span>
-          <span>{t.filing ? 'not yet — the garden is reading it' : <Fragment>{topic ? <a href={topic.url}>{topic.name}</a> : <strong>no root yet</strong>}{` · title ${t.titleBy === 'you' ? 'yours' : 'from the first line'} · ${near.length} nearby`}</Fragment>}</span>
-        </div>
-        <div>
-          <span class="lab">Changed by hand</span>
-          <span>{[t.titleBy === 'you' && 'title', t.topicBy === 'you' && 'topic', t.stageBy === 'you' && 'stage'].filter(Boolean).join(', ') || 'nothing yet'}</span>
-        </div>
-      </div>
+      <p class="filed">{t.filing ? 'not filed yet — the garden is reading it' : t.topicBy === 'you' ? `filed under ${topic ? topic.name : 'nothing'} by hand` : topic ? <Fragment>filed under <a href={topic.url}>{topic.name}</a> by the garden</Fragment> : 'no root yet'}</p>
     </article>
 
     <aside class="side">
