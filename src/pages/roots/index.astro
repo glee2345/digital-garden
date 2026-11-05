@@ -1,0 +1,91 @@
+---
+import Garden from '../../layouts/Garden.astro';
+import { loadGarden } from '../../lib/garden.js';
+import { growRoots, strandFor } from '../../lib/roots.js';
+const g = loadGarden();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const roots = g.topics.length ? growRoots(g.topics, { seed: 8 }) : null;
+const maxCount = g.topics[0]?.count || 1;
+---
+<Garden current="map" title="roots" description="Every topic is a root. Thoughts grow along them.">
+  <div class="view-head">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px">
+      <div class="view-toggle"><a href={`${base}/map/`}>Map</a><a href={`${base}/roots/`} aria-current="page">Roots</a></div>
+      <p class="lede">Every topic is a root. Thoughts grow along them; the fine roots are where topics reach toward each other.</p>
+    </div>
+    <div class="legend">
+      <span><span class="k" style="color:var(--root)">***</span> root — darker = more thoughts</span>
+      <span><span class="k" style="color:var(--green-ink)">@</span> thought &nbsp; <span class="k" style="color:var(--green)">o</span> photo or link &nbsp; <span style="color:var(--faint)">each sits in a small clearing</span></span>
+    </div>
+  </div>
+
+  {roots ? (
+    <Fragment>
+      <div class="panel roots-panel" id="roots" style="height:800px">
+        <pre set:html={roots.html} />
+        <div class="hovercard" id="hover" data-open="false"><span class="k" id="hk"></span><span class="t" id="ht"></span><span class="m" id="hm"></span></div>
+      </div>
+      <p class="foot-note" id="roots-note">Grown by the site, not drawn by hand: each topic is a root whose thickness and reach come from how many thoughts it holds. Click a root's name to follow just that one; click a thought to open it. <a href="#" id="roots-clear" hidden>show all roots</a></p>
+    </Fragment>
+  ) : (
+    <div class="panel" style="padding:40px 20px;text-align:center">
+      <pre style="margin:0 auto 12px;font-family:var(--mono);font-size:12px;line-height:1.2;color:var(--root-soft);display:inline-block;text-align:left">     |||
+~~~~~|||~~~~~
+     :|:
+      ',</pre>
+      <p class="foot-note">Nothing has taken root yet. Roots appear once a few thoughts cluster.</p>
+    </div>
+  )}
+
+  <!-- phone: roots read one at a time -->
+  <div class="root-list phone-list">
+    {g.topics.map((tp) => (
+      <a href={tp.url}>
+        <pre set:html={strandFor(tp, maxCount)} />
+        <span class="n"><span style="font-size:16px">{tp.name}</span><span>{`${tp.count} ${tp.count === 1 ? 'thought' : 'thoughts'}${tp.photos ? ` · ${tp.photos} ${tp.photos === 1 ? 'photo' : 'photos'}` : ''}${tp.isNew ? ' · new' : ''}`}</span></span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    ))}
+  </div>
+
+  <style>
+    .phone-list { display: none; }
+    @media (max-width: 719px) {
+      .phone-list { display: block; }
+      #roots { height: 420px; }
+      #roots-note { display: none; }
+    }
+  </style>
+  <script>
+    const panel = document.getElementById('roots');
+    if (panel) {
+      const hover = document.getElementById('hover');
+      const params = new URLSearchParams(location.search);
+      const clear = document.getElementById('roots-clear');
+      const focus = (slug) => {
+        panel.querySelectorAll('[data-root]').forEach((el) => el.classList.toggle('dim', !!slug && el.dataset.root !== slug));
+        clear.hidden = !slug;
+      };
+      panel.querySelectorAll('.root-label').forEach((a) => a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slug = a.dataset.root;
+        const already = [...panel.querySelectorAll('.dim')].length && !a.classList.contains('dim');
+        focus(already ? null : slug);
+      }));
+      clear.addEventListener('click', (e) => { e.preventDefault(); focus(null); });
+      if (params.get('root')) focus(params.get('root'));
+      panel.querySelectorAll('.node').forEach((n) => {
+        n.addEventListener('mouseenter', () => {
+          const r = n.getBoundingClientRect(), p = panel.getBoundingClientRect();
+          document.getElementById('hk').textContent = `${n.dataset.topic} · ${n.dataset.stage}`;
+          document.getElementById('ht').textContent = n.dataset.title;
+          document.getElementById('hm').textContent = `${n.dataset.near} nearby · click to open`;
+          let left = r.left - p.left + panel.scrollLeft + 14, top = r.top - p.top + panel.scrollTop - 10;
+          if (left + 270 > panel.clientWidth + panel.scrollLeft) left = r.left - p.left + panel.scrollLeft - 274;
+          hover.style.left = `${left}px`; hover.style.top = `${top}px`; hover.dataset.open = 'true';
+        });
+        n.addEventListener('mouseleave', () => { hover.dataset.open = 'false'; });
+      });
+    }
+  </script>
+</Garden>

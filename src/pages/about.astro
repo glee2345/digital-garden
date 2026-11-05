@@ -1,0 +1,15 @@
+---
+import Garden from '../layouts/Garden.astro';
+import { loadGarden, fmtDate } from '../lib/garden.js';
+const g = loadGarden();
+---
+<Garden current="about" title="about">
+  <div class="prose">
+    <h1>about this garden</h1>
+    <p>This is a digital garden: a place for thoughts that are still growing, rather than finished pieces. Some are a sentence. Some are a photo. Some are a link and what I made of it.</p>
+    <p>I don't file anything here. I write a thought down and the garden names it, finds the thoughts near it, and decides which root it belongs to. When it's wrong I nudge it. Topics appear on their own once a few thoughts cluster, which is why the list of them keeps changing.</p>
+    <p>Each thought is a seedling when it's planted, growing once it's connected to a couple of others or I've come back to it, and evergreen when I think it's done — which is rare.</p>
+    <p>{g.stats.thoughts} thoughts, {g.stats.topics} topics, {g.stats.connections} connections{g.stats.firstPlanted ? `, planted since ${fmtDate(g.stats.firstPlanted, { year: true })}` : ''}.</p>
+    <p>— {g.site.author}</p>
+  </div>
+</Garden>

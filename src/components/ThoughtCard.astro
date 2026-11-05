@@ -1,0 +1,61 @@
+---
+import { fmtDate } from '../lib/garden.js';
+const { t } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const near = t.nearbyThoughts.slice(0, 3);
+const extra = t.nearbyThoughts.length - near.length;
+const photo = t.kind === 'photo' && t.firstImage;
+const linkBlock = t.body.find((b) => b.type === 'link');
+const showKind = t.kind !== 'text';
+const showStage = t.kind === 'text' && t.stage !== 'growing';
+---
+<article class:list={['card', { filing: t.filing, photo: !!photo }]}>
+  {photo && (
+    <a class="thumb" href={t.url} aria-hidden="true" tabindex="-1">
+      {t.firstImage.thumb && <img src={`${base}${t.firstImage.thumb}`} alt="" loading="lazy" />}
+    </a>
+  )}
+  <div class={photo ? 'rest' : undefined} style={photo ? undefined : 'display:contents'}>
+    <div class="meta">
+      {t.filing && <span class="filing-note">still being filed · usually within the hour</span>}
+      {!t.filing && t.topic && <a class="topic" href={t.topicUrl}><span class="mark" aria-hidden="true">//</span>{t.topic}</a>}
+      {!t.filing && !t.topic && <span class="noroot"><span class="mark" aria-hidden="true">:</span>no root yet</span>}
+      {!t.filing && <span aria-hidden="true">·</span>}
+      {!t.filing && <span>{`planted ${fmtDate(t.planted)}`}</span>}
+      {!t.filing && (showKind || showStage) && <span aria-hidden="true">·</span>}
+      {!t.filing && showKind && <span class="stage">{t.kind}</span>}
+      {!t.filing && showStage && <span class="stage">{t.stage}</span>}
+    </div>
+    <h2 class="title"><a href={t.url}>{t.title}</a></h2>
+    {linkBlock && !photo && (
+      <a class="linkcard" href={linkBlock.link.url} rel="noopener">
+        {linkBlock.link.image && <span class="pic" style={`background-image:url('${linkBlock.link.image}')`}></span>}
+        <span class="txt">
+          <span class="dom">{linkBlock.link.domain}</span>
+          <span class="lt">{linkBlock.link.title || linkBlock.link.url}</span>
+          {linkBlock.link.description && <span class="ld">{linkBlock.link.description}</span>}
+        </span>
+      </a>
+    )}
+    {t.excerpt && <p>{t.excerpt}</p>}
+    {t.filing && <div class="nearby"><span>nearby</span><span class="looking">looking for neighbors…</span></div>}
+    {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
+    {!t.filing && t.topic && near.length > 0 && (
+      <div class="nearby">
+        <span>nearby</span>
+        {near.map((n, i) => (
+          <Fragment>
+            {i !== 0 && <span class="dot" aria-hidden="true"></span>}
+            <a href={n.url}>{n.title}</a>
+          </Fragment>
+        ))}
+        {extra > 0 && (
+          <Fragment>
+            <span class="dot" aria-hidden="true"></span>
+            <a class="more" href={`${base}/map/?t=${t.id}`}>{`${extra} more on the map`}</a>
+          </Fragment>
+        )}
+      </div>
+    )}
+  </div>
+</article>

@@ -1,0 +1,15 @@
+---
+import Garden from '../../layouts/Garden.astro';
+import Stream from '../../components/Stream.astro';
+import { loadGarden } from '../../lib/garden.js';
+export function getStaticPaths() {
+  const g = loadGarden();
+  const pages = Math.max(1, Math.ceil(g.stream.length / 20));
+  return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({ params: { n: String(i + 2) } }));
+}
+const g = loadGarden();
+const n = Number(Astro.params.n);
+---
+<Garden current="stream" title={`page ${n}`}>
+  <Stream g={g} page={n} />
+</Garden>

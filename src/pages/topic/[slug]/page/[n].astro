@@ -1,0 +1,20 @@
+---
+import Garden from '../../../../layouts/Garden.astro';
+import Stream from '../../../../components/Stream.astro';
+import { loadGarden } from '../../../../lib/garden.js';
+export function getStaticPaths() {
+  const g = loadGarden();
+  const out = [];
+  for (const tp of g.topics) {
+    const pages = Math.ceil(tp.count / 20);
+    for (let n = 2; n <= pages; n++) out.push({ params: { slug: tp.slug, n: String(n) }, props: { name: tp.name } });
+  }
+  return out;
+}
+const g = loadGarden();
+const topic = g.topicMap.get(Astro.props.name);
+const n = Number(Astro.params.n);
+---
+<Garden current="stream" title={`${topic.name} · page ${n}`} activeTopic={topic.name}>
+  <Stream g={g} topic={topic} page={n} />
+</Garden>

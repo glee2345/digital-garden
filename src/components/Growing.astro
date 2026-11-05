@@ -1,0 +1,87 @@
+---
+// The sage board on the right of the stream. Has three moods: a filtered
+// topic ("About this root"), a young garden, and the everyday one.
+import { fmtDate, ago } from '../lib/garden.js';
+const { g, topic = null } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const today = fmtDate(new Date().toISOString().slice(0, 10));
+const young = g.stats.thoughts < 8 || g.topics.length < 3;
+---
+{topic ? (
+  <aside class="board" aria-label="About this root">
+    <div class="head"><h2>About this root</h2><span>{topic.name}</span></div>
+    {topic.reachesList.length > 0 ? (
+      <section>
+        <span class="lab">Reaches toward</span>
+        <p class="big">
+          <a href={g.topicMap.get(topic.reachesList[0]).url}>{topic.reachesList[0]}</a>
+          {topic.reachesList[1] && <Fragment> most, then <a href={g.topicMap.get(topic.reachesList[1]).url}>{topic.reachesList[1]}</a></Fragment>}.
+        </p>
+      </section>
+    ) : (
+      <section><span class="lab">Reaches toward</span><p class="big">Nothing yet — this root keeps to itself so far.</p></section>
+    )}
+    {topic.mergedFrom?.length > 0 && (
+      <section>
+        <span class="lab">Also filed here as</span>
+        <span>{topic.mergedFrom.map((m) => `“${m}”`).join(', ')}</span>
+        <span class="sub">the garden merged these into {topic.name} · undo in the sheet's topics tab</span>
+      </section>
+    )}
+    {topic.suggested && (
+      <section>
+        <span class="lab">The garden suggests</span>
+        <span>{topic.suggested}</span>
+        <span class="sub">approve or ignore in the sheet's topics tab</span>
+      </section>
+    )}
+    <section>
+      <span>{`${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'} · first planted ${fmtDate(topic.firstPlanted, { year: true })}`}</span>
+      {(topic.photos || topic.links) ? <span class="sub">{[topic.photos && `${topic.photos} ${topic.photos === 1 ? 'photo' : 'photos'}`, topic.links && `${topic.links} ${topic.links === 1 ? 'link' : 'links'}`].filter(Boolean).join(' · ')}</span> : null}
+    </section>
+  </aside>
+) : young ? (
+  <aside class="board" aria-label="What's growing">
+    <div class="head"><h2>What's growing</h2><span>{today}</span></div>
+    <section>
+      <pre aria-hidden="true">{g.topics.length === 0 ? `     |||\n~~~~~|||~~~~~\n     :|:\n      ',` : `     |||\n~~~~~|||~~~~~\n     :|:\n    .' ';\n   .'   ',\n  @      @\n '        o`}</pre>
+      <p class="big">{g.topics.length === 0 ? 'Nothing has taken root yet. The first few thoughts grow the first few roots.' : `${g.topics.length === 1 ? 'One root' : `${g.topics.length} roots`} so far. Keep planting — the garden names new ones on its own.`}</p>
+    </section>
+    <section>
+      <span>{`${g.stats.thoughts} ${g.stats.thoughts === 1 ? 'thought' : 'thoughts'} · ${g.stats.topics} ${g.stats.topics === 1 ? 'topic' : 'topics'} · ${g.stats.connections} ${g.stats.connections === 1 ? 'connection' : 'connections'}`}</span>
+      {g.stats.firstPlanted && <span class="sub">first planted {fmtDate(g.stats.firstPlanted, { year: true })}</span>}
+    </section>
+  </aside>
+) : (
+  <aside class="board" aria-label="What's growing">
+    <div class="head"><h2>What's growing</h2><span>{today}</span></div>
+    <section>
+      <span class="lab">New roots</span>
+      {g.growing.newRoots.length > 0 ? (
+        <p class="big">
+          {g.growing.newRoots.length === 1 ? 'A new topic took root on its own: ' : `${g.growing.newRoots.length === 2 ? 'Two' : g.growing.newRoots.length} topics took root on their own: `}
+          {g.growing.newRoots.map((tp, i) => (<Fragment>{i !== 0 && (i === g.growing.newRoots.length - 1 ? ' and ' : ', ')}<a href={tp.url}>{tp.name}</a></Fragment>))}.
+        </p>
+      ) : (
+        <p class="big">Nothing new this month — the old roots are getting deeper.</p>
+      )}
+    </section>
+    <section>
+      <span class="lab">Recently tended</span>
+      <ul>
+        {g.growing.recentlyTended.map((t) => (<li><a href={t.url}>{t.title}</a> <span class="when">· {ago(t.tended)}</span></li>))}
+      </ul>
+    </section>
+    {g.growing.deepest && (
+      <section>
+        <span class="lab">Deepest root</span>
+        <a class="big" href={g.growing.deepest.url}>{g.growing.deepest.title}</a>
+        <span class="sub">connected to {g.growing.deepest.nearbyThoughts.length + g.growing.deepest.mentionedBy.length} other thoughts</span>
+      </section>
+    )}
+    <section>
+      <span>{`${g.stats.thoughts} thoughts · ${g.stats.topics} topics · ${g.stats.connections} connections`}</span>
+      <span class="sub">topics are named by the garden as it grows</span>
+    </section>
+  </aside>
+)}

@@ -1,0 +1,105 @@
+---
+// Dots clustered by topic, placed deterministically so the map is stable.
+import Garden from '../../layouts/Garden.astro';
+import { loadGarden } from '../../lib/garden.js';
+const g = loadGarden();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const rand = rng(21);
+const topics = g.topics;
+const n = topics.length;
+// cluster centers on a loose ring, big topics get more room
+const centers = new Map();
+topics.forEach((tp, i) => {
+  const ang = -Math.PI / 2 + (i / Math.max(1, n)) * Math.PI * 2 + (rand() - 0.5) * 0.4;
+  const rad = n === 1 ? 0 : 0.30 + (rand() - 0.5) * 0.08;
+  centers.set(tp.name, { x: 0.5 + Math.cos(ang) * rad * 1.25, y: 0.5 + Math.sin(ang) * rad, r: 0.06 + 0.10 * Math.sqrt(tp.count / (topics[0]?.count || 1)) });
+});
+const pos = new Map();
+for (const t of g.thoughts) {
+  const c = t.topic ? centers.get(t.topic) : { x: 0.5, y: 0.5, r: 0.12 };
+  // jitter in a disc, pulled slightly toward neighbors' cluster
+  const a = rand() * Math.PI * 2, d = Math.sqrt(rand()) * c.r;
+  let x = c.x + Math.cos(a) * d * 1.2, y = c.y + Math.sin(a) * d;
+  for (const nb of t.nearbyThoughts) if (nb.topic && nb.topic !== t.topic) { const oc = centers.get(nb.topic); x += (oc.x - x) * 0.08; y += (oc.y - y) * 0.08; }
+  pos.set(t.id, { x: Math.min(0.96, Math.max(0.04, x)), y: Math.min(0.94, Math.max(0.08, y)) });
+}
+const edges = [];
+const seen = new Set();
+for (const t of g.thoughts) for (const nb of t.nearbyThoughts) {
+  const key = [t.id, nb.id].sort().join('|'); if (seen.has(key)) continue; seen.add(key);
+  edges.push([pos.get(t.id), pos.get(nb.id), t.id, nb.id]);
+}
+const size = (t) => 10 + Math.min(10, (t.nearbyThoughts.length + t.mentionedBy.length) * 2);
+---
+<Garden current="map" title="map" description="Each thought, next to what it's about.">
+  <div class="view-head">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px">
+      <div class="view-toggle"><a href={`${base}/map/`} aria-current="page">Map</a><a href={`${base}/roots/`}>Roots</a></div>
+      <p class="lede">Each thought, next to what it's about.</p>
+    </div>
+    <div class="legend">
+      {topics.slice(0, 8).map((tp) => <a href={tp.url} style="color:inherit">{tp.name}</a>)}
+    </div>
+  </div>
+
+  {g.thoughts.length ? (
+    <div class="panel map-panel" id="map">
+      <svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%">
+        {edges.map(([a, b, ida, idb]) => <line class="edge" data-a={ida} data-b={idb} x1={(a.x * 100).toFixed(2)} y1={(a.y * 100).toFixed(2)} x2={(b.x * 100).toFixed(2)} y2={(b.y * 100).toFixed(2)} vector-effect="non-scaling-stroke" />)}
+      </svg>
+      {topics.map((tp) => { const c = centers.get(tp.name); return <span class="cluster" style={`left:${(c.x * 100).toFixed(2)}%;top:${(Math.max(0.06, c.y - c.r - 0.05) * 100).toFixed(2)}%`}><a href={tp.url}>{tp.name}</a></span>; })}
+      {g.thoughts.map((t) => { const p = pos.get(t.id); const s = size(t); return (
+        <a class:list={['dot', { photo: t.kind !== 'text' }]} href={t.url} data-id={t.id} data-title={t.title} data-topic={t.topic || 'no root yet'} data-stage={t.stage} data-near={t.nearbyThoughts.length}
+          aria-label={t.title} style={`left:${(p.x * 100).toFixed(2)}%;top:${(p.y * 100).toFixed(2)}%;width:${s}px;height:${s}px`}></a>
+      ); })}
+      <div class="hovercard" id="hover" data-open="false"><span class="k" id="hk"></span><span class="t" id="ht"></span><span class="m" id="hm"></span></div>
+      <span class="legend-note"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);vertical-align:middle"></span> thought &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green-soft);vertical-align:middle"></span> photo or link &nbsp;· closer = more related</span>
+    </div>
+  ) : (
+    <div class="panel" style="padding:40px 20px;text-align:center"><p class="foot-note">Nothing planted yet.</p></div>
+  )}
+  <p class="foot-note">Dots cluster by topic and drift toward the topics they also touch. The thin lines are "nearby" links the garden found. Bigger dot, more connections.</p>
+
+  <style>
+    .map-panel .dot.lit { box-shadow: 0 0 0 4px rgba(126,139,110,.25); background: var(--green-ink); }
+    .map-panel .dot.lit-near { box-shadow: 0 0 0 3px rgba(126,139,110,.18); }
+    .map-panel .edge { stroke: #D9CDB9; stroke-width: 1; }
+    .map-panel .edge.lit { stroke: var(--green); stroke-width: 1.5; }
+    .map-panel[data-focus] .dot:not(.lit):not(.lit-near) { opacity: .35; }
+    .map-panel[data-focus] .edge:not(.lit) { opacity: .4; }
+  </style>
+  <script>
+    const map = document.getElementById('map');
+    if (map) {
+      const hover = document.getElementById('hover');
+      map.querySelectorAll('.dot').forEach((n) => {
+        n.addEventListener('mouseenter', () => {
+          document.getElementById('hk').textContent = `${n.dataset.topic} · ${n.dataset.stage}`;
+          document.getElementById('ht').textContent = n.dataset.title;
+          document.getElementById('hm').textContent = `${n.dataset.near} nearby · click to open`;
+          let left = n.offsetLeft + 16, top = n.offsetTop - 12;
+          if (left + 270 > map.clientWidth) left = n.offsetLeft - 276;
+          if (top + 90 > map.clientHeight) top = map.clientHeight - 96;
+          hover.style.left = `${left}px`; hover.style.top = `${Math.max(8, top)}px`; hover.dataset.open = 'true';
+        });
+        n.addEventListener('mouseleave', () => { hover.dataset.open = 'false'; });
+      });
+      // ?t=<id> lights up one thought and its neighbors
+      const id = new URLSearchParams(location.search).get('t');
+      if (id) {
+        const me = map.querySelector(`.dot[data-id="${CSS.escape(id)}"]`);
+        if (me) {
+          map.dataset.focus = id; me.classList.add('lit');
+          map.querySelectorAll(`.edge[data-a="${CSS.escape(id)}"], .edge[data-b="${CSS.escape(id)}"]`).forEach((e) => {
+            e.classList.add('lit');
+            const other = e.dataset.a === id ? e.dataset.b : e.dataset.a;
+            map.querySelector(`.dot[data-id="${CSS.escape(other)}"]`)?.classList.add('lit-near');
+          });
+          me.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      }
+    }
+  </script>
+</Garden>

@@ -1,0 +1,15 @@
+---
+import Garden from '../../layouts/Garden.astro';
+import { loadGarden } from '../../lib/garden.js';
+const g = loadGarden();
+const ids = g.thoughts.filter((t) => !t.filing).map((t) => t.url);
+---
+<Garden title="wander">
+  <div class="prose">
+    <h1>wandering…</h1>
+    <p>Picking a thought at random. <a href={`${import.meta.env.BASE_URL}`}>Or go back to the stream.</a></p>
+  </div>
+  <script is:inline define:vars={{ ids }}>
+    if (ids.length) location.replace(ids[Math.floor(Math.random() * ids.length)]);
+  </script>
+</Garden>

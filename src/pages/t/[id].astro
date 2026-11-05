@@ -1,0 +1,110 @@
+---
+import Garden from '../../layouts/Garden.astro';
+import { loadGarden, fmtDate } from '../../lib/garden.js';
+export function getStaticPaths() {
+  const g = loadGarden();
+  return g.thoughts.map((t) => ({ params: { id: t.id } }));
+}
+const g = loadGarden();
+const t = g.byId.get(Astro.params.id);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const topic = t.topic ? g.topicMap.get(t.topic) : null;
+const near = t.nearbyThoughts;
+const closest = near.slice(0, 4);
+const inline = near.slice(0, 5);
+const extra = near.length - inline.length;
+const img = (p) => `${base}${p}`;
+const ogImage = t.firstImage?.full ? img(t.firstImage.full) : null;
+---
+<Garden title={t.title} description={t.excerpt || t.title} activeTopic={t.topic}>
+  <Fragment slot="head">
+    <meta property="og:type" content="article" />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />}
+  </Fragment>
+  <div class="cols" style="gap:56px">
+    <article class="thought">
+      <a class="back" href={topic ? topic.url : `${base}/`}>← {topic ? topic.name : 'stream'}</a>
+      <div class="meta">
+        {t.filing ? (
+          <span class="filing-note">still being filed · usually within the hour</span>
+        ) : topic ? (
+          <a class="topic-tag" href={topic.url} aria-label={`All thoughts in ${topic.name}`}><span class="mark" aria-hidden="true">//</span>{topic.name} <span class="arrow">{`· ${topic.count} →`}</span></a>
+        ) : (
+          <span class="noroot"><span class="mark" aria-hidden="true">:</span>no root yet</span>
+        )}
+        <span>planted {fmtDate(t.planted, { year: true })}</span>
+        {t.tended && t.tended !== t.planted && <Fragment><span aria-hidden="true">·</span><span>tended {fmtDate(t.tended)}</span></Fragment>}
+        <span aria-hidden="true">·</span><span class="stage">{t.stage}</span>
+      </div>
+      <h1>{t.title}</h1>
+      <div class="body">
+        {t.pageBody.map((b) => {
+          if (b.type === 'p') return <p set:html={b.html} />;
+          if (b.type === 'link') return (
+            <a class="linkcard" href={b.link.url} rel="noopener">
+              {b.link.image ? <span class="pic" style={`background-image:url('${b.link.image}')`}></span> : null}
+              <span class="txt"><span class="dom">{b.link.domain}</span><span class="lt">{b.link.title || b.link.url}</span>{b.link.description && <span class="ld">{b.link.description}</span>}</span>
+            </a>
+          );
+          if (b.type === 'image' || b.type === 'gallery') return (
+            <figure>
+              <div class:list={[{ gallery: b.type === 'gallery' }]}>
+                {b.images.map((im) => im.full ? (
+                  <a href={img(im.full)} data-full={img(im.full)} data-alt={im.alt}><img src={img(b.type === 'gallery' ? im.thumb : im.full)} alt={im.alt} width={im.width} height={im.height} loading="lazy" /></a>
+                ) : (
+                  <div class="missing">[{im.file} — not in the images folder yet]</div>
+                ))}
+              </div>
+              {b.caption && <figcaption>{b.caption}</figcaption>}
+            </figure>
+          );
+          return null;
+        })}
+      </div>
+      {!t.filing && topic && (
+        <div class="nearby" style="font-size:14px">
+          <span>nearby</span>
+          {inline.map((n, i) => (<Fragment>{i !== 0 && <span class="dot" aria-hidden="true"></span>}<a href={n.url}>{n.title}</a></Fragment>))}
+          {extra > 0 && <Fragment><span class="dot" aria-hidden="true"></span><a class="more" href={`${base}/map/?t=${t.id}`}>{extra} more on the map</a></Fragment>}
+          {inline.length === 0 && <span class="looking">nothing close yet</span>}
+        </div>
+      )}
+      <div class="filed">
+        <div>
+          <span class="lab">Filed as</span>
+          <span>{t.filing ? 'not yet — the garden is reading it' : <Fragment>{topic ? <a href={topic.url}>{topic.name}</a> : <strong>no root yet</strong>}{` · title ${t.titleBy === 'you' ? 'yours' : 'from the first line'} · ${near.length} nearby`}</Fragment>}</span>
+        </div>
+        <div>
+          <span class="lab">Changed by hand</span>
+          <span>{[t.titleBy === 'you' && 'title', t.topicBy === 'you' && 'topic', t.stageBy === 'you' && 'stage'].filter(Boolean).join(', ') || 'nothing yet'}</span>
+        </div>
+      </div>
+    </article>
+
+    <aside class="side">
+      <div class="aside-block">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <h2>Closest</h2>
+          {near.length > closest.length && <span class="cnt">{`closest ${closest.length} of ${near.length}`}</span>}
+        </div>
+        {closest.map((n) => (
+          <a class="near-card" href={n.url}>
+            {n.firstImage && <span class="pic">{n.firstImage.thumb && <img src={img(n.firstImage.thumb)} alt="" loading="lazy" />}</span>}
+            <span style="display:flex;flex-direction:column;gap:4px;min-width:0">
+              <span class="t">{n.title}</span>
+              <span class="m">{n.topic || 'no root yet'}{n.kind !== 'text' ? ` · ${n.kind}` : ''}</span>
+            </span>
+          </a>
+        ))}
+        {closest.length === 0 && <p class="foot-note" style="font-style:italic">Nothing close yet. It'll find company as the garden grows.</p>}
+        {near.length > 0 && <a class="btn" href={`${base}/map/?t=${t.id}`}>{`all ${near.length} on the map →`}</a>}
+      </div>
+      {t.mentionedBy.length > 0 && (
+        <div class="aside-block">
+          <h2>Mentioned by</h2>
+          <ul>{t.mentionedBy.map((m) => <li><a href={m.url}>{m.title}</a></li>)}</ul>
+        </div>
+      )}
+    </aside>
+  </div>
+</Garden>

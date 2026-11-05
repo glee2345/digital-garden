@@ -1,0 +1,168 @@
+---
+import '../styles/garden.css';
+import Clover from '../components/Clover.astro';
+import { loadGarden, ago } from '../lib/garden.js';
+const { title = '', description = '', current = '', activeTopic = '', wide = false } = Astro.props;
+const g = loadGarden();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pageTitle = title ? `${title} · ${g.site.name}` : g.site.name;
+const topics = g.topics;
+const shown = topics.slice(0, 12);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description || g.site.tagline} />
+  <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+  <link rel="alternate" type="application/rss+xml" title={g.site.name} href={`${base}/rss.xml`} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=IBM+Plex+Mono:wght@400;700&display=swap" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description || g.site.tagline} />
+  <meta property="og:type" content="website" />
+  <slot name="head" />
+</head>
+<body data-base={base}>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="logo" href={`${base}/`} aria-label="Home"><Clover /></a>
+      <nav aria-label="Garden">
+        <a href={`${base}/`} aria-current={current === 'stream' ? 'page' : undefined}>Stream</a>
+        <button type="button" class="nav-btn" id="topics-btn" aria-expanded="false" aria-controls="topics-drawer">Topics <span class="caret" aria-hidden="true">▾</span></button>
+        <a href={`${base}/map/`} aria-current={current === 'map' ? 'page' : undefined}>Map</a>
+        <a href={`${base}/about/`} aria-current={current === 'about' ? 'page' : undefined}>About</a>
+        <a href={`${base}/wander/`} class="wander" title="Wander: a random thought"><span class="word">wander</span> <span class="tilde" aria-hidden="true">~</span></a>
+        <form class="search" id="search" role="search" autocomplete="off" onsubmit="return false">
+          <button type="button" class="search-open" id="search-open" aria-label="Search" style="background:none;border:none;padding:0;color:inherit;font-size:14px;display:inline-flex">⌕</button>
+          <input type="search" id="search-input" placeholder="search the garden" aria-label="Search the garden" />
+          <kbd aria-hidden="true">/</kbd>
+          <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+        </form>
+      </nav>
+    </header>
+  </div>
+
+  <div class="wrap"><main class="page"><slot /></main></div>
+
+  <div class="wrap">
+    <footer class="site-footer">
+      <span>{`planted ${g.stats.firstPlanted ? g.stats.firstPlanted.slice(0, 4) : new Date().getFullYear()} · ${g.site.author}`}</span>
+      <span class="tended"><i aria-hidden="true"></i>garden last tended <time datetime={g.tended} data-ago={g.tended}>{ago(g.tended)}</time></span>
+    </footer>
+  </div>
+
+  <div class="scrim" id="scrim" data-open="false"></div>
+  <aside class="drawer" id="topics-drawer" data-open="false" aria-label="Topics" aria-hidden="true">
+    <div class="dh">
+      <h2>Topics</h2>
+      <button type="button" class="close" id="topics-close" aria-label="Close topics">×</button>
+    </div>
+    <p>{`${topics.length} ${topics.length === 1 ? 'root' : 'roots'}, named by the garden. Pick one and the stream narrows to it.`}</p>
+    <ul>
+      {topics.map((tp) => {
+        const max = topics[0]?.count || 1;
+        const w = Math.max(6, Math.round((tp.count / max) * 72));
+        const cls = tp.count >= max * 0.5 ? '' : tp.count >= 3 ? 'soft' : 'faint';
+        return (
+          <li><a href={tp.url} class:list={[{ new: tp.isNew }]} aria-current={activeTopic === tp.name ? 'page' : undefined}>
+            <span>{tp.name}{tp.isNew && <span class="tag">new</span>}</span>
+            <span class="bar"><i class={cls} style={`width:${w}px`}></i><b>{tp.count}</b></span>
+          </a></li>
+        );
+      })}
+      {topics.length === 0 && <li><span style="font-size:13px;color:var(--faint);font-style:italic">no roots yet — topics appear once a few thoughts cluster</span></li>}
+    </ul>
+    <div class="foot"><a class="btn" href={`${base}/roots/`}>see them as roots →</a></div>
+  </aside>
+
+  <div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-label="Image">
+    <button type="button" id="lightbox-close" aria-label="Close">×</button>
+    <img alt="" />
+  </div>
+
+  <script>
+    const base = document.body.dataset.base || '';
+    // topics drawer
+    const drawer = document.getElementById('topics-drawer');
+    const scrim = document.getElementById('scrim');
+    const btn = document.getElementById('topics-btn');
+    const setDrawer = (open) => {
+      drawer.dataset.open = String(open); scrim.dataset.open = String(open);
+      drawer.setAttribute('aria-hidden', String(!open)); btn.setAttribute('aria-expanded', String(open));
+      if (open) drawer.querySelector('a, button')?.focus();
+    };
+    btn.addEventListener('click', () => setDrawer(drawer.dataset.open !== 'true'));
+    document.getElementById('topics-close').addEventListener('click', () => setDrawer(false));
+    scrim.addEventListener('click', () => setDrawer(false));
+    document.querySelectorAll('[data-open-topics]').forEach((el) => el.addEventListener('click', () => setDrawer(true)));
+
+    // search
+    const form = document.getElementById('search');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    let index = null, sel = -1;
+    const loadIndex = async () => index || (index = await (await fetch(`${base}/search.json`)).json());
+    const norm = (s) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
+    const render = (hits) => {
+      sel = -1;
+      results.innerHTML = hits.length
+        ? hits.map((h) => `<a href="${h.url}" role="option"><span class="t">${h.title}</span><span class="m">${h.topic ? h.topic + ' · ' : ''}${h.planted}</span></a>`).join('')
+        : `<div class="empty">nothing here yet — try another word</div>`;
+      results.dataset.open = 'true';
+    };
+    const search = async () => {
+      const q = norm(input.value.trim());
+      if (q.length < 2) { results.dataset.open = 'false'; return; }
+      const idx = await loadIndex();
+      const terms = q.split(/\s+/);
+      const hits = idx.map((t) => {
+        const hay = norm(`${t.title} ${t.topic} ${t.text}`);
+        let score = 0;
+        for (const term of terms) {
+          if (!hay.includes(term)) return null;
+          score += norm(t.title).includes(term) ? 3 : norm(t.topic).includes(term) ? 2 : 1;
+        }
+        return { ...t, score };
+      }).filter(Boolean).sort((a, b) => b.score - a.score || b.planted.localeCompare(a.planted)).slice(0, 8);
+      render(hits);
+    };
+    input.addEventListener('input', search);
+    input.addEventListener('focus', () => { form.dataset.open = 'true'; if (input.value.trim().length >= 2) search(); });
+    document.getElementById('search-open').addEventListener('click', () => { form.dataset.open = 'true'; input.focus(); });
+    document.addEventListener('click', (e) => { if (!form.contains(e.target)) { results.dataset.open = 'false'; if (!input.value) form.dataset.open = 'false'; } });
+    document.addEventListener('keydown', (e) => {
+      const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName);
+      if (e.key === '/' && !typing) { e.preventDefault(); form.dataset.open = 'true'; input.focus(); input.select(); }
+      if (e.key === 'Escape') { results.dataset.open = 'false'; setDrawer(false); closeLightbox(); if (document.activeElement === input) { input.blur(); form.dataset.open = 'false'; } }
+      if (results.dataset.open === 'true' && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter')) {
+        const opts = [...results.querySelectorAll('a')];
+        if (!opts.length) return;
+        if (e.key === 'Enter') { if (sel >= 0) opts[sel].click(); return; }
+        e.preventDefault();
+        sel = e.key === 'ArrowDown' ? Math.min(sel + 1, opts.length - 1) : Math.max(sel - 1, 0);
+        opts.forEach((o, i) => o.setAttribute('aria-selected', String(i === sel)));
+      }
+    });
+
+    // lightbox
+    const lb = document.getElementById('lightbox');
+    const closeLightbox = () => { lb.dataset.open = 'false'; };
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    document.querySelectorAll('a[data-full]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault(); const img = lb.querySelector('img'); img.src = a.dataset.full; img.alt = a.dataset.alt || ''; lb.dataset.open = 'true';
+    }));
+
+    // "last tended" stays honest as the tab sits open
+    const t = document.querySelector('time[data-ago]');
+    if (t) setInterval(() => {
+      const m = Math.round((Date.now() - new Date(t.dataset.ago).getTime()) / 60000);
+      t.textContent = m < 2 ? 'just now' : m < 60 ? `${m} min ago` : m < 2160 ? `${Math.round(m / 60)}h ago` : `${Math.round(m / 1440)}d ago`;
+    }, 60000);
+  </script>
+</body>
+</html>

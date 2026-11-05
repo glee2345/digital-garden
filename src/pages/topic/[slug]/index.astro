@@ -1,0 +1,29 @@
+---
+import Garden from '../../../layouts/Garden.astro';
+import Stream from '../../../components/Stream.astro';
+import { loadGarden, slugify } from '../../../lib/garden.js';
+export function getStaticPaths() {
+  const g = loadGarden();
+  const out = [];
+  const taken = new Set(g.topics.map((tp) => tp.slug));
+  for (const tp of g.topics) {
+    out.push({ params: { slug: tp.slug }, props: { name: tp.name } });
+    // old names (renamed or merged) keep working
+    for (const old of tp.mergedFrom || []) {
+      const s = slugify(old);
+      if (!taken.has(s)) { taken.add(s); out.push({ params: { slug: s }, props: { name: tp.name, redirect: true } }); }
+    }
+  }
+  return out;
+}
+const g = loadGarden();
+const topic = g.topicMap.get(Astro.props.name);
+---
+{Astro.props.redirect ? (
+  <html lang="en"><head><meta charset="utf-8" /><title>{topic.name}</title><meta http-equiv="refresh" content={`0; url=${topic.url}`} /><link rel="canonical" href={topic.url} /></head>
+  <body style="font-family:system-ui;padding:40px;background:#F3EDE2;color:#2A231D">This root is now called <a href={topic.url}>{topic.name}</a>.</body></html>
+) : (
+  <Garden current="stream" title={topic.name} activeTopic={topic.name} description={`${topic.count} thoughts filed under ${topic.name}`}>
+    <Stream g={g} topic={topic} page={1} />
+  </Garden>
+)}
