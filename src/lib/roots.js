@@ -97,7 +97,6 @@ export function growRoots(topics, opts = {}) {
     if (own.size) cellOwner[r][c] = [...own.entries()].sort((a, b) => b[1] - a[1])[0][0];
   }
   for (let r = 0; r < 3; r++) { for (let c = 0; c < COLS; c++) g[r][c] = ' '; for (const c of [COLS / 2 - 1, COLS / 2, COLS / 2 + 1]) g[r][c] = '|'; }
-  for (let c = 0; c < COLS; c++) if (g[3][c] === ' ') g[3][c] = '~';
 
   // thoughts: spread along each root, each in a small clearing
   const marks = new Map(); let mi = 0;
