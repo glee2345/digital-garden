@@ -1,0 +1,21 @@
+---
+// The field on the home page: the map, as flowers. Stems are topics,
+// blooms are thoughts. Drawn live by public/flowers.js.
+const { g } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const payload = {
+  topics: g.topics.map((tp) => ({
+    name: tp.name, url: tp.url, count: tp.count, isNew: tp.isNew,
+    thoughts: tp.thoughts.map((t) => ({ id: t.id, title: t.title, url: t.url, stage: t.stage, kind: t.kind, near: t.nearbyThoughts.length })),
+  })),
+  loose: g.thoughts.filter((t) => !t.topic && !t.filing).map((t) => ({ id: t.id, title: t.title, url: t.url })),
+};
+---
+<div class="field" id="field" data-garden={JSON.stringify(payload)} aria-label="The garden as flowers: each stem is a topic, each bloom a thought you can open">
+  <canvas aria-hidden="true"></canvas>
+  <div class="hits"></div>
+  <div class="labels" aria-hidden="true"></div>
+  <div class="hovercard" data-open="false" aria-hidden="true"><span class="k"></span><span class="t"></span><span class="m"></span></div>
+  <button type="button" class="replay" aria-label="Grow again">↻</button>
+</div>
+<script src={`${base}/flowers.js`} is:inline defer></script>
