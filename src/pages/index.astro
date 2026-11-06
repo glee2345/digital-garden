@@ -17,7 +17,7 @@ const latest = g.stream.filter((t) => !t.filing).slice(0, 3);
   </section>
 
   {g.topics.length > 0 && <Field g={g} />}
-  <p class="foot-note" style="margin-top:-24px">Each stem is a topic and each flower a thought — a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen. Drag to turn the bouquet; hover a flower to see it, click to read it. <a href={`${base}/stream/`}>Read the stream →</a> · <a href={`${base}/about/`}>What is this?</a></p>
+  <p class="foot-note" style="margin-top:-24px">Each stem is a topic and each flower a thought — a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen; the smallest topics are baby's breath. Drag to turn the bouquet; hover a flower to see it, click to read it. <a href={`${base}/stream/`}>Read the stream →</a> · <a href={`${base}/about/`}>What is this?</a></p>
 
   {latest.length > 0 && (
     <div class="home-row">

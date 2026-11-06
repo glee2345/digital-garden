@@ -18,7 +18,7 @@
 
   // flower colors, one per topic
   const PETALS = ['#FF9FA3', '#FFE08A', '#FFB070', '#C9A8FF', '#8FD9FF', '#FFC2E8', '#B8F0A0', '#FFD1A8'];
-  const SPECIES = ['daisy', 'poppy', 'bell', 'tulip', 'aster'];
+  const SPECIES = ['peony', 'orchid', 'calla', 'anemone', 'ranunculus'];
   const C = { stem: '#4E7A42', stem2: '#3E6436', leaf: '#5E9050', ruscus: '#3F6B3B', bud: '#86B274', core: '#3A2616', eye: '#FFE58A', stamen: '#FFF2C4', breath: '#F6F1E6', bg: [31, 27, 23] };
   const RAMP = " .'`,:;-~=+*#";
 
@@ -46,8 +46,8 @@
       const bendDir = [Math.cos(az + 1.57), 0, Math.sin(az + 1.57)];
       const bend = (rand() - 0.5) * 0.12;
       const color = hex(PETALS[i % PETALS.length]);
-      const species = SPECIES[i % SPECIES.length];
-      const blooms = tp.thoughts.slice(0, 6).map((t, k, arr) => {
+      const species = tp.count <= 2 ? 'breath' : SPECIES[i % SPECIES.length];
+      const blooms = tp.thoughts.slice(0, species === 'breath' ? 6 : 4).map((t, k, arr) => {
         const u = arr.length === 1 ? 1 : 0.6 + (0.4 * k) / (arr.length - 1);
         const a = rand() * 6.28, r = k === arr.length - 1 ? 0 : 0.035 + rand() * 0.045;
         const size = t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.74 : 0.5;
@@ -113,23 +113,33 @@
     g.fillStyle = shadeAt(hex(C.bud), z); g.beginPath(); g.ellipse(x, y + R * 0.1, R * 0.28, R * 0.42, 0, 0, Math.PI * 2); g.fill();
     if (open < 0.05) { g.fillStyle = petal; g.beginPath(); g.ellipse(x, y - R * 0.3, R * 0.18, R * 0.24, 0, 0, Math.PI * 2); g.fill(); return; }
     const E = (cx, cy, rx, ry, a, c) => { g.fillStyle = c; g.beginPath(); g.ellipse(cx, cy, Math.max(0.6, rx), Math.max(0.6, ry), a, 0, Math.PI * 2); g.fill(); };
-    if (kind === 'daisy') {
-      const N = 12; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob; const L = R * (0.5 + 0.9 * open); E(x + Math.cos(a) * L * 0.7, y + Math.sin(a) * L * 0.7 * 0.8, L * 0.42, R * 0.07, a, p % 2 ? petal : petal2); }
-      E(x, y, R * 0.24, R * 0.2, 0, eye); E(x, y, R * 0.12, R * 0.1, 0, core);
-    } else if (kind === 'poppy') {
-      const N = 4; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + 0.78; const L = R * (0.45 + 0.85 * open); E(x + Math.cos(a) * L * 0.62, y + Math.sin(a) * L * 0.62 * 0.8, L * 0.5, L * 0.3, a, p % 2 ? petal : petal2); }
-      E(x, y, R * 0.24, R * 0.2, 0, core); if (open > 0.7) for (let q = 0; q < 6; q++) { const a = phase + q * 1.05; E(x + Math.cos(a) * R * 0.3, y + Math.sin(a) * R * 0.24, 1.2, 1.1, 0, shadeAt(hex(C.stamen), z)); }
-    } else if (kind === 'bell') {
-      const N = 6; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob; const L = R * (0.5 + 0.85 * open); E(x + Math.cos(a) * L * 0.68, y + Math.sin(a) * L * 0.68 * 0.8, L * 0.45, R * (0.1 + 0.08 * open), a, p % 2 ? petal : petal2); }
-      E(x, y, R * 0.2, R * 0.16, 0, core); if (open > 0.7) for (let q = 0; q < 5; q++) { const a = phase + q * 1.26; E(x + Math.cos(a) * R * 0.3, y + Math.sin(a) * R * 0.24, 1.3, 1.1, 0, shadeAt(hex(C.stamen), z)); }
-    } else if (kind === 'tulip') {
-      // a cup: three overlapping petals that spread as it opens
-      const sp = 0.25 + 0.55 * open; const L = R * 1.15;
-      E(x - R * sp, y - L * 0.35, R * 0.42, L * 0.5, -0.25 * open, petal2); E(x + R * sp, y - L * 0.35, R * 0.42, L * 0.5, 0.25 * open, petal2); E(x, y - L * 0.4, R * 0.45, L * 0.55, 0, petal);
-      if (open > 0.8) E(x, y - L * 0.2, R * 0.12, R * 0.12, 0, core);
-    } else { // aster: a pompom of dots
-      const N = 14 + Math.round(10 * open); for (let p = 0; p < N; p++) { const a = p * 2.399963 + phase + wob; const rr = R * (0.15 + 0.85 * open) * Math.sqrt((p + 1) / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.17, R * 0.14, 0, p % 3 ? petal : petal2); }
-      E(x, y, R * 0.14, R * 0.12, 0, eye);
+    const lip = rgb(mix(C.bg, mix(col, [120, 40, 60], 0.45), k));
+    const pale = rgb(mix(C.bg, mix(col, [255, 250, 240], 0.55), k));
+    if (kind === 'peony') {
+      // layered round petals, outer ring largest, inner ring paler
+      const rings = [[9, 1.0, petal], [7, 0.7, petal2], [5, 0.42, pale]];
+      rings.forEach(([N, f, c], ri) => { for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + ri * 0.4; const L = R * f * (0.45 + 0.75 * open); E(x + Math.cos(a) * L * 0.58, y + Math.sin(a) * L * 0.58 * 0.8, L * 0.44, L * 0.22, a, c); } });
+      E(x, y, R * 0.12 * open, R * 0.1 * open, 0, eye);
+    } else if (kind === 'orchid') {
+      // three narrow sepals, two broad petals, a darker lip
+      const L = R * (0.5 + 0.8 * open);
+      for (const a of [-1.571, 0.524, 2.618]) { const aa = a + phase * 0.2 + wob; E(x + Math.cos(aa) * L * 0.55, y + Math.sin(aa) * L * 0.55 * 0.85, L * 0.5, R * 0.16, aa, petal2); }
+      for (const a of [-0.35, 3.49]) { const aa = a + phase * 0.2 + wob; E(x + Math.cos(aa) * L * 0.42, y + Math.sin(aa) * L * 0.42 * 0.85, L * 0.42, R * 0.3, aa, petal); }
+      E(x, y + L * 0.3, R * 0.3, L * 0.32, 0, lip); E(x, y + L * 0.12, R * 0.12, R * 0.1, 0, eye);
+    } else if (kind === 'calla') {
+      // one furled spathe with a flared lip and a spadix
+      const L = R * 1.3, sp = 0.5 + 0.5 * open;
+      E(x, y - L * 0.35, R * 0.42 * sp, L * 0.55, 0.18, petal); E(x - R * 0.15, y - L * 0.5, R * 0.36 * sp, L * 0.38, -0.5, petal2);
+      E(x + R * 0.18 * sp, y - L * 0.72, R * 0.3 * sp, R * 0.14, 0.3, pale);
+      if (open > 0.5) E(x + R * 0.05, y - L * 0.55, R * 0.07, L * 0.3, 0.1, eye);
+    } else if (kind === 'anemone') {
+      const N = 6; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob; const L = R * (0.5 + 0.8 * open); E(x + Math.cos(a) * L * 0.6, y + Math.sin(a) * L * 0.6 * 0.8, L * 0.5, L * 0.32, a, p % 2 ? petal : petal2); }
+      E(x, y, R * 0.3, R * 0.26, 0, core); if (open > 0.6) for (let q = 0; q < 8; q++) { const a = phase + q * 0.785; E(x + Math.cos(a) * R * 0.34, y + Math.sin(a) * R * 0.28, 1.1, 1.0, 0, rgb(mix(C.bg, [60, 40, 50], k))); }
+    } else if (kind === 'ranunculus') {
+      // tight spiral of many small petals
+      const N = 10 + Math.round(14 * open); for (let p = N; p >= 0; p--) { const a = p * 2.399963 + phase + wob; const rr = R * (0.1 + 0.75 * open) * Math.sqrt(p / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.22, R * 0.16, a, p % 2 ? petal : (p % 3 ? petal2 : pale)); }
+    } else { // breath: a spray of tiny blossoms in the topic's tint
+      const N = 5 + Math.round(6 * open); for (let p = 0; p < N; p++) { const a = p * 2.399963 + phase; const rr = R * (0.3 + 0.9 * open) * Math.sqrt((p + 1) / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.12, R * 0.1, 0, p % 2 ? pale : petal2); }
     }
   }
 
@@ -167,7 +177,7 @@
         const sp = stemPoint(s, b.u, sway);
         const wp = [sp[0] + b.off[0] * bg, sp[1] + b.off[1] * bg, sp[2] + b.off[2] * bg];
         const p0 = project(sp), p = project(wp); b.screen = p;
-        const R = (0.024 + 0.05 * b.size) * u1 * bg * p[2];
+        const R = (0.03 + 0.062 * b.size) * u1 * bg * p[2];
         items.push({ z: p[3], draw() {
           if (b.off[0] || b.off[2]) { g.strokeStyle = shadeAt(hex(C.stem2), p[3]); g.lineWidth = 1 * p[2]; g.beginPath(); g.moveTo(p0[0], p0[1]); g.quadraticCurveTo(p0[0], p[1], p[0], p[1]); g.stroke(); }
           drawFlower(g, s.species, p[0], p[1], R, open, s.color, b.phase, reduce ? 0 : Math.sin(T * 1.1 + b.phase) * 0.05, p[3], p[2]);
