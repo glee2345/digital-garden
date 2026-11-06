@@ -14,8 +14,8 @@ const payload = {
 <div class="field" id="field" data-garden={JSON.stringify(payload)} aria-label="The garden as flowers: each stem is a topic, each bloom a thought you can open">
   <canvas aria-hidden="true"></canvas>
   <div class="hits"></div>
-  <div class="labels" aria-hidden="true"></div>
   <div class="hovercard" data-open="false" aria-hidden="true"><span class="k"></span><span class="t"></span><span class="m"></span></div>
   <button type="button" class="replay" aria-label="Grow again">↻</button>
 </div>
+<nav class="field-keys labels" aria-label="Topics in the bouquet"></nav>
 <script src={`${base}/flowers.js`} is:inline defer></script>

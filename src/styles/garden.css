@@ -296,15 +296,21 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 @media (prefers-reduced-motion: reduce) { .drawer, .scrim, .map-panel .dot, * { transition: none !important; scroll-behavior: auto !important; } }
 
 /* the field */
-.field { position: relative; width: 100%; height: 600px; border-radius: 16px; border: 1px solid var(--card-line); background: var(--paper); overflow: hidden; }
+.field { position: relative; width: 100%; height: 620px; border-radius: 16px; background: #1F1B17; overflow: hidden; }
 .field canvas { position: absolute; left: 0; top: 0; display: block; }
 .field .hits a, .field .field-label { position: absolute; transform: translate(-50%, -50%); }
 .field .bloom-hit { border-radius: 50%; display: block; }
-.field .bloom-hit:hover, .field .bloom-hit:focus-visible { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--green-ink); outline: none; }
-.field .field-label { transform: translate(-50%, 4px); font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--brown); white-space: nowrap; }
-.field .field-label:hover { color: var(--ink); }
-.field .replay { position: absolute; right: 12px; top: 10px; min-width: 40px; min-height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 16px; }
-.field .replay:hover { color: var(--ink); border-color: var(--brown); }
-.field .labels { position: absolute; inset: 0; pointer-events: none; }
-.field .labels a { pointer-events: auto; }
-@media (max-width: 719px) { .field { height: 440px; } .field .field-label { font-size: 13px; } }
+.field .bloom-hit:hover, .field .bloom-hit:focus-visible { box-shadow: 0 0 0 2px #1F1B17, 0 0 0 3.5px var(--c, #F3EDE2); outline: none; }
+.field .field-label { font-family: var(--serif); font-style: italic; font-size: 15px; white-space: nowrap; opacity: .9; text-shadow: 0 1px 8px rgba(31,27,23,.9); }
+.field .field-label:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+.field .replay { position: absolute; right: 12px; top: 10px; min-width: 40px; min-height: 40px; border-radius: 50%; border: 1px solid rgba(243,237,226,.25); background: rgba(31,27,23,.6); color: rgba(243,237,226,.75); font-size: 16px; }
+.field .replay:hover { color: #F3EDE2; border-color: rgba(243,237,226,.6); }
+.field .hovercard { background: #2A231D; border-color: #4A4038; color: #F3EDE2; }
+.field .hovercard .t { color: #F3EDE2; }
+.field .hovercard .k, .field .hovercard .m { color: #BFB2A0; }
+@media (max-width: 719px) { .field { height: 480px; } .field .field-label { font-size: 13px; } }
+.field-keys { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: -24px; font-size: 16px; }
+.field-keys a { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
+.field-keys a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.field-keys i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid rgba(31,27,23,.15); }
+.field-keys span { color: var(--muted); }
