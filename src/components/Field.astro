@@ -3,6 +3,7 @@
 // blooms are thoughts. Drawn live by public/flowers.js.
 const { g } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const v = Date.now().toString(36); // cache-buster: a new build is a new file to the browser
 const payload = {
   topics: g.topics.map((tp) => ({
     name: tp.name, url: tp.url, count: tp.count, isNew: tp.isNew,
@@ -20,4 +21,4 @@ const payload = {
   <button type="button" class="replay" aria-label="Grow again">↻</button>
 </div>
 <nav class="field-keys labels" aria-label="Topics in the bouquet"></nav>
-<script src={`${base}/flowers.js`} is:inline defer></script>
+<script src={`${base}/flowers.js?v=${v}`} is:inline defer></script>
