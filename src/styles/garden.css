@@ -344,7 +344,7 @@ body.dark .field { background: transparent; }
 body.dark .field .replay { border-color: rgba(243,237,226,.2); background: rgba(31,27,23,.5); }
 
 /* the home stage: bouquet first, then side by side */
-.home-stage { display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-start; }
+.home-stage { display: flex; flex-wrap: wrap; gap: 32px 120px; align-items: flex-start; }
 .home-bouquet { flex: 1 1 100%; min-width: 0; display: flex; flex-direction: column; gap: 14px; transition: flex-basis 1.4s cubic-bezier(.4,0,.2,1); }
 .home-side { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 28px; opacity: 0; transform: translateY(12px); transition: opacity .9s ease .7s, transform .9s ease .7s; }
 .home-stage.settled .home-side { opacity: 1; transform: none; }
@@ -353,8 +353,8 @@ body.dark .field .replay { border-color: rgba(243,237,226,.2); background: rgba(
 .home-side h2.sec { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
 .field-note { max-width: 640px; }
 @media (min-width: 1000px) {
-  .home-stage.settled .home-bouquet { flex-basis: calc(58% - 32px); }
-  .home-stage.settled .home-side { flex-basis: calc(42% - 32px); }
+  .home-stage.settled .home-bouquet { flex-basis: calc(56% - 60px); }
+  .home-stage.settled .home-side { flex-basis: calc(44% - 60px); }
   .home-stage.settled .field { height: 640px; }
   .home-stage.settled .home-bouquet { position: sticky; top: 24px; }
 }
