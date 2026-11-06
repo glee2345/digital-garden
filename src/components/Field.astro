@@ -4,12 +4,17 @@
 const { g } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const v = Date.now().toString(36); // cache-buster: a new build is a new file to the browser
+const MAX_STEMS = 12;
+const byConnections = (a, b) => (b.nearbyThoughts.length + b.mentionedBy.length) - (a.nearbyThoughts.length + a.mentionedBy.length) || (b.planted || '').localeCompare(a.planted || '');
 const payload = {
-  topics: g.topics.map((tp) => ({
+  topics: g.topics.slice(0, MAX_STEMS).map((tp) => ({
     name: tp.name, url: tp.url, count: tp.count, isNew: tp.isNew,
-    thoughts: tp.thoughts.map((t) => ({ id: t.id, title: t.title, url: t.url, stage: t.stage, kind: t.kind, near: t.nearbyThoughts.length })),
+    thoughts: [...tp.thoughts].sort(byConnections).slice(0, 4).map((t) => ({ id: t.id, title: t.title, url: t.url, stage: t.stage, kind: t.kind, near: t.nearbyThoughts.length })),
   })),
-  loose: g.thoughts.filter((t) => !t.topic && !t.filing).map((t) => ({ id: t.id, title: t.title, url: t.url })),
+  // everything not shown as a flower still thickens the baby's breath
+  loose: g.thoughts.filter((t) => !t.topic && !t.filing).slice(0, 12).map((t) => ({ id: t.id, title: t.title, url: t.url })),
+  extra: Math.max(0, g.stats.thoughts - g.topics.slice(0, MAX_STEMS).reduce((n, tp) => n + Math.min(4, tp.count), 0)),
+  firstVisitKey: 'garden-seen',
 };
 ---
 <div class="field" id="field" tabindex="0" data-garden={JSON.stringify(payload)} aria-label="The garden as a bouquet: each stem is a topic, each flower a thought you can open. Drag or use the arrow keys to turn it.">

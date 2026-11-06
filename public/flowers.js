@@ -63,7 +63,8 @@
       return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.42 + rand() * 0.24, delay: 0.4 + rand() * 1.4, leaves: 5 + Math.floor(rand() * 4), phase: rand() * 6.28, az };
     });
     const mk = (nn) => { const az = rand() * 6.28, tilt = 0.25 + rand() * 0.5; return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.5 + rand() * 0.42, delay: 3.6 + rand() * 2, phase: rand() * 6.28, n: nn }; };
-    const breath = (data.loose || []).map(() => mk(4)).concat(Array.from({ length: 4 + n }, () => mk(3)));
+    const filler = Math.min(40, 4 + n + Math.round(Math.sqrt(data.extra || 0) * 2)); // more thoughts, fuller breath
+    const breath = (data.loose || []).map(() => mk(4)).concat(Array.from({ length: filler }, () => mk(3)));
     scene = { stems, sprigs, breath, base: [0, 1.14, 0] };
   }
 
@@ -264,14 +265,19 @@
   let start = performance.now(), last = 0;
   function frame(now) {
     const t = reduce ? 9 : (now - start) / 1000;
-    if (!dragging) { yaw += yawV; yawV *= 0.92; } // it only turns when you turn it; the wind does the rest
+    if (!dragging) { yaw += yawV; yawV *= 0.95; } // it only turns when you turn it; the wind does the rest
     if (now - last > 1000 / 30) { last = now; drawScene(t); paint(); placeHits(); }
     requestAnimationFrame(frame);
   }
   function replay() { start = performance.now(); }
 
   layout(); size(); idleSince = performance.now();
+  if (window.__gardenStartSettled) start = performance.now() - 9000; // already grown
   requestAnimationFrame(frame);
   addEventListener('resize', size);
+  if ('ResizeObserver' in window) new ResizeObserver(() => size()).observe(root);
+  // when the page settles, the bouquet spins a half turn as it slides to its side
+  const stage = document.getElementById('stage');
+  if (stage) new MutationObserver(() => { if (stage.classList.contains('settled') && !stage.classList.contains('instant')) yawV = 0.085; }).observe(stage, { attributes: true, attributeFilter: ['class'] });
   root.querySelector('.replay')?.addEventListener('click', replay);
 })();

@@ -119,6 +119,7 @@ function tend() {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(5000)) return { filed: 0, newImages: 0, pushed: false, note: 'already running' };
   try {
+    tfidfCache_ = null;
     ensureStructure_();
     const ss = SpreadsheetApp.getActive();
     const th = ss.getSheetByName(SHEET_THOUGHTS);
@@ -272,7 +273,7 @@ function pushImages_(rows, col) {
     const key = name + ':' + f.getLastUpdated().getTime();
     if (pushed[name] === key) continue;
     try {
-      const img = imageBytes_(f, 1600);
+      const img = imageBytes_(f, 1200);
       const path = 'images/' + name.replace(/\.(heic|heif)$/i, '.jpg');
       putFile_(path, Utilities.base64Encode(img.bytes), 'image: ' + name);
       pushed[name] = key; n++;
@@ -372,7 +373,7 @@ function fileThought_(rows, i, col, topics, today) {
   const counts = {};
   for (const r of rows) { const t = usedTopic_(r, col); if (t) counts[t] = (counts[t] || 0) + 1; }
   const topicList = Object.keys(counts).sort((a, b) => counts[b] - counts[a]).map((t) => `${t} (${counts[t]})`);
-  const others = rows.filter((r, j) => j !== i && r[col('id')] && r[col('auto title')]).slice(-250)
+  const others = candidates_(rows, i, col, 30)
     .map((r) => `${r[col('id')]} | ${usedTopic_(r, col) || '-'} | ${String(r[col('title')] || r[col('auto title')]).slice(0, 80)}`);
 
   const prompt = [
@@ -417,6 +418,35 @@ function fileThought_(rows, i, col, topics, today) {
     const t = topics.find((x) => x.name.toLowerCase() === topic);
     if (t) t.suggests = `merge into "${json.same_as}"?`;
   }
+}
+
+// The thoughts most similar to row i by word overlap (tf-idf cosine), so the
+// candidate list stays short however big the garden gets. Claude picks the
+// real neighbors from these.
+const STOP = new Set('the a an and or but of to in on at for with from by as is are was were be been it its this that these those i me my we our you your he she they them his her their not no yes if then than so very just about into over under out up down off more most some any all each both few such own same too can will would should could do does did have has had what which who whom when where why how'.split(' '));
+let tfidfCache_ = null;
+function tokens_(text) { return String(text || '').toLowerCase().replace(/https?:\/\/\S+/g, ' ').replace(/[^a-z0-9à-ÿ' ]+/g, ' ').split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w)).map((w) => w.replace(/(ing|ed|es|s)$/, '')); }
+function candidates_(rows, i, col, n) {
+  if (!tfidfCache_ || tfidfCache_.n !== rows.length) {
+    const docs = rows.map((r) => { const tf = {}; for (const w of tokens_(String(r[col('thought')] || '') + ' ' + String(r[col('auto title')] || '') + ' ' + usedTopic_(r, col))) tf[w] = (tf[w] || 0) + 1; return tf; });
+    const df = {}; for (const d of docs) for (const w in d) df[w] = (df[w] || 0) + 1;
+    const N = docs.length;
+    const vecs = docs.map((d) => { const v = {}; let norm = 0; for (const w in d) { const x = (1 + Math.log(d[w])) * Math.log(1 + N / df[w]); v[w] = x; norm += x * x; } norm = Math.sqrt(norm) || 1; for (const w in v) v[w] /= norm; return v; });
+    tfidfCache_ = { n: rows.length, vecs };
+  }
+  const me = tfidfCache_.vecs[i];
+  const scored = [];
+  rows.forEach((r, j) => {
+    if (j === i || !r[col('id')] || !r[col('auto title')]) return;
+    let dot = 0; const v = tfidfCache_.vecs[j]; for (const w in me) if (v[w]) dot += me[w] * v[w];
+    scored.push([dot, j]);
+  });
+  scored.sort((a, b) => b[0] - a[0]);
+  // the best matches, padded with the most recent so a new garden still has candidates
+  const pick = scored.slice(0, n).map((x) => x[1]);
+  const recent = rows.map((r, j) => j).filter((j) => j !== i && rows[j][col('id')] && rows[j][col('auto title')]).slice(-10);
+  for (const j of recent) if (!pick.includes(j)) pick.push(j);
+  return pick.map((j) => rows[j]);
 }
 
 function fetchLink_(url) {
