@@ -152,7 +152,7 @@
     items.length = 0;
     for (const sp of scene.sprigs) {
       const gr = ease((t - sp.delay) / 2.4); if (gr <= 0) continue;
-      const sway = reduce ? 0 : Math.sin(T * 0.6 + sp.phase) * 0.02;
+      const sway = reduce ? 0 : (Math.sin(T * 0.6 + sp.phase) * 0.024 + Math.sin(T * 1.7 + sp.phase) * 0.006);
       const pts = []; for (let i = 0; i <= 14; i++) { const u = (i / 14) * gr; pts.push(project([scene.base[0] + sp.dir[0] * sp.len * u + sway * u, scene.base[1] + sp.dir[1] * sp.len * u, scene.base[2] + sp.dir[2] * sp.len * u])); }
       items.push({ z: pts[Math.floor(pts.length / 2)][3], draw() {
         g.strokeStyle = shadeAt(hex(C.ruscus), pts[7][3]); g.lineWidth = 1.2 * pts[7][2]; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
@@ -162,7 +162,7 @@
     }
     for (const s of scene.stems) {
       const gr = ease((t - s.delay) / 2.6); if (gr <= 0) continue;
-      const sway = reduce ? 0 : Math.sin(T * 0.7 + s.i) * 0.02;
+      const sway = reduce ? 0 : (Math.sin(T * 0.7 + s.i) * 0.022 + Math.sin(T * 1.9 + s.i * 2.1) * 0.006);
       const pts = []; for (let i = 0; i <= 24; i++) pts.push(project(stemPoint(s, (i / 24) * gr, sway)));
       const mid = pts[12];
       items.push({ z: mid[3] + 0.02, draw() {
@@ -264,7 +264,7 @@
   let start = performance.now(), last = 0;
   function frame(now) {
     const t = reduce ? 9 : (now - start) / 1000;
-    if (!dragging) { yaw += yawV; yawV *= 0.92; if (!reduce && now - idleSince > 2500 && hover.dataset.open !== 'true') yaw += 0.0025; }
+    if (!dragging) { yaw += yawV; yawV *= 0.92; } // it only turns when you turn it; the wind does the rest
     if (now - last > 1000 / 30) { last = now; drawScene(t); paint(); placeHits(); }
     requestAnimationFrame(frame);
   }
