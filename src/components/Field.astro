@@ -11,9 +11,11 @@ const payload = {
   loose: g.thoughts.filter((t) => !t.topic && !t.filing).map((t) => ({ id: t.id, title: t.title, url: t.url })),
 };
 ---
-<div class="field" id="field" data-garden={JSON.stringify(payload)} aria-label="The garden as flowers: each stem is a topic, each bloom a thought you can open">
+<div class="field" id="field" tabindex="0" data-garden={JSON.stringify(payload)} aria-label="The garden as a bouquet: each stem is a topic, each flower a thought you can open. Drag or use the arrow keys to turn it.">
   <canvas aria-hidden="true"></canvas>
   <div class="hits"></div>
+  <div class="tags" aria-hidden="true"></div>
+  <span class="hint" aria-hidden="true">drag to turn</span>
   <div class="hovercard" data-open="false" aria-hidden="true"><span class="k"></span><span class="t"></span><span class="m"></span></div>
   <button type="button" class="replay" aria-label="Grow again">↻</button>
 </div>
