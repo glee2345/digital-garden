@@ -25,13 +25,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </div>
 
   <script is:inline>
-    // first visit this session: watch it grow, then settle; after that, start settled
+    // the layout is settled from the start; the bouquet grows in place on the
+    // first visit of a session and starts fully grown after that
     (function () {
       var stage = document.getElementById('stage'); if (!stage) return;
+      stage.classList.add('settled', 'instant');
       var seen = false; try { seen = sessionStorage.getItem('garden-seen') === '1'; } catch (e) {}
       var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (seen || reduce) { stage.classList.add('settled', 'instant'); window.__gardenStartSettled = true; return; }
-      setTimeout(function () { stage.classList.add('settled'); try { sessionStorage.setItem('garden-seen', '1'); } catch (e) {} }, 7600);
+      if (seen || reduce) window.__gardenStartSettled = true;
+      else { try { sessionStorage.setItem('garden-seen', '1'); } catch (e) {} }
     })();
   </script>
 </Garden>
