@@ -17,7 +17,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="home-stage" id="stage">
     <div class="home-bouquet">
       {g.topics.length > 0 ? <Field g={g} /> : <p class="foot-note">Nothing planted yet.</p>}
-      <p class="foot-note field-note">Each stem is a topic and each flower a thought: a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen. The smallest topics are baby's breath. Drag to turn it. Hover a flower to see it, click to read it.</p>
     </div>
     <div class="home-side">
       <div class="side" id="growing"><Growing g={g} /></div>

@@ -12,7 +12,7 @@
   const ctx = canvas.getContext('2d');
   const hits = root.querySelector('.hits');
   const tags = root.querySelector('.tags');
-  const keys = document.querySelector('.field-keys');
+  const keys = null;
   const hover = root.querySelector('.hovercard');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 

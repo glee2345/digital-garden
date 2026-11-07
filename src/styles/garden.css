@@ -305,7 +305,7 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .field .tags { position: absolute; inset: 0; pointer-events: none; }
 .field .field-tag { position: absolute; transform: translate(-50%, -100%); pointer-events: auto; font-family: var(--serif); font-style: italic; white-space: nowrap; text-shadow: 0 1px 10px rgba(31,27,23,.95), 0 0 2px rgba(31,27,23,.9); }
 .field .field-tag:hover { text-decoration: underline; text-underline-offset: 3px; }
-.field .hint { position: absolute; left: 14px; bottom: 10px; font-size: 13px; color: rgba(243,237,226,.45); font-style: italic; }
+.field .hint { position: absolute; left: 14px; bottom: 10px; font-size: 13px; color: rgba(243,237,226,.4); font-style: italic; max-width: 60%; line-height: 1.4; }
 .field canvas { position: absolute; left: 0; top: 0; display: block; }
 .field .hits a { position: absolute; transform: translate(-50%, -50%); }
 .field .bloom-hit { border-radius: 50%; display: block; }
