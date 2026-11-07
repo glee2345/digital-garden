@@ -543,7 +543,7 @@ function claude_(text, content, maxTokens) {
 function gemini_(text, content, maxTokens) {
   const props = PropertiesService.getScriptProperties();
   const key = props.getProperty('GEMINI_API_KEY');
-  const model = props.getProperty('GEMINI_MODEL') || 'gemini-2.5-flash';
+  const model = props.getProperty('GEMINI_MODEL') || 'gemini-3.8-flash';
   const parts = text ? [{ text }] : content.map((c) => c.type === 'image'
     ? { inline_data: { mime_type: c.source.media_type, data: c.source.data } }
     : { text: c.text });
@@ -553,7 +553,10 @@ function gemini_(text, content, maxTokens) {
   let res;
   for (let attempt = 0; attempt < 4; attempt++) {
     res = UrlFetchApp.fetch(url, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify(body) });
-    if (res.getResponseCode() !== 429 && res.getResponseCode() < 500) break;
+    const c = res.getResponseCode();
+    // newer models may not accept thinkingConfig; drop it and try once more
+    if (c === 400 && body.generationConfig.thinkingConfig && /thinking/i.test(res.getContentText())) { delete body.generationConfig.thinkingConfig; continue; }
+    if (c !== 429 && c < 500) break;
     Utilities.sleep(15000 * (attempt + 1)); // free tier: a handful of requests a minute
   }
   const code = res.getResponseCode();
