@@ -18,9 +18,15 @@ Google Sheet  ──(hourly "tend", or Garden ▸ Tend now)──▶  data/garde
 
 You'll do these once. Each is a copy-paste, no coding.
 
-### 1. An Anthropic API key (the filing brain)
-1. Go to <https://console.anthropic.com/> → API keys → Create key. Copy it (starts with `sk-ant-`).
-2. Under Billing, add a payment method and set a **monthly spend limit of $5**. Real usage is cents.
+### 1. The filing brain (optional)
+The filing step (title, topic, nearby, alt text) can run three ways. Pick one:
+- **No key.** Free, nothing to sign up for. Titles are the first sentence, nearby thoughts come
+  from word overlap, and the topic is whatever you type in the `topic` column (otherwise it lands
+  in `unsorted` for you to sort later).
+- **Google Gemini, free tier.** <https://aistudio.google.com/> → Get API key (starts with `AIza`).
+  No card needed. Does the full automatic filing, including looking at images.
+- **Anthropic.** <https://console.anthropic.com/> → API keys → Create key (starts with `sk-ant-`).
+  Add a card and set a monthly spend limit of $5; real usage is cents.
 
 ### 2. A GitHub token (lets the sheet publish)
 1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate.
@@ -35,9 +41,9 @@ repo root containing just the domain (Settings → Pages does this for you when 
 ### 4. Put the script in the sheet
 1. Open the sheet → Extensions → **Apps Script**.
 2. Delete whatever is in `Code.gs`, paste the whole of [`apps-script/Code.gs`](apps-script/Code.gs), save (💾), close the tab.
-3. Reload the sheet. A **Garden** menu appears. Choose **Garden ▸ Set up (first time)** and paste the three things it asks for (the API key, the GitHub token, and `owner/repo` — e.g. `glee2345/digital-garden`).
+3. Reload the sheet. A **Garden** menu appears. Choose **Garden ▸ Set up (first time)** and paste what it asks for (the API key or blank, the GitHub token, and `owner/repo` — e.g. `glee2345/digital-garden`).
    The first run asks you to authorize the script for your Google account; approve it (it's your own script reading your own sheet and Drive folder).
-4. **Garden ▸ Check connections** should say ok three times.
+4. **Garden ▸ Check connections** should say ok for GitHub and the images folder (and for the AI if you set a key).
 5. **Garden ▸ Tend now**. Within a minute or two the site rebuilds.
 
 From then on it tends itself every hour.

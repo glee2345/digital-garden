@@ -5,13 +5,16 @@
  * What a tend does:
  *   1. stamps new rows with an id and a planted date, updates tended dates
  *   2. turns any un-mentioned image in the images folder into a row of its own
- *   3. files new/changed thoughts with Claude: title, topic, nearby, alt text
+ *   3. files new/changed thoughts: title, topic, nearby, alt text
+ *      (with Claude or Gemini if a key is set; otherwise by simple rules,
+ *      and the thought's own words decide where it lands)
  *   4. applies renames and merges from the topics tab, keeps that tab current
  *   5. pushes garden.json (+ new images) to the GitHub repo, which rebuilds the site
  *
  * Settings live in Script Properties (set once via Garden ▸ Set up):
- *   ANTHROPIC_API_KEY, GITHUB_TOKEN, GITHUB_REPO (owner/repo),
- *   optional: CLAUDE_MODEL, IMAGES_FOLDER_ID, MAX_FILINGS_PER_RUN
+ *   GITHUB_TOKEN, GITHUB_REPO (owner/repo),
+ *   optional: ANTHROPIC_API_KEY or GEMINI_API_KEY (either, both, or neither),
+ *   CLAUDE_MODEL, GEMINI_MODEL, IMAGES_FOLDER_ID, MAX_FILINGS_PER_RUN
  */
 
 const SHEET_THOUGHTS = 'thoughts';
@@ -55,7 +58,9 @@ function setup() {
     const v = r.getResponseText().trim();
     if (v) props.setProperty(key, v);
   };
-  ask('1 of 3 · Claude', 'Paste your Anthropic API key (starts with sk-ant-).', 'ANTHROPIC_API_KEY');
+  ask('1 of 3 · AI (optional)', 'Paste an API key for the filing step, or leave blank to file by simple rules.\nAnthropic keys start with sk-ant-; Google Gemini keys start with AIza (free tier works).', 'AI_KEY_INPUT');
+  const k = props.getProperty('AI_KEY_INPUT');
+  if (k) { props.setProperty(k.startsWith('sk-ant-') ? 'ANTHROPIC_API_KEY' : 'GEMINI_API_KEY', k); props.deleteProperty('AI_KEY_INPUT'); }
   ask('2 of 3 · GitHub', 'Paste a GitHub token with "Contents: read and write" on the garden repository.', 'GITHUB_TOKEN');
   ask('3 of 3 · Repository', 'The repository, as owner/name (e.g. glee2345/digital-garden).', 'GITHUB_REPO');
   ensureStructure_();
@@ -71,7 +76,9 @@ function ensureTrigger_() {
 function checkConnections() {
   const ui = SpreadsheetApp.getUi();
   const out = [];
-  try { claude_('Reply with the single word ok.', [], 20); out.push('Claude: ok'); } catch (e) { out.push('Claude: ' + e.message); }
+  const prov = aiProvider_();
+  if (prov === 'none') out.push('AI: none set, filing by simple rules');
+  else { try { ai_('Reply with the single word ok.', [], 20); out.push(prov + ': ok'); } catch (e) { out.push(prov + ': ' + e.message); } }
   try { const r = github_('GET', ''); out.push('GitHub: ok (' + r.full_name + ')'); } catch (e) { out.push('GitHub: ' + e.message); }
   try { out.push('Images folder: ' + imagesFolder_().getName()); } catch (e) { out.push('Images folder: ' + e.message); }
   ui.alert('Connections', out.join('\n'), ui.ButtonSet.OK);
@@ -357,9 +364,9 @@ function fileThought_(rows, i, col, topics, today) {
   if (urls.length) { try { link = fetchLink_(urls[0]); } catch (e) { link = { url: urls[0], domain: domainOf_(urls[0]) }; } row[col('_link')] = JSON.stringify(link); }
   else row[col('_link')] = '';
 
-  // image(s) for Claude to look at
+  // image(s) for the model to look at
   const imageBlocks = [];
-  if (imageNames.length) {
+  if (imageNames.length && aiProvider_() !== 'none') {
     const folder = imagesFolder_();
     for (const name of imageNames.slice(0, 3)) {
       const it = folder.getFilesByName(name);
@@ -398,9 +405,9 @@ function fileThought_(rows, i, col, topics, today) {
     '- "excerpt": "" (reserved).',
   ].join('\n');
 
-  const content = imageBlocks.concat([{ type: 'text', text: prompt }]);
-  const raw = claude_(null, content, 600);
-  const json = parseJson_(raw);
+  let json;
+  if (aiProvider_() === 'none') json = fileByRules_(rows, i, col, lines, imageNames, counts);
+  else json = parseJson_(ai_(null, imageBlocks.concat([{ type: 'text', text: prompt }]), 600));
 
   row[col('auto title')] = String(json.title || '').trim() || lines.find((l) => l && !IMAGE_RE.test(l) && !URL_RE.test(l)) || imageNames[0] || 'untitled';
   let topic = String(json.topic || '').trim().toLowerCase();
@@ -465,10 +472,60 @@ function parseJson_(s) {
   return JSON.parse(m[0]);
 }
 
-// ---------------------------------------------------------------- Claude
+// ---------------------------------------------------------------- filing without a key
+// Title: the first line of text. Nearby: the closest thoughts by word overlap.
+// Topic: whatever the user typed in the topic column; failing that, the topic
+// of the closest existing thought when it is close enough; failing that
+// "unsorted" so it is easy to find and fix on the sheet.
+function fileByRules_(rows, i, col, lines, imageNames, counts) {
+  const row = rows[i];
+  const firstText = lines.find((l) => l && !IMAGE_RE.test(l) && !URL_RE.test(l) && !l.startsWith('—')) || '';
+  const clean = firstText.replace(/[#*_>]/g, '').trim();
+  const sentence = (clean.match(/^(.+?[.!?])(\s|$)/) || [, clean])[1].trim();
+  const words = (sentence.split(/\s+/).length <= 12 ? sentence : clean).split(/\s+/).filter(Boolean);
+  let title = words.slice(0, 12).join(' ').replace(/[.,;:]+$/, '');
+  if (!title) title = imageNames.length ? imageNames[0].replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ') : '';
+  const scored = candidatesScored_(rows, i, col, 8);
+  const nearby = scored.filter((x) => x.score > 0.12).slice(0, 5).map((x) => String(x.row[col('id')]));
+  let topic = String(row[col('topic')] || '').trim().toLowerCase();
+  if (!topic) {
+    const best = scored.find((x) => x.score > 0.2 && usedTopic_(x.row, col));
+    topic = best ? usedTopic_(best.row, col).toLowerCase() : 'unsorted';
+  }
+  const alt = {};
+  for (const n of imageNames) alt[n] = n.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+  return { title, topic, is_new_topic: !counts[topic], same_as: '', nearby, alt };
+}
+
+function candidatesScored_(rows, i, col, n) {
+  candidates_(rows, i, col, 1); // warms the cache
+  const me = tfidfCache_.vecs[i];
+  const out = [];
+  rows.forEach((r, j) => {
+    if (j === i || !r[col('id')] || !r[col('auto title')]) return;
+    let dot = 0; const v = tfidfCache_.vecs[j]; for (const w in me) if (v[w]) dot += me[w] * v[w];
+    out.push({ score: dot, row: r });
+  });
+  return out.sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+// ---------------------------------------------------------------- AI providers
+function aiProvider_() {
+  const p = PropertiesService.getScriptProperties();
+  if (p.getProperty('ANTHROPIC_API_KEY')) return 'Claude';
+  if (p.getProperty('GEMINI_API_KEY')) return 'Gemini';
+  return 'none';
+}
+
+function ai_(text, content, maxTokens) {
+  const prov = aiProvider_();
+  if (prov === 'Claude') return claude_(text, content, maxTokens);
+  if (prov === 'Gemini') return gemini_(text, content, maxTokens);
+  throw new Error('No AI key set');
+}
+
 function claude_(text, content, maxTokens) {
   const key = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
-  if (!key) throw new Error('ANTHROPIC_API_KEY not set. Run Garden ▸ Set up');
   const model = PropertiesService.getScriptProperties().getProperty('CLAUDE_MODEL') || 'claude-haiku-4-5';
   const body = { model, max_tokens: maxTokens || 600, messages: [{ role: 'user', content: text ? [{ type: 'text', text }] : content }] };
   const res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
@@ -479,6 +536,26 @@ function claude_(text, content, maxTokens) {
   if (code !== 200) throw new Error('Claude ' + code + ': ' + res.getContentText().slice(0, 200));
   const data = JSON.parse(res.getContentText());
   return (data.content || []).filter((c) => c.type === 'text').map((c) => c.text).join('');
+}
+
+// Google's Gemini API has a free tier that is plenty for a garden
+// (get a key at aistudio.google.com). Same prompt, different envelope.
+function gemini_(text, content, maxTokens) {
+  const props = PropertiesService.getScriptProperties();
+  const key = props.getProperty('GEMINI_API_KEY');
+  const model = props.getProperty('GEMINI_MODEL') || 'gemini-2.5-flash';
+  const parts = text ? [{ text }] : content.map((c) => c.type === 'image'
+    ? { inline_data: { mime_type: c.source.media_type, data: c.source.data } }
+    : { text: c.text });
+  const body = { contents: [{ role: 'user', parts }], generationConfig: { maxOutputTokens: maxTokens || 600, temperature: 0.2 } };
+  const res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify(body),
+  });
+  const code = res.getResponseCode();
+  if (code !== 200) throw new Error('Gemini ' + code + ': ' + res.getContentText().slice(0, 200));
+  const data = JSON.parse(res.getContentText());
+  const cand = (data.candidates || [])[0];
+  return cand && cand.content ? (cand.content.parts || []).map((p) => p.text || '').join('') : '';
 }
 
 // ---------------------------------------------------------------- GitHub
