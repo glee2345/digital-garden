@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-07T04:55:06.034Z",
+  "tended": "2026-11-07T05:55:55.090Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -106,8 +106,8 @@
       "link": {
         "url": "https://www.youtube.com/watch?v=jHbrK-w7ElU",
         "domain": "youtube.com",
-        "title": "https://www.youtube.com/watch?v=jHbrK-w7ElU",
-        "description": "",
+        "title": "YouTube",
+        "description": "Share your videos with friends, family, and the world",
         "image": ""
       }
     }
