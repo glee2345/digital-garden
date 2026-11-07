@@ -386,3 +386,21 @@ body.dark main.page { gap: 24px; padding-top: 24px; padding-bottom: 48px; }
 body.dark .intro .hello { font-size: 30px; }
 body.dark .intro .lede { font-size: 20px; }
 @media (min-width: 1000px) { .home-stage.settled .field { height: 560px; } }
+
+/* home: the bouquet is the page; the growing notes sit quietly beside it */
+body.dark .home-side .board { background: none; border: none; border-radius: 0; }
+body.dark .home-side .board .head { background: none; border-bottom: 1px solid var(--line); padding: 0 0 10px; }
+body.dark .home-side .board h2 { font-size: 18px; }
+body.dark .home-side .board section { padding: 12px 0; border-bottom: 1px solid var(--line); }
+body.dark .home-side .board section:last-child { border-bottom: none; padding: 12px 0 0; }
+body.dark .home-side .board .lab { color: var(--muted); }
+body.dark .home-side .board .big { color: var(--text); font-size: 15px; }
+body.dark .home-side .board .big a, body.dark .home-side .board a.big { color: var(--ink); border-bottom-color: #5A5146; }
+body.dark .home-side .board ul a { color: var(--text); }
+body.dark .home-side .board .when, body.dark .home-side .board .sub { color: var(--muted); }
+body.dark .home-side .board section:last-child { color: var(--muted); }
+@media (min-width: 1000px) {
+  .home-stage.settled .home-bouquet { flex-basis: calc(70% - 60px); }
+  .home-stage.settled .home-side { flex-basis: calc(30% - 60px); padding-top: 48px; }
+  .home-stage.settled .field { height: 620px; }
+}
