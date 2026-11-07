@@ -407,7 +407,10 @@ function fileThought_(rows, i, col, topics, today) {
 
   let json;
   if (aiProvider_() === 'none') json = fileByRules_(rows, i, col, lines, imageNames, counts);
-  else json = parseJson_(ai_(null, imageBlocks.concat([{ type: 'text', text: prompt }]), 600));
+  else {
+    json = parseJson_(ai_(null, imageBlocks.concat([{ type: 'text', text: prompt }]), 600));
+    if (aiProvider_() === 'Gemini') Utilities.sleep(6500); // free tier: stay under requests-per-minute
+  }
 
   row[col('auto title')] = String(json.title || '').trim() || lines.find((l) => l && !IMAGE_RE.test(l) && !URL_RE.test(l)) || imageNames[0] || 'untitled';
   let topic = String(json.topic || '').trim().toLowerCase();
@@ -563,7 +566,6 @@ function gemini_(text, content, maxTokens) {
   if (code !== 200) throw new Error('Gemini ' + code + ': ' + res.getContentText().slice(0, 200));
   const data = JSON.parse(res.getContentText());
   const cand = (data.candidates || [])[0];
-  Utilities.sleep(6500); // stay under the free tier's requests-per-minute limit
   return cand && cand.content ? (cand.content.parts || []).map((p) => p.text || '').join('') : '';
 }
 
