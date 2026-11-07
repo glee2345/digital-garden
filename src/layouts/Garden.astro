@@ -33,6 +33,13 @@ const shown = topics.slice(0, 12);
     <nav aria-label="Garden">
       <a href={`${base}/stream/`} aria-current={current === 'stream' ? 'page' : undefined}>Stream</a>
       <button type="button" class="nav-btn" id="topics-btn" aria-expanded="false" aria-controls="topics-drawer">Topics <span class="caret" aria-hidden="true">▾</span></button>
+      <ul class="rail-topics" id="rail-topics" hidden>
+        {topics.map((tp) => (
+          <li><a href={tp.url} class:list={[{ new: tp.isNew }]} aria-current={activeTopic === tp.name ? 'page' : undefined}>{tp.name} <span class="n">{tp.isNew ? 'new' : tp.count}</span></a></li>
+        ))}
+        {topics.length === 0 && <li class="none">no roots yet</li>}
+        <li class="all"><a href={`${base}/roots/`}>see them as roots</a></li>
+      </ul>
       <a href={`${base}/map/`} aria-current={current === 'map' ? 'page' : undefined}>Map</a>
       <a href={`${base}/about/`} aria-current={current === 'about' ? 'page' : undefined}>About</a>
       <a href={`${base}/wander/`} class="wander" title="Wander: a random thought"><span class="word">wander</span> <span class="tilde" aria-hidden="true">~</span></a>
@@ -91,7 +98,16 @@ const shown = topics.slice(0, 12);
     const drawer = document.getElementById('topics-drawer');
     const scrim = document.getElementById('scrim');
     const btn = document.getElementById('topics-btn');
+    const rail = document.getElementById('rail-topics'); let userOpened = false;
+    const wide = () => matchMedia('(min-width: 1000px)').matches;
     const setDrawer = (open) => {
+      if (wide()) { // on wide screens the list opens under "Topics" in the rail
+        rail.hidden = !open; btn.setAttribute('aria-expanded', String(open)); btn.setAttribute('aria-controls', 'rail-topics');
+        drawer.dataset.open = 'false'; scrim.dataset.open = 'false'; drawer.setAttribute('aria-hidden', 'true');
+        if (open && userOpened) rail.querySelector('a')?.focus();
+        return;
+      }
+      btn.setAttribute('aria-controls', 'topics-drawer');
       drawer.dataset.open = String(open); scrim.dataset.open = String(open);
       drawer.setAttribute('aria-hidden', String(!open)); btn.setAttribute('aria-expanded', String(open));
       if (open) drawer.querySelector('a, button')?.focus(); else if (document.activeElement && drawer.contains(document.activeElement)) btn.focus();
@@ -104,7 +120,8 @@ const shown = topics.slice(0, 12);
       if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); }
       else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); }
     });
-    btn.addEventListener('click', () => setDrawer(drawer.dataset.open !== 'true'));
+    btn.addEventListener('click', () => { userOpened = true; setDrawer(wide() ? rail.hidden : drawer.dataset.open !== 'true'); });
+    if (wide() && document.querySelector('.rail-topics a[aria-current="page"]')) setDrawer(true);
     document.getElementById('topics-close').addEventListener('click', () => setDrawer(false));
     scrim.addEventListener('click', () => setDrawer(false));
     document.querySelectorAll('[data-open-topics]').forEach((el) => el.addEventListener('click', () => setDrawer(true)));
