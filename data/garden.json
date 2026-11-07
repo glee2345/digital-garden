@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-07T07:50:13.223Z",
+  "tended": "2026-11-07T08:49:42.315Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -26,13 +26,16 @@
     {
       "id": "g002",
       "text": "https://youtu.be/NDljilrUmL0?is=pd2o7OOClVxV6hbq\nA syllabus for understanding yourself",
-      "title": "",
-      "topic": "",
+      "title": "A syllabus for understanding yourself",
+      "topic": "self-reflection",
       "planted": "2026-11-06",
       "tended": "2026-11-06",
       "stage": "growing",
-      "nearby": [],
-      "status": "filing",
+      "nearby": [
+        "g003",
+        "g001"
+      ],
+      "status": "filed",
       "published": true,
       "titleBy": "garden",
       "topicBy": "garden",
@@ -84,21 +87,24 @@
       "link": {
         "url": "https://www.instagram.com/reel/DZnL9j9MK6l/?igsh=MTdwaG1ib21tZDBreA==",
         "domain": "instagram.com",
-        "title": "Instagram",
-        "description": "Create an account or log in to Instagram - Share what you&#039;re into with the people who get you.",
-        "image": "https://static.cdninstagram.com/rsrc.php/v4/yD/r/R0fBIMurK8v.png"
+        "title": "Marisa Emillie on Instagram: \"I don&#x2019;t think I&#x2019;m uninspired. I think I&#x2019;m just full.\nFull of other people&#x2019;s aesthetics, opinions, versions of &#x201c;how to be.&#x201d; Full of answers to questions I never actually asked myself.\nAnd somewhere between scrolling and saving and comparing, I stopped noticing when my own thoughts got quieter.\nIt&#x2019;s weird&#x2014;there&#x2019;s so much out there, but I feel less like I&#x2019;m creating and more like I&#x2019;m remixing lives that aren&#x2019;t mine.\nMaybe inspiration isn&#x2019;t something I need more of.\nMaybe I just need less noise so I can hear myself again.\n\n#creativegirls #findingmyself #romanticizeyourlife #digitaldetox #hotgirlsummer\"",
+        "description": "I don&#x2019;t think I&#x2019;m uninspired. I think I&#x2019;m just full.\nFull of other people&#x2019;s aesthetics, opinions, versions of &#x201c;how to be.&#x201d; Full of answers to questions I neve",
+        "image": "https://scontent-ord5-2.cdninstagram.com/v/t51.71878-15/724568753_1368391091867789_2365029639321025254_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=107&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=g4JpxkCPdr0Q7kNvwFU2tRd&_nc_oc=AdqJOSS7bT9BFGkWMDncp7OtwG94vFko-CB4bQfRjUCxYLymIPZImYkFi16jXqQZsnM&_nc_zt=23&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_gid=s9J2u3xrOX2XyUQDyfuofw&_nc_ss=7c60f&oh=00_AQSvduBqQTnk59mnto6TUyAFoYV-egvOXx7pvi0zqNEiSQ&oe=6AF4B062"
       }
     },
     {
       "id": "g005",
       "text": "https://www.youtube.com/watch?v=jHbrK-w7ElU\n5 productivity tips that will change your life, apparently\nChoose clarity over productivity \n        1. Have an end goal. Understand the magnitude of what you’re working towards \n        2. What is the ultimate thing you want to achieve? \n        3. Trace decisions towards ultimate goal, 5 year plan, 10 year plan \n        4. Set aside time to think about your goals\n2. Maintain a fun no bs routine \n        1. Routine of self care, having fun, being lazy a little bit\n        2. Feeding your soul \n        3. Mornings are important \n        4. Stuff like talking walks, naps, frolicking \n3. Write down one new idea a day \n4. Listen to your body \n5. Make a drastic change \n        1. Actively choose the person you want to become and go after it \n        2. Nothing changes if nothing changes ",
-      "title": "",
-      "topic": "",
+      "title": "Five productivity tips that will change your life",
+      "topic": "productivity",
       "planted": "2026-11-06",
       "tended": "2026-11-06",
       "stage": "growing",
-      "nearby": [],
-      "status": "filing",
+      "nearby": [
+        "g002",
+        "g003"
+      ],
+      "status": "filed",
       "published": true,
       "titleBy": "garden",
       "topicBy": "garden",
@@ -106,8 +112,8 @@
       "link": {
         "url": "https://www.youtube.com/watch?v=jHbrK-w7ElU",
         "domain": "youtube.com",
-        "title": "YouTube",
-        "description": "Share your videos with friends, family, and the world",
+        "title": "https://www.youtube.com/watch?v=jHbrK-w7ElU",
+        "description": "",
         "image": ""
       }
     }
@@ -145,6 +151,18 @@
     },
     {
       "name": "journaling",
+      "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
+      "mergedFrom": [],
+      "suggested": ""
+    },
+    {
+      "name": "self-reflection",
+      "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
+      "mergedFrom": [],
+      "suggested": ""
+    },
+    {
+      "name": "productivity",
       "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
       "mergedFrom": [],
       "suggested": ""
