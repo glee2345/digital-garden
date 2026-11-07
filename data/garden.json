@@ -1,278 +1,124 @@
 {
-  "tended": "2026-11-04T23:40:00Z",
+  "tended": "2026-11-07T02:07:53.454Z",
   "site": {
     "name": "digital garden",
-    "author": "[your name]",
+    "author": "grace",
     "tagline": "welcome to my digital garden!",
     "welcome": "explore what I'm thinking and learning about in this little corner of the internet.",
-    "about": "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, nothing is sorted by date, and most of it is still changing.\n\nThoughts start small. A sentence, a photo from a walk, a link and what I made of it. Some of them get revisited and grow into something bigger; most stay seedlings, and that's fine. The point isn't the size of any one thought. It's that they're planted somewhere I can come back to.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go.\n\nIt's also a way of thinking in public without performing. There are no likes here and nothing to chase. Publishing a half-formed idea is allowed, encouraged even, because the alternative is that it gets said once and lost. This is where I'm learning out loud."
+    "about": "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, and most of it is still changing.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go.\n\nIt's also a way of thinking in public without performing! With the increasing pressures of social media, I've come to realize that having a space to myself is cathartic, in a way."
   },
   "thoughts": [
     {
       "id": "g001",
-      "text": "Light serifs feel warmer than bold ones.\n\nSaw it on a café menu. Bold felt like shouting, light felt like talking. Probably more about the contrast with the body text than the serif itself.\n\nConnects to [[Contrast sets the mood]]: a light serif next to a steady sans is a conversation. Two heavy faces is an argument.",
+      "text": "Light serifs feel warmer than bold ones. Saw it on a café menu — bold felt like shouting, light felt like talking.",
       "title": "Light serifs feel warmer than bold ones",
       "topic": "typography",
       "planted": "2026-11-03",
       "tended": "2026-11-03",
       "stage": "seedling",
       "nearby": [
-        "g005",
-        "g006",
-        "g002"
+        "g003"
       ],
-      "status": "filed",
+      "status": "filing",
+      "published": true,
       "titleBy": "garden",
-      "topicBy": "garden"
+      "topicBy": "garden",
+      "stageBy": "garden"
     },
     {
       "id": "g002",
-      "text": "sketch-03.jpg\n— first pass, pencil\n\nDropped in from my phone. No caption, so the title is the garden's.",
+      "text": "sketch-03.jpg",
       "title": "Poster sketch, two columns",
       "topic": "design",
       "planted": "2026-11-02",
       "tended": "2026-11-02",
       "stage": "seedling",
       "nearby": [
-        "g004",
-        "g001"
+        "g003"
       ],
-      "status": "filed",
+      "status": "filing",
+      "published": true,
       "titleBy": "you",
       "topicBy": "garden",
+      "stageBy": "garden",
       "images": [
         {
           "file": "sketch-03.jpg",
-          "alt": "Pencil sketch of a two-column poster layout"
+          "alt": ""
         }
       ]
     },
     {
       "id": "g003",
-      "text": "https://example.com/an-article-about-fewer-things\n\nThe part about owning fewer things, but better ones. That's the rule for this site too: one idea per card, air around it.",
+      "text": "https://example.com/an-article-about-fewer-things — the part about owning fewer things but better ones. One idea per card, air around it.",
       "title": "Fewer things, better ones",
       "topic": "slow living",
       "planted": "2026-11-01",
       "tended": "2026-11-03",
       "stage": "growing",
       "nearby": [
-        "g007",
-        "g001"
+        "g001",
+        "g002"
       ],
-      "status": "filed",
+      "status": "filing",
+      "published": true,
       "titleBy": "garden",
       "topicBy": "you",
-      "link": {
-        "url": "https://example.com/an-article-about-fewer-things",
-        "domain": "example.com",
-        "title": "An article about fewer things",
-        "description": "On keeping less, and keeping it well."
-      }
+      "stageBy": "garden"
     },
     {
       "id": "g004",
-      "text": "Grids I keep coming back to.\n\nSix columns, big gutters, one thing that breaks the grid on purpose. Every time I try something cleverer I come back to this.",
-      "title": "Grids I keep coming back to",
-      "topic": "design",
-      "planted": "2026-10-20",
-      "tended": "2026-10-28",
-      "stage": "growing",
-      "nearby": [
-        "g002",
-        "g008"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g005",
-      "text": "Contrast sets the mood. Not the typeface — the gap between the big thing and the small thing.",
-      "title": "Contrast sets the mood",
-      "topic": "typography",
-      "planted": "2026-10-27",
-      "tended": "2026-10-27",
-      "stage": "growing",
-      "nearby": [
-        "g001",
-        "g006"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g006",
-      "text": "Small serifs. Below 14px most of them fall apart; the ones that don't are worth knowing by name.",
-      "title": "Small serifs",
-      "topic": "typography",
-      "planted": "2026-10-25",
-      "tended": "2026-10-25",
-      "stage": "seedling",
-      "nearby": [
-        "g001",
-        "g005"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g007",
-      "text": "What cozy minimalism means to me: fewer objects, warmer ones. Cream, brown, a green that isn't trying. Texture over decoration.",
-      "title": "What cozy minimalism means to me",
-      "topic": "slow living",
-      "planted": "2026-10-24",
-      "tended": "2026-11-01",
-      "stage": "evergreen",
-      "nearby": [
-        "g003",
-        "g004",
-        "g001"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g008",
-      "text": "poster-a.jpg\nposter-b.jpg\nposter-c.jpg\n\nThree attempts at the poster. The middle one is the one.",
-      "title": "Three attempts at the poster",
-      "topic": "design",
-      "planted": "2026-10-14",
-      "tended": "2026-10-14",
-      "stage": "seedling",
-      "nearby": [
-        "g004",
-        "g002"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden",
-      "images": [
-        {
-          "file": "poster-a.jpg",
-          "alt": "Poster draft A"
-        },
-        {
-          "file": "poster-b.jpg",
-          "alt": "Poster draft B"
-        },
-        {
-          "file": "poster-c.jpg",
-          "alt": "Poster draft C"
-        }
-      ]
-    },
-    {
-      "id": "g009",
       "text": "Toast the rice before the water goes in. Every time.",
       "title": "Toast the rice first",
       "topic": "cooking",
-      "planted": "2026-10-22",
-      "tended": "2026-10-22",
-      "stage": "seedling",
-      "nearby": [
-        "g010"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g010",
-      "text": "Stock, slowly. Two hours minimum, barely moving. Anything faster is just hot water with opinions.",
-      "title": "Stock, slowly",
-      "topic": "cooking",
-      "planted": "2026-10-18",
-      "tended": "2026-10-18",
-      "stage": "seedling",
-      "nearby": [
-        "g009"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g011",
-      "text": "A walk is a first draft. Most of what I write down started as something I noticed between two blocks.",
-      "title": "A walk is a first draft",
-      "topic": "walks",
-      "planted": "2026-10-16",
-      "tended": "2026-10-16",
-      "stage": "seedling",
-      "nearby": [
-        "g012"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden"
-    },
-    {
-      "id": "g012",
-      "text": "evening-brick.jpg\n\nEvening light on brick.",
-      "title": "Evening light on brick",
-      "topic": "walks",
-      "planted": "2026-10-12",
-      "tended": "2026-10-12",
-      "stage": "seedling",
-      "nearby": [
-        "g011"
-      ],
-      "status": "filed",
-      "titleBy": "garden",
-      "topicBy": "garden",
-      "images": [
-        {
-          "file": "evening-brick.jpg",
-          "alt": "Low evening light raking across a brick wall"
-        }
-      ]
-    },
-    {
-      "id": "g013",
-      "text": "Why do good posters always leave the bottom third empty? Noticed it on three different ones today. Something about weight settling.",
-      "title": "",
-      "topic": "",
-      "planted": "2026-11-04",
-      "tended": "2026-11-04",
+      "planted": "2026-10-30",
+      "tended": "2026-10-30",
       "stage": "seedling",
       "nearby": [],
-      "status": "filing"
+      "status": "filing",
+      "published": false,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden"
+    },
+    {
+      "id": "g005",
+      "text": "Why do good posters always leave the bottom third empty?",
+      "title": "",
+      "topic": "",
+      "planted": "2026-11-06",
+      "tended": "2026-11-06",
+      "stage": "seedling",
+      "nearby": [],
+      "status": "filing",
+      "published": true,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden"
     }
   ],
   "topics": [
     {
-      "name": "design",
-      "firstPlanted": "2026-10-14",
-      "mergedFrom": [
-        "layout",
-        "posters"
-      ],
+      "name": "typography",
+      "firstPlanted": "2026-11-03",
+      "mergedFrom": [],
       "suggested": ""
     },
     {
-      "name": "typography",
-      "firstPlanted": "2026-10-25",
+      "name": "design",
+      "firstPlanted": "2026-11-01",
+      "mergedFrom": [],
+      "suggested": "merge \"layout\" into design?"
+    },
+    {
+      "name": "slow living",
+      "firstPlanted": "2026-11-01",
       "mergedFrom": [],
       "suggested": ""
     },
     {
       "name": "cooking",
-      "firstPlanted": "2026-10-18",
-      "mergedFrom": [],
-      "suggested": ""
-    },
-    {
-      "name": "walks",
-      "firstPlanted": "2026-10-12",
-      "mergedFrom": [],
-      "suggested": ""
-    },
-    {
-      "name": "slow living",
-      "firstPlanted": "2026-10-24",
+      "firstPlanted": "2026-10-30",
       "mergedFrom": [],
       "suggested": ""
     }
