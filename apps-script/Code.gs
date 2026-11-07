@@ -547,14 +547,20 @@ function gemini_(text, content, maxTokens) {
   const parts = text ? [{ text }] : content.map((c) => c.type === 'image'
     ? { inline_data: { mime_type: c.source.media_type, data: c.source.data } }
     : { text: c.text });
-  const body = { contents: [{ role: 'user', parts }], generationConfig: { maxOutputTokens: maxTokens || 600, temperature: 0.2 } };
-  const res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
-    method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify(body),
-  });
+  // thinkingBudget 0: the answer is a small JSON object, no need to spend the output budget thinking
+  const body = { contents: [{ role: 'user', parts }], generationConfig: { maxOutputTokens: maxTokens || 600, temperature: 0.2, thinkingConfig: { thinkingBudget: 0 } } };
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + encodeURIComponent(key);
+  let res;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    res = UrlFetchApp.fetch(url, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify(body) });
+    if (res.getResponseCode() !== 429 && res.getResponseCode() < 500) break;
+    Utilities.sleep(15000 * (attempt + 1)); // free tier: a handful of requests a minute
+  }
   const code = res.getResponseCode();
   if (code !== 200) throw new Error('Gemini ' + code + ': ' + res.getContentText().slice(0, 200));
   const data = JSON.parse(res.getContentText());
   const cand = (data.candidates || [])[0];
+  Utilities.sleep(6500); // stay under the free tier's requests-per-minute limit
   return cand && cand.content ? (cand.content.parts || []).map((p) => p.text || '').join('') : '';
 }
 
