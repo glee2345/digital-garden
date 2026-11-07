@@ -8,7 +8,7 @@ const MAX_STEMS = 12;
 const byConnections = (a, b) => (b.nearbyThoughts.length + b.mentionedBy.length) - (a.nearbyThoughts.length + a.mentionedBy.length) || (b.planted || '').localeCompare(a.planted || '');
 const payload = {
   topics: g.topics.slice(0, MAX_STEMS).map((tp) => ({
-    name: tp.name, url: tp.url, count: tp.count, isNew: tp.isNew,
+    name: tp.name, url: tp.url, count: tp.count, isNew: tp.isNew, color: tp.color,
     thoughts: [...tp.thoughts].sort(byConnections).slice(0, 4).map((t) => ({ id: t.id, title: t.title, url: t.url, stage: t.stage, kind: t.kind, near: t.nearbyThoughts.length })),
   })),
   // everything not shown as a flower still thickens the baby's breath

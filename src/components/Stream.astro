@@ -31,7 +31,7 @@ const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/$
   </div>
   {topic && (
     <div class="filter-bar">
-      <span>showing <strong>{topic.name}</strong>{`, ${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'}. `}<a href={`${base}/roots/?root=${topic.slug}`}>see this root</a></span>
+      <span>showing <strong>{topic.name}</strong>{`, ${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'}. `}<a href={`${base}/map/?topic=${topic.slug}`}>see it on the map</a></span>
       <a class="clear" href={`${base}/stream/`}>clear <span aria-hidden="true">×</span></a>
     </div>
   )}

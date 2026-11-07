@@ -45,7 +45,7 @@
       const dir = [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)];
       const bendDir = [Math.cos(az + 1.57), 0, Math.sin(az + 1.57)];
       const bend = (rand() - 0.5) * 0.12;
-      const color = hex(PETALS[i % PETALS.length]);
+      const color = hex(tp.color || PETALS[i % PETALS.length]);
       const species = tp.count <= 2 ? 'breath' : SPECIES[i % SPECIES.length];
       const blooms = tp.thoughts.slice(0, species === 'breath' ? 6 : 4).map((t, k, arr) => {
         const u = arr.length === 1 ? 1 : 0.6 + (0.4 * k) / (arr.length - 1);

@@ -8,6 +8,9 @@ import manifest from './img-manifest.js';
 const IMAGE_RE = /^[\w.\- ()]+\.(jpe?g|png|gif|webp|heic|heif)$/i;
 const URL_RE = /^https?:\/\/\S+$/i;
 
+// one flower color per topic, in order of size; the bouquet and the map share these
+export const TOPIC_COLORS = ['#FF9FA3', '#FFE08A', '#FFB070', '#C9A8FF', '#8FD9FF', '#FFC2E8', '#B8F0A0', '#FFD1A8'];
+
 export function slugify(s) {
   return String(s || '')
     .toLowerCase()
@@ -206,6 +209,7 @@ export function loadGarden() {
     tp.isNew = ageDays <= 14 && tp.count <= 3;
   }
   const topics = [...topicMap.values()].filter((tp) => tp.count > 0).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  topics.forEach((tp, i) => { tp.color = TOPIC_COLORS[i % TOPIC_COLORS.length]; });
   for (const t of thoughts) t.topicUrl = t.topic ? topicMap.get(t.topic)?.url : '';
 
   const stream = [...thoughts].sort((a, b) => (b.planted || '').localeCompare(a.planted || '') || b.id.localeCompare(a.id));
