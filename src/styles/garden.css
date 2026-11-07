@@ -404,3 +404,28 @@ body.dark .home-side .board section:last-child { color: var(--muted); }
   .home-stage.settled .home-side { flex-basis: calc(30% - 60px); padding-top: 48px; }
   .home-stage.settled .field { height: 620px; }
 }
+
+/* the rail: navigation down the side on wide screens, a bar on top otherwise */
+@media (min-width: 1000px) {
+  body { flex-direction: row; }
+  .site-header { position: sticky; top: 0; align-self: flex-start; height: 100vh; flex: 0 0 200px; display: flex; flex-direction: column; align-items: flex-start; gap: 28px; padding: 28px 24px 28px 32px; border-bottom: none; border-right: 1px solid var(--line); box-sizing: border-box; }
+  .site-header nav { flex-direction: column; align-items: flex-start; gap: 12px; font-size: 17px; }
+  .site-header nav a { padding: 0; border-bottom: none; }
+  .site-header nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--green); }
+  .nav-btn { margin: 0; padding: 4px 10px 4px 0; background: none; border: none; font-size: 17px; color: var(--muted); gap: 6px; }
+  .nav-btn:hover { color: var(--ink); }
+  .nav-btn[aria-expanded="true"] { background: none; color: var(--ink); }
+  body.dark .nav-btn, body.dark .nav-btn[aria-expanded="true"] { background: none; border: none; color: var(--muted); }
+  body.dark .nav-btn[aria-expanded="true"], body.dark .nav-btn:hover { color: var(--ink); }
+  .site-header .search { margin: auto 0 0; width: 100%; padding: 0 10px; min-height: 36px; }
+  .site-header .search input { width: 100%; min-width: 0; font-size: 15px; }
+  .site-header .search kbd { display: none; }
+  .search-results { right: auto; left: 0; width: min(420px, 60vw); }
+  .content { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 100vh; }
+  .content > .wrap:first-child { flex: 1; }
+  .wrap { max-width: 1040px; }
+  main.page { padding-top: 28px; }
+  .site-footer { padding: 20px 0 28px; }
+}
+@media (max-width: 999px) { .site-header { padding-left: 20px; padding-right: 20px; } }
+body.dark .site-header { border-right-color: var(--line); }
