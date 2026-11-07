@@ -4,10 +4,9 @@
 import Garden from '../layouts/Garden.astro';
 import Growing from '../components/Growing.astro';
 import Field from '../components/Field.astro';
-import { loadGarden, fmtDate } from '../lib/garden.js';
+import { loadGarden } from '../lib/garden.js';
 const g = loadGarden();
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const latest = g.stream.filter((t) => !t.filing).slice(0, 5);
 ---
 <Garden current="home" dark={true}>
   <section class="intro" style="gap:12px">
@@ -21,18 +20,6 @@ const latest = g.stream.filter((t) => !t.filing).slice(0, 5);
       <p class="foot-note field-note">Each stem is a topic and each flower a thought: a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen. The smallest topics are baby's breath. Drag to turn it. Hover a flower to see it, click to read it.</p>
     </div>
     <div class="home-side">
-      <div class="latest">
-        <h2 class="sec">recently planted</h2>
-        <ul class="latest-list">
-          {latest.map((t) => (
-            <li>
-              <a href={t.url}>{t.title}</a>
-              <span class="m">{t.topic ? `${t.topic}, ` : ''}{fmtDate(t.planted)}</span>
-            </li>
-          ))}
-        </ul>
-        <a class="more-link" href={`${base}/stream/`}>everything, newest first</a>
-      </div>
       <div class="side" id="growing"><Growing g={g} /></div>
       <p class="foot-note"><a href={`${base}/about/`}>What is this?</a></p>
     </div>
