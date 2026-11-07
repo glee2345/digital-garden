@@ -5,7 +5,7 @@ import { loadGarden, ago } from '../lib/garden.js';
 const { title = '', description = '', current = '', activeTopic = '', wide = false, dark = false } = Astro.props;
 const g = loadGarden();
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const pageTitle = title ? `${title} · ${g.site.name}` : g.site.name;
+const pageTitle = title ? `${title}, ${g.site.name}` : g.site.name;
 const topics = g.topics;
 const shown = topics.slice(0, 12);
 ---
@@ -51,7 +51,7 @@ const shown = topics.slice(0, 12);
 
   <div class="wrap">
     <footer class="site-footer">
-      <span>{`planted ${g.stats.firstPlanted ? g.stats.firstPlanted.slice(0, 4) : new Date().getFullYear()} · ${g.site.author}`}</span>
+      <span>{`${g.site.author}, planting since ${g.stats.firstPlanted ? g.stats.firstPlanted.slice(0, 4) : new Date().getFullYear()}`}</span>
       <span class="tended"><i aria-hidden="true"></i>garden last tended <time datetime={g.tended} data-ago={g.tended}>{ago(g.tended)}</time></span>
     </footer>
   </div>
@@ -75,9 +75,9 @@ const shown = topics.slice(0, 12);
           </a></li>
         );
       })}
-      {topics.length === 0 && <li><span style="font-size:13px;color:var(--faint);font-style:italic">no roots yet — topics appear once a few thoughts cluster</span></li>}
+      {topics.length === 0 && <li><span style="font-size:13px;color:var(--faint);font-style:italic">no roots yet; topics appear once a few thoughts cluster</span></li>}
     </ul>
-    <div class="foot"><a class="btn" href={`${base}/roots/`}>see them as roots →</a></div>
+    <div class="foot"><a class="btn" href={`${base}/roots/`}>see them as roots</a></div>
   </aside>
 
   <div class="lightbox" id="lightbox" data-open="false" role="dialog" aria-modal="true" aria-label="Image">
@@ -119,8 +119,8 @@ const shown = topics.slice(0, 12);
     const render = (hits) => {
       sel = -1;
       results.innerHTML = hits.length
-        ? hits.map((h) => `<a href="${h.url}" role="option"><span class="t">${h.title}</span><span class="m">${h.topic ? h.topic + ' · ' : ''}${h.planted}</span></a>`).join('')
-        : `<div class="empty">nothing here yet — try another word</div>`;
+        ? hits.map((h) => `<a href="${h.url}" role="option"><span class="t">${h.title}</span><span class="m">${h.topic ? h.topic + ', ' : ''}${h.planted}</span></a>`).join('')
+        : `<div class="empty">nothing with that word yet</div>`;
       results.dataset.open = 'true';
     };
     const search = async () => {

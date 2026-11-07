@@ -19,16 +19,16 @@ const latest = g.stream.filter((t) => !t.filing).slice(0, 3);
   <div class="home-stage" id="stage">
     <div class="home-bouquet">
       {g.topics.length > 0 ? <Field g={g} /> : <p class="foot-note">Nothing planted yet.</p>}
-      <p class="foot-note field-note">Each stem is a topic and each flower a thought — a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen; the smallest topics are baby's breath. Drag to turn it; hover a flower to see it, click to read it.</p>
+      <p class="foot-note field-note">Each stem is a topic and each flower a thought: a bud while it's a seedling, open once it's growing, in full bloom when it's evergreen. The smallest topics are baby's breath. Drag to turn it. Hover a flower to see it, click to read it.</p>
     </div>
     <div class="home-side">
       <div class="latest">
-        <h2 class="sec">Recently planted</h2>
+        <h2 class="sec">recently planted</h2>
         {latest.map((t) => <ThoughtCard t={t} />)}
         <a class="pager" href={`${base}/stream/`}>everything, newest first</a>
       </div>
       <div class="side" id="growing"><Growing g={g} /></div>
-      <p class="foot-note"><a href={`${base}/about/`}>What is this? →</a></p>
+      <p class="foot-note"><a href={`${base}/about/`}>What is this?</a></p>
     </div>
   </div>
 

@@ -21,7 +21,7 @@ const HIDDEN = ['_hash', '_link', '_alt', '_textHash'];
 const TOPIC_HIDDEN = ['_aliases'];
 const IMAGE_RE = /^[\w.\- ()]+\.(jpe?g|png|gif|webp|heic|heif)$/i;
 const URL_RE = /^https?:\/\/\S+$/i;
-const DEFAULT_ABOUT = "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, nothing is sorted by date, and most of it is still changing.\n\nThoughts start small. A sentence, a photo from a walk, a link and what I made of it. Some of them get revisited and grow into something bigger; most stay seedlings, and that's fine. The point isn't the size of any one thought \u2014 it's that they're planted somewhere I can come back to.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go.\n\nIt's also a way of thinking in public without performing. There are no likes here and nothing to chase. Publishing a half-formed idea is allowed \u2014 encouraged, even \u2014 because the alternative is that it gets said once and lost. This is where I'm learning out loud.";
+const DEFAULT_ABOUT = "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, nothing is sorted by date, and most of it is still changing.\n\nThoughts start small. A sentence, a photo from a walk, a link and what I made of it. Some of them get revisited and grow into something bigger; most stay seedlings, and that's fine. The point isn't the size of any one thought. It's that they're planted somewhere I can come back to.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go.\n\nIt's also a way of thinking in public without performing. There are no likes here and nothing to chase. Publishing a half-formed idea is allowed, encouraged even, because the alternative is that it gets said once and lost. This is where I'm learning out loud.";
 
 // ---------------------------------------------------------------- menu
 function onOpen() {
@@ -50,7 +50,7 @@ function setup() {
   const props = PropertiesService.getScriptProperties();
   const ask = (title, text, key) => {
     const cur = props.getProperty(key);
-    const r = ui.prompt(title, text + (cur ? '\n\n(already set — leave blank to keep)' : ''), ui.ButtonSet.OK_CANCEL);
+    const r = ui.prompt(title, text + (cur ? '\n\n(already set; leave blank to keep)' : ''), ui.ButtonSet.OK_CANCEL);
     if (r.getSelectedButton() !== ui.Button.OK) throw new Error('Set-up cancelled');
     const v = r.getResponseText().trim();
     if (v) props.setProperty(key, v);
@@ -468,7 +468,7 @@ function parseJson_(s) {
 // ---------------------------------------------------------------- Claude
 function claude_(text, content, maxTokens) {
   const key = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
-  if (!key) throw new Error('ANTHROPIC_API_KEY not set — run Garden ▸ Set up');
+  if (!key) throw new Error('ANTHROPIC_API_KEY not set. Run Garden ▸ Set up');
   const model = PropertiesService.getScriptProperties().getProperty('CLAUDE_MODEL') || 'claude-haiku-4-5';
   const body = { model, max_tokens: maxTokens || 600, messages: [{ role: 'user', content: text ? [{ type: 'text', text }] : content }] };
   const res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
@@ -485,7 +485,7 @@ function claude_(text, content, maxTokens) {
 function github_(method, path, payload) {
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('GITHUB_TOKEN'), repo = props.getProperty('GITHUB_REPO');
-  if (!token || !repo) throw new Error('GitHub not set up — run Garden ▸ Set up');
+  if (!token || !repo) throw new Error('GitHub not set up. Run Garden ▸ Set up');
   const res = UrlFetchApp.fetch('https://api.github.com/repos/' + repo + path, {
     method, muteHttpExceptions: true, contentType: 'application/json',
     headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' },

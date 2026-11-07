@@ -55,12 +55,12 @@ const size = (t) => 10 + Math.min(10, (t.nearbyThoughts.length + t.mentionedBy.l
           aria-label={t.title} style={`left:${(p.x * 100).toFixed(2)}%;top:${(p.y * 100).toFixed(2)}%;width:${s}px;height:${s}px`}></a>
       ); })}
       <div class="hovercard" id="hover" data-open="false"><span class="k" id="hk"></span><span class="t" id="ht"></span><span class="m" id="hm"></span></div>
-      <span class="legend-note"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);vertical-align:middle"></span> thought &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green-soft);vertical-align:middle"></span> photo or link &nbsp;· closer = more related</span>
+      <span class="legend-note"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);vertical-align:middle"></span> a thought, <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green-soft);vertical-align:middle"></span> a photo or link; closer means more related</span>
     </div>
   ) : (
     <div class="panel" style="padding:40px 20px;text-align:center"><p class="foot-note">Nothing planted yet.</p></div>
   )}
-  <p class="foot-note">Dots cluster by topic and drift toward the topics they also touch. The thin lines are "nearby" links the garden found. Bigger dot, more connections.</p>
+  <p class="foot-note">Dots cluster by topic and drift toward the topics they also touch. The thin lines are the nearby links the garden found. A bigger dot has more connections.</p>
 
   <style>
     .map-panel .dot.lit { box-shadow: 0 0 0 4px rgba(126,139,110,.25); background: var(--green-ink); }
@@ -76,9 +76,9 @@ const size = (t) => 10 + Math.min(10, (t.nearbyThoughts.length + t.mentionedBy.l
       const hover = document.getElementById('hover');
       map.querySelectorAll('.dot').forEach((n) => {
         n.addEventListener('mouseenter', () => {
-          document.getElementById('hk').textContent = `${n.dataset.topic} · ${n.dataset.stage}`;
+          document.getElementById('hk').textContent = `${n.dataset.topic}, ${n.dataset.stage}`;
           document.getElementById('ht').textContent = n.dataset.title;
-          document.getElementById('hm').textContent = `${n.dataset.near} nearby · click to open`;
+          document.getElementById('hm').textContent = `${n.dataset.near} nearby. Click to open.`;
           let left = n.offsetLeft + 16, top = n.offsetTop - 12;
           if (left + 270 > map.clientWidth) left = n.offsetLeft - 276;
           if (top + 90 > map.clientHeight) top = map.clientHeight - 96;

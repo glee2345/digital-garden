@@ -17,12 +17,12 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
   )}
   <div class={photo ? 'rest' : undefined} style={photo ? undefined : 'display:contents'}>
     <div class="meta">
-      {t.filing && <span class="filing-note">still being filed · usually within the hour</span>}
+      {t.filing && <span class="filing-note">still being filed, usually within the hour</span>}
       {!t.filing && t.topic && <a class="topic" href={t.topicUrl}>{t.topic}</a>}
       {!t.filing && !t.topic && <span class="noroot">no root yet</span>}
-      {!t.filing && <span aria-hidden="true">·</span>}
+      {!t.filing && <span class="sep" aria-hidden="true">,</span>}
       {!t.filing && <span>{`planted ${fmtDate(t.planted)}`}</span>}
-      {!t.filing && (showKind || showStage) && <span aria-hidden="true">·</span>}
+      {!t.filing && (showKind || showStage) && <span class="sep" aria-hidden="true">,</span>}
       {!t.filing && showKind && <span class="stage">{t.kind}</span>}
       {!t.filing && showStage && <span class="stage">{t.stage}</span>}
     </div>
@@ -38,11 +38,11 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
       </a>
     )}
     {t.excerpt && <p>{t.excerpt}</p>}
-    {t.filing && <div class="nearby"><span class="lab">Nearby</span><span class="looking">looking for neighbors…</span></div>}
+    {t.filing && <div class="nearby"><span class="lab">nearby:</span><span class="looking">looking for neighbors…</span></div>}
     {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
     {!t.filing && t.topic && near.length > 0 && (
       <nav class="nearby" aria-label="Nearby thoughts">
-        <span class="lab" aria-hidden="true">Nearby</span>
+        <span class="lab" aria-hidden="true">nearby:</span>
         {near.map((n, i) => (
           <Fragment>
             {i !== 0 && <span class="dot" aria-hidden="true"></span>}

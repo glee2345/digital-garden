@@ -11,11 +11,11 @@ const maxCount = g.topics[0]?.count || 1;
   <div class="view-head">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px">
       <div class="view-toggle"><a href={`${base}/map/`}>Map</a><a href={`${base}/roots/`} aria-current="page">Roots</a></div>
-      <h1 class="lede">Every topic is a root. Thoughts grow along them; the fine roots are where topics reach toward each other.</h1>
+      <h1 class="lede">Every topic is a root. Thoughts grow along them, and the fine roots are where topics reach toward each other.</h1>
     </div>
     <div class="legend">
-      <span><span class="k" style="color:var(--root)">***</span> root — darker = more thoughts</span>
-      <span><span class="k" style="color:var(--green-ink)">@</span> thought &nbsp; <span class="k" style="color:var(--green)">o</span> photo or link &nbsp; <span style="color:var(--faint)">each sits in a small clearing</span></span>
+      <span><span class="k" style="color:var(--root)">***</span> a root; darker means more thoughts</span>
+      <span><span class="k" style="color:var(--green-ink)">@</span> a thought, <span class="k" style="color:var(--green-ink)">o</span> a photo or link; each sits in a small clearing</span>
     </div>
   </div>
 
@@ -25,7 +25,7 @@ const maxCount = g.topics[0]?.count || 1;
         <pre set:html={roots.html} />
         <div class="hovercard" id="hover" data-open="false"><span class="k" id="hk"></span><span class="t" id="ht"></span><span class="m" id="hm"></span></div>
       </div>
-      <p class="foot-note" id="roots-note">Grown by the site, not drawn by hand: each topic is a root whose thickness and reach come from how many thoughts it holds. Click a root's name to follow just that one; click a thought to open it. <a href="#" id="roots-clear" hidden>show all roots</a></p>
+      <p class="foot-note" id="roots-note">Grown by the site, not drawn by hand. Each topic is a root whose thickness and reach come from how many thoughts it holds. Click a root's name to follow just that one; click a thought to open it. <a href="#" id="roots-clear" hidden>show all roots</a></p>
     </Fragment>
   ) : (
     <div class="panel" style="padding:40px 20px;text-align:center">
@@ -43,7 +43,7 @@ const maxCount = g.topics[0]?.count || 1;
       <a href={tp.url}>
         <pre set:html={strandFor(tp, maxCount)} />
         <span class="n"><span style="font-size:16px">{tp.name}</span><span>{`${tp.count} ${tp.count === 1 ? 'thought' : 'thoughts'}${tp.photos ? ` · ${tp.photos} ${tp.photos === 1 ? 'photo' : 'photos'}` : ''}${tp.isNew ? ' · new' : ''}`}</span></span>
-        <span class="arrow" aria-hidden="true">→</span>
+        
       </a>
     ))}
   </nav>
@@ -77,9 +77,9 @@ const maxCount = g.topics[0]?.count || 1;
       panel.querySelectorAll('.node').forEach((n) => {
         n.addEventListener('mouseenter', () => {
           const r = n.getBoundingClientRect(), p = panel.getBoundingClientRect();
-          document.getElementById('hk').textContent = `${n.dataset.topic} · ${n.dataset.stage}`;
+          document.getElementById('hk').textContent = `${n.dataset.topic}, ${n.dataset.stage}`;
           document.getElementById('ht').textContent = n.dataset.title;
-          document.getElementById('hm').textContent = `${n.dataset.near} nearby · click to open`;
+          document.getElementById('hm').textContent = `${n.dataset.near} nearby. Click to open.`;
           let left = r.left - p.left + panel.scrollLeft + 14, top = r.top - p.top + panel.scrollTop - 10;
           if (left + 270 > panel.clientWidth + panel.scrollLeft) left = r.left - p.left + panel.scrollLeft - 274;
           hover.style.left = `${left}px`; hover.style.top = `${top}px`; hover.dataset.open = 'true';

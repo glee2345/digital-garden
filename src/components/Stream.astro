@@ -31,7 +31,7 @@ const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/$
   </div>
   {topic && (
     <div class="filter-bar">
-      <span>showing <strong>{topic.name}</strong>{` · ${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'} · `}<a href={`${base}/roots/?root=${topic.slug}`}>see this root</a></span>
+      <span>showing <strong>{topic.name}</strong>{`, ${topic.count} ${topic.count === 1 ? 'thought' : 'thoughts'}. `}<a href={`${base}/roots/?root=${topic.slug}`}>see this root</a></span>
       <a class="clear" href={`${base}/stream/`}>clear <span aria-hidden="true">×</span></a>
     </div>
   )}
@@ -39,8 +39,8 @@ const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/$
 
 {!topic && page === 1 && g.stats.thoughts > 0 && (
   <a class="board-line phone-only" href="#growing">
-    <span><span class="t">What's growing</span>{g.growing.newRoots.length > 0 ? ` · ${g.growing.newRoots.length === 1 ? 'a new root' : `${g.growing.newRoots.length} new roots`} this month` : ` · ${g.stats.thoughts} thoughts, ${g.stats.topics} topics`}</span>
-    <span aria-hidden="true">↓</span>
+    <span><span class="t">What's growing</span>{g.growing.newRoots.length > 0 ? `: ${g.growing.newRoots.length === 1 ? 'a new root' : `${g.growing.newRoots.length} new roots`} this month` : `: ${g.stats.thoughts} thoughts, ${g.stats.topics} topics`}</span>
+    
   </a>
 )}
 <div class="cols">
@@ -50,7 +50,7 @@ const nextUrl = topic ? `${topic.url}page/${page + 1}/` : `${base}/stream/page/$
     {page < pages ? (
       <a class="pager" href={nextUrl}>{topic ? `${all.length - page * perPage} more in ${topic.name}` : 'earlier'}</a>
     ) : (
-      all.length > 0 && <p class="end">{`that's everything ${topic ? `in ${topic.name}` : 'so far'} — ${all.length} ${all.length === 1 ? 'thought' : 'thoughts'}`}</p>
+      all.length > 0 && <p class="end">{`that's everything ${topic ? `in ${topic.name}` : 'so far'}: ${all.length} ${all.length === 1 ? 'thought' : 'thoughts'}`}</p>
     )}
   </div>
   <div class="side" id="growing">

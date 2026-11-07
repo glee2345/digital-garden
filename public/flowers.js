@@ -245,9 +245,9 @@
     }
   }
   function showHover(a) {
-    hover.querySelector('.k').textContent = `${a.dataset.topic} · ${a.dataset.stage}`;
+    hover.querySelector('.k').textContent = `${a.dataset.topic}, ${a.dataset.stage}`;
     hover.querySelector('.t').textContent = a.dataset.title;
-    hover.querySelector('.m').textContent = `${a.dataset.near} nearby · click to open`;
+    hover.querySelector('.m').textContent = `${a.dataset.near} nearby. Click to open.`;
     let left = a.offsetLeft + 20, top = a.offsetTop - 16;
     if (left + 270 > root.clientWidth) left = a.offsetLeft - 280;
     hover.style.left = `${Math.max(8, left)}px`; hover.style.top = `${clamp(top, 8, root.clientHeight - 100)}px`; hover.dataset.open = 'true';

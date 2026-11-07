@@ -18,7 +18,7 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
     <p>Nothing here is typed into a website. The whole garden is a Google Sheet with one column that matters, and a folder of photos next to it. That's the part I touch.</p>
 
     <h3>Planting</h3>
-    <p>I write a thought in the sheet — a sentence, a paragraph, a link with my notes under it. Photos I drop into the folder from my phone. There's no title field I have to fill in, no tags to pick, no categories to maintain. Column A, done.</p>
+    <p>I write a thought in the sheet: a sentence, a paragraph, a link with my notes under it. Photos I drop into the folder from my phone. There's no title field I have to fill in, no tags to pick, no categories to maintain. Column A, done.</p>
 
     <h3>Tending</h3>
     <p>Once an hour a small script inside the sheet wakes up and reads what's new. For each thought it asks Claude to do the filing: write a short title, decide which topic it belongs to (or start a new one if none fits), pick the handful of existing thoughts that are most related, and describe any photo for people who can't see it. It writes all of that back into the sheet in its own columns, next to mine. If it gets something wrong, I type the right answer in my column and mine wins.</p>
@@ -28,7 +28,7 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
     <p>Every thought starts as a <em>seedling</em>. It becomes <em>growing</em> once it's connected to a couple of others or I've come back and edited it, and <em>evergreen</em> only when I say so. The stages are automatic so I never have to think about them.</p>
 
     <h3>Publishing</h3>
-    <p>When the tending is done, the script hands the result to GitHub, which rebuilds the site and publishes it. The site is plain static pages — fast, free to host, nothing running on a server. The <a href={`${base}/roots/`}>roots drawing</a> is grown fresh on every build: each topic becomes a root whose thickness and reach come from how many thoughts it holds, rendered as text characters the way old terminal art was, with a small clearing carved out around each thought so you can find it. The <a href={`${base}/map/`}>map</a> places every thought near its topic and draws the connections the script found.</p>
+    <p>When the tending is done, the script hands the result to GitHub, which rebuilds the site and publishes it. The site is plain static pages: fast, free to host, nothing running on a server. The <a href={`${base}/roots/`}>roots drawing</a> is grown fresh on every build: each topic becomes a root whose thickness and reach come from how many thoughts it holds, rendered as text characters the way old terminal art was, with a small clearing carved out around each thought so you can find it. The <a href={`${base}/map/`}>map</a> places every thought near its topic and draws the connections the script found.</p>
 
     <h3>Made with</h3>
     <p>The design was worked out in Claude Design and the site was built with Claude from that design; the code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a>. Under the hood it's Astro for the pages, GitHub Pages for hosting, Google Sheets and Drive for the writing, and Claude for the filing. The typeface is Newsreader. The clover is a scribble.</p>
