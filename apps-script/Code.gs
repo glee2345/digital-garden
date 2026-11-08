@@ -466,7 +466,13 @@ function fetchLink_(url) {
   const html = res.getContentText().slice(0, 200000);
   const meta = (p) => { const m = html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${p}["'][^>]+content=["']([^"']*)["']`, 'i')) || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+(?:property|name)=["']${p}["']`, 'i')); return m ? decode_(m[1]) : ''; };
   const t = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  return { url, domain: domainOf_(url), title: (meta('og:title') || (t ? decode_(t[1].trim()) : '')).slice(0, 140), description: (meta('og:description') || meta('description')).slice(0, 200), image: meta('og:image') };
+  let title = meta('og:title') || (t ? decode_(t[1].trim()) : '');
+  let description = meta('og:description') || meta('description');
+  // Instagram puts the whole caption in the title: "Name on Instagram: "caption""
+  const ig = title.match(/^(.+?) on Instagram: ["\u201c](.*)["\u201d]?$/s);
+  if (ig) { title = ig[1] + ' on Instagram'; description = ig[2]; }
+  description = description.replace(/\s*#\w+/g, '').trim(); // drop hashtags
+  return { url, domain: domainOf_(url), title: title.slice(0, 140), description: description.slice(0, 180), image: meta('og:image') };
 }
 
 // Video sites answer "oEmbed" requests with a title, author and thumbnail,

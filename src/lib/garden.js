@@ -68,7 +68,7 @@ export function parseBody(text, thought, byTitle) {
     }
     if (URL_RE.test(line)) {
       flush();
-      const link = thought?.link && thought.link.url === line ? { ...thought.link, title: decodeEntities(thought.link.title), description: decodeEntities(thought.link.description) } : { url: line, domain: domainOf(line) };
+      const link = thought?.link && thought.link.url === line ? tidyLink(thought.link) : { url: line, domain: domainOf(line) };
       blocks.push({ type: 'link', link });
       continue;
     }
@@ -93,6 +93,14 @@ export function bareUrl(line) {
   if (m[2]) return m[2];
   const inner = m[1];
   return /^https?:\/\/\S+$/i.test(inner) ? inner : line;
+}
+
+function tidyLink(link) {
+  let title = decodeEntities(link.title), description = decodeEntities(link.description);
+  const ig = title.match(/^(.+?) on Instagram: ["\u201c](.*)["\u201d]?$/s);
+  if (ig) { title = ig[1] + ' on Instagram'; description = ig[2]; }
+  description = description.replace(/\s*#\w+/g, '').trim().slice(0, 180);
+  return { ...link, title: title.slice(0, 140), description };
 }
 
 function decodeEntities(x) {
