@@ -53,7 +53,7 @@ export function parseBody(text, thought, byTitle) {
   let para = [];
   const flush = () => { if (para.length) { blocks.push({ type: 'p', html: inline(para.join(' '), byTitle) }); para = []; } };
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+    const line = bareUrl(lines[i].trim());
     if (!line) { flush(); continue; }
     if (IMAGE_RE.test(line)) {
       flush();
@@ -75,6 +75,15 @@ export function parseBody(text, thought, byTitle) {
   }
   flush();
   return blocks;
+}
+
+// a link pasted as [url](), [text](url) or <url> still counts as a link line
+export function bareUrl(line) {
+  const m = line.match(/^\[([^\]]*)\]\((https?:\/\/[^)\s]*)?\)$/) || line.match(/^<(https?:\/\/[^>\s]+)>$/);
+  if (!m) return line;
+  if (m[2]) return m[2];
+  const inner = m[1];
+  return /^https?:\/\/\S+$/i.test(inner) ? inner : line;
 }
 
 function domainOf(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } }
@@ -173,17 +182,19 @@ export function loadGarden() {
       if (first === title) t.pageBody.shift();
     }
   }
-  // backlinks: who lists me as nearby, or wiki-links me
+  // connections go both ways: if A is filed next to B, B is next to A too
+  // (also any thought that names another in [[double brackets]])
   for (const t of thoughts) t.mentionedBy = [];
   for (const t of thoughts) {
     for (const n of t.nearbyThoughts) if (!n.nearbyThoughts.includes(t) && !n.mentionedBy.includes(t)) n.mentionedBy.push(t);
     const wikis = [...String(t.text || '').matchAll(/\[\[([^\]]+)\]\]/g)].map((m) => byTitle.get(m[1].trim().toLowerCase())).filter(Boolean);
-    for (const w of wikis) if (!w.mentionedBy.includes(t)) w.mentionedBy.push(t);
+    for (const w of wikis) if (!w.mentionedBy.includes(t) && !w.nearbyThoughts.includes(t)) w.mentionedBy.push(t);
   }
+  for (const t of thoughts) { t.nearbyThoughts = [...t.nearbyThoughts, ...t.mentionedBy]; t.mentionedBy = []; }
   // stages: seedling → growing (2+ connections or edited) → evergreen (you said so)
   for (const t of thoughts) {
     if (t.stage === 'evergreen') continue;
-    const connections = new Set([...t.nearbyThoughts, ...t.mentionedBy]).size;
+    const connections = t.nearbyThoughts.length;
     t.stage = connections >= 2 || (t.tended && t.tended !== t.planted) ? 'growing' : 'seedling';
   }
 

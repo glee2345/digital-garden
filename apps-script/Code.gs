@@ -355,7 +355,7 @@ function fileThought_(rows, i, col, topics, today) {
   const text = String(row[col('thought')] || '').trim();
   const extra = String(row[col('image or link')] || '').trim();
   const allText = extra && !text.includes(extra) ? text + '\n' + extra : text;
-  const lines = allText.split('\n').map((l) => l.trim());
+  const lines = allText.split('\n').map((l) => bareUrl_(l.trim()));
   const imageNames = lines.filter((l) => IMAGE_RE.test(l));
   const urls = lines.filter((l) => URL_RE.test(l));
 
@@ -494,6 +494,13 @@ function videoEmbed_(url) {
   }
 }
 
+// a link pasted as [url](), [text](url) or <url> still counts as a link line
+function bareUrl_(line) {
+  const m = line.match(/^\[([^\]]*)\]\((https?:\/\/[^)\s]*)?\)$/) || line.match(/^<(https?:\/\/[^>\s]+)>$/);
+  if (!m) return line;
+  if (m[2]) return m[2];
+  return /^https?:\/\/\S+$/i.test(m[1]) ? m[1] : line;
+}
 function domainOf_(u) { const m = String(u).match(/^https?:\/\/([^/]+)/i); return m ? m[1].replace(/^www\./, '') : u; }
 function decode_(s) { return String(s).replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' '); }
 
