@@ -28,8 +28,8 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
     </div>
     <h2 class="title"><a href={t.url}>{t.title}</a></h2>
     {linkBlock && !photo && (
-      <a class="linkcard" href={linkBlock.link.url} rel="noopener">
-        {linkBlock.link.image && <span class="pic" style={`background-image:url('${linkBlock.link.image}')`}></span>}
+      <a class={`linkcard${linkBlock.link.kind === 'video' ? ' video' : ''}`} href={linkBlock.link.url} rel="noopener">
+        {linkBlock.link.image && <span class="pic" style={`background-image:url('${linkBlock.link.image}')`}>{linkBlock.link.kind === 'video' && <span class="play" aria-hidden="true"></span>}</span>}
         <span class="txt">
           <span class="dom">{linkBlock.link.domain}</span>
           <span class="lt">{linkBlock.link.title || linkBlock.link.url}</span>

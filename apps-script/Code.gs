@@ -460,12 +460,40 @@ function candidates_(rows, i, col, n) {
 }
 
 function fetchLink_(url) {
+  const video = videoEmbed_(url);
+  if (video) return video;
   const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true, headers: { 'User-Agent': 'Mozilla/5.0 (digital garden link preview)' } });
   const html = res.getContentText().slice(0, 200000);
   const meta = (p) => { const m = html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${p}["'][^>]+content=["']([^"']*)["']`, 'i')) || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+(?:property|name)=["']${p}["']`, 'i')); return m ? decode_(m[1]) : ''; };
   const t = html.match(/<title[^>]*>([^<]*)<\/title>/i);
   return { url, domain: domainOf_(url), title: meta('og:title') || (t ? decode_(t[1].trim()) : ''), description: (meta('og:description') || meta('description')).slice(0, 200), image: meta('og:image') };
 }
+
+// Video sites answer "oEmbed" requests with a title, author and thumbnail,
+// which is far more reliable than scraping their pages.
+function videoEmbed_(url) {
+  const host = domainOf_(url).toLowerCase();
+  let endpoint = null;
+  if (/(^|\.)youtube\.com$|^youtu\.be$/.test(host)) endpoint = 'https://www.youtube.com/oembed?format=json&url=';
+  else if (/(^|\.)vimeo\.com$/.test(host)) endpoint = 'https://vimeo.com/api/oembed.json?url=';
+  else if (/(^|\.)tiktok\.com$/.test(host)) endpoint = 'https://www.tiktok.com/oembed?url=';
+  if (!endpoint) return null;
+  try {
+    const res = UrlFetchApp.fetch(endpoint + encodeURIComponent(url), { muteHttpExceptions: true });
+    if (res.getResponseCode() !== 200) throw new Error('oembed ' + res.getResponseCode());
+    const d = JSON.parse(res.getContentText());
+    let image = d.thumbnail_url || '';
+    // YouTube's oEmbed thumbnail is small; the larger one has a predictable name
+    const yt = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/);
+    if (yt) image = 'https://i.ytimg.com/vi/' + yt[1] + '/hqdefault.jpg';
+    return { url, domain: host.replace(/^www\./, ''), title: d.title || '', description: d.author_name ? 'by ' + d.author_name : '', image, kind: 'video' };
+  } catch (e) {
+    const yt = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/);
+    if (yt) return { url, domain: host.replace(/^www\./, ''), title: '', description: '', image: 'https://i.ytimg.com/vi/' + yt[1] + '/hqdefault.jpg', kind: 'video' };
+    return null;
+  }
+}
+
 function domainOf_(u) { const m = String(u).match(/^https?:\/\/([^/]+)/i); return m ? m[1].replace(/^www\./, '') : u; }
 function decode_(s) { return String(s).replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' '); }
 

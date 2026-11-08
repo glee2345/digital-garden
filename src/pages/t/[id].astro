@@ -41,8 +41,8 @@ const ogImage = t.firstImage?.full ? img(t.firstImage.full) : null;
         {t.pageBody.map((b) => {
           if (b.type === 'p') return <p set:html={b.html} />;
           if (b.type === 'link') return (
-            <a class="linkcard" href={b.link.url} rel="noopener">
-              {b.link.image ? <span class="pic" style={`background-image:url('${b.link.image}')`}></span> : null}
+            <a class={`linkcard${b.link.kind === 'video' ? ' video' : ''}`} href={b.link.url} rel="noopener">
+              {b.link.image ? <span class="pic" style={`background-image:url('${b.link.image}')`}>{b.link.kind === 'video' ? <span class="play" aria-hidden="true"></span> : null}</span> : null}
               <span class="txt"><span class="dom">{b.link.domain}</span><span class="lt">{b.link.title || b.link.url}</span>{b.link.description && <span class="ld">{b.link.description}</span>}</span>
             </a>
           );

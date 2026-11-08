@@ -144,7 +144,7 @@ export function loadGarden() {
     const title = (t.title || '').trim() || titleFrom(firstLine);
     const images = [];
     for (const line of String(t.text || '').split('\n')) if (IMAGE_RE.test(line.trim())) images.push(line.trim());
-    const kind = images.length ? 'photo' : t.link || String(t.text || '').split('\n').some((l) => URL_RE.test(l.trim())) ? 'link' : 'text';
+    const kind = images.length ? 'photo' : t.link && t.link.kind === 'video' ? 'video' : t.link || String(t.text || '').split('\n').some((l) => URL_RE.test(l.trim())) ? 'link' : 'text';
     return {
       ...t,
       topic,
@@ -200,7 +200,7 @@ export function loadGarden() {
     tp.thoughts.sort((a, b) => (b.planted || '').localeCompare(a.planted || ''));
     tp.count = tp.thoughts.length;
     tp.photos = tp.thoughts.filter((t) => t.kind === 'photo').length;
-    tp.links = tp.thoughts.filter((t) => t.kind === 'link').length;
+    tp.links = tp.thoughts.filter((t) => t.kind === 'link' || t.kind === 'video').length;
     tp.firstPlanted = tp.firstPlanted || tp.thoughts.at(-1)?.planted || '';
     tp.url = url(`/topic/${tp.slug}/`);
     for (const t of tp.thoughts) for (const n of t.nearbyThoughts) if (n.topic && n.topic !== tp.name) tp.reaches.set(n.topic, (tp.reaches.get(n.topic) || 0) + 1);
