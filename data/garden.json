@@ -1,11 +1,11 @@
 {
-  "tended": "2026-11-07T09:44:03.943Z",
+  "tended": "2026-11-08T01:42:12.788Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
-    "tagline": "welcome to my digital garden!",
-    "welcome": "explore what I'm thinking and learning about in this little corner of the internet.",
-    "about": "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, and most of it is still changing.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go.\n\nIt's also a way of thinking in public without performing! With the increasing pressures of social media, I've come to realize that having a space to myself is cathartic, in a way."
+    "tagline": "welcome!",
+    "welcome": "hi, i'm grace, a designer and curious overthinker. click around to explore what i'm thinking and learning about in my digital garden.",
+    "about": "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, and most of it is still changing. It's also a way of thinking in public without performing! With the increasing pressures of social media, I've come to realize that having a space to myself is cathartic, in a way.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go."
   },
   "thoughts": [
     {
@@ -25,15 +25,15 @@
     },
     {
       "id": "g002",
-      "text": "https://youtu.be/NDljilrUmL0?is=pd2o7OOClVxV6hbq\nA syllabus for understanding yourself",
-      "title": "A syllabus for understanding yourself",
+      "text": "https://youtu.be/NDljilrUmL0?is=pd2o7OOClVxV6hbq\nA syllabus for understanding yourself\n\nThe overall philosophy\n- Journal and document your life—experiences, feelings, memories, and things you find beautiful or meaningful.\n- When you're obsessed with something, research it deeply: its history, symbolism, origins, context, etc.\n- The idea is that by investigating why you're drawn to something, you'll often discover something about yourself.\n- The creator also suggests an optional creative project: make a film or cinematic vlog about yourself and your life.\nWeek 1: Find your myth and your symbol\nStudy Greek mythology and find a myth that genuinely resonates with you or feels representative of your life/personality.\n\nThen:\n- Research different versions and interpretations of the myth.\n- Ask yourself why this particular story resonates with you.\n- Find a flower that represents you and deeply research its symbolism rather than choosing one based on an obvious cliché.\nThe example used is Narcissus and Echo, with the daffodil representing themes connected to transformation, death, rebirth, reflection, and self-discovery. The point isn't really the flower itself—it's practicing the ability to connect external symbols to your internal identity.    Pasted text(1)\nWeek 2: Create an “orbital journal”\nTake your abstract interests, obsessions, feelings, and drives and turn them into something physical and visible.\n\nCreate a small book filled with things in your “orbit,” such as:\n- Pictures\n- Quotes\n- Words and definitions\n- Objects and imagery\n- Art and branding\n- Strange facts\n- People or expressions\n- Things you find beautiful, disturbing, sad, fascinating, etc.\nIt doesn't need to be traditionally written like a diary. It's more like a physical collection of everything that keeps appearing around your mind and interests.\n\nThe idea is that once you collect these things together, patterns may emerge and you may look at the finished collection and think: “Oh—that's me.”    Pasted text(1)\nWeek 3: Abandon yourself temporarily\nAfter spending two weeks intensely focusing on yourself, the third week is about stepping away from your constructed identity.\n\nSuggestions include:\n- Wear simple, neutral clothing.\n- Don't focus much on appearance, makeup, mirrors, or aesthetics.\n- Focus on basic daily life and getting out of your own head.\n- Volunteer or physically help someone, ideally doing hands-on work that makes you focus outward.\nAt the end of the week, write three versions of yourself as three different characters in the third person—as if someone else were observing you.\n\nThe purpose is to see yourself from outside your own perspective, including qualities you might not normally acknowledge. It's about recognizing that you don't completely control how you're perceived and giving yourself a fresh perspective on your identity.    Pasted text(1)\nWeek 4: Free association\nRecord yourself talking freely for around 40 minutes.\n\nThe instructions are essentially:\n- Lie down somewhere comfortable.\n- Start with how you're feeling that day.\n- Don't make an outline.\n- Don't script anything.\n- Let one thought lead to another.\n- Record it, then listen back afterward.\nThe goal is to see where your mind naturally goes when you're not carefully controlling your narrative. The creator sees recording yourself as a tool that can be used for genuine introspection rather than just performance or social media.    Pasted text(1)\nThe main takeaway\nThe video's core argument is that no one is inherently boring or without depth. People become “surface level” when they don't investigate their own experiences, interests, contradictions, and patterns.\n\nThe goal of the syllabus is essentially:\nLook closely at what you love, what you repeatedly return to, what fascinates you, and how other people see you—then use all of that to build a deeper understanding of who you actually are.\n\nIt's less about finding one neat label for yourself and more about collecting evidence of yourself until patterns begin to emerge.",
+      "title": "A four-week syllabus for understanding yourself",
       "topic": "self-reflection",
       "planted": "2026-11-06",
-      "tended": "2026-11-06",
+      "tended": "2026-11-07",
       "stage": "growing",
       "nearby": [
         "g003",
-        "g001"
+        "g004"
       ],
       "status": "filed",
       "published": true,
@@ -43,20 +43,23 @@
       "link": {
         "url": "https://youtu.be/NDljilrUmL0?is=pd2o7OOClVxV6hbq",
         "domain": "youtu.be",
-        "title": "YouTube",
-        "description": "Share your videos with friends, family, and the world",
-        "image": ""
+        "title": "A Syllabus for Studying Yourself",
+        "description": "by Heaven Sent Honey",
+        "image": "https://i.ytimg.com/vi/NDljilrUmL0/hqdefault.jpg",
+        "kind": "video"
       }
     },
     {
       "id": "g003",
-      "text": "https://www.instagram.com/reel/DYuUM9WMNMc/?igsh=azU4OGg3bmI4NnB1\nJournal prompts for when nothing is going your way",
+      "text": "https://www.instagram.com/reel/DYuUM9WMNMc/?igsh=azU4OGg3bmI4NnB1\nJournal prompts for when nothing is going your way\n\nSome weeks are heavier than others. You start focusing so much on what’s not working, what’s delayed, uncomfortable, uncertain, or disappointing, that your mind slowly begins filtering your entire life through frustration.\n\nThis kind of journaling helps interrupt those spirals.\n\nNot by pretending everything is perfect, but by helping you reconnect with perspective and self-trust again.\n\nThese are the prompts I use:\n- What is still going right in my life that I’ve stopped noticing?\n- What would change if I stopped treating this moment as permanent?\n- What have difficult seasons taught me about myself before?\n- What is one thing I can still control or improve today?\n- What would it look like to believe things could still work out for me?\n\nSometimes the most important mindset shift is remembering that a difficult moment is not the same thing as a doomed future.",
       "title": "Journal prompts for when nothing is going your way",
       "topic": "journaling",
       "planted": "2026-11-06",
-      "tended": "2026-11-06",
+      "tended": "2026-11-07",
       "stage": "growing",
-      "nearby": [],
+      "nearby": [
+        "g002"
+      ],
       "status": "filed",
       "published": true,
       "titleBy": "garden",
@@ -65,22 +68,23 @@
       "link": {
         "url": "https://www.instagram.com/reel/DYuUM9WMNMc/?igsh=azU4OGg3bmI4NnB1",
         "domain": "instagram.com",
-        "title": "Instagram",
-        "description": "Create an account or log in to Instagram - Share what you&#039;re into with the people who get you.",
-        "image": "https://static.cdninstagram.com/rsrc.php/v4/yD/r/R0fBIMurK8v.png"
+        "title": "ieva | Mindful Productivity on Instagram: \"Journaling Prompts for When Nothing Is Going Your Way &#x2712;&#xfe0f;\n\nSome weeks are heavier than others. You start focusing so much on what&#x2019;s not working, what&#x2019;s delayed, uncomfortable, uncertain, or disappointing, that your mind slowly begins filtering your entire life through frustration.\n\nThis kind of journaling helps interrupt those spirals.\n\nNot by pretending everything is perfect, but by helping you reconnect with perspective and self-trust again.\n\nThese are the prompts I use: \n- What is still going right in my life that I&#x2019;ve stopped noticing?\n- What would change if I stopped treating this moment as permanent?\n- What have difficult seasons taught me about myself before?\n- What is one thing I can still control or improve today?\n- What would it look like to believe things could still work out for me?\n\nSometimes the most important mindset shift is remembering that a difficult moment is not the same thing as a doomed future.\n\n#journalingprompts #journaling #journalwithme\"",
+        "description": "17K likes, 100 comments - mindofieva on May 24, 2026: \"Journaling Prompts for When Nothing Is Going Your Way &#x2712;&#xfe0f;\n\nSome weeks are heavier than others. You start focusing so much on what&#x",
+        "image": "https://scontent-sea5-1.cdninstagram.com/v/t51.71878-15/705320451_1000850045809004_8674852386426129251_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=110&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=2SyKidNaMbUQ7kNvwEv_yO1&_nc_oc=AdrSqtLrnDhFVlncn9nJGV56wh8x_tCtvsqRVEDouJ7O1vs8Zh1rt6QQmMQIG1kObRc&_nc_zt=23&_nc_ht=scontent-sea5-1.cdninstagram.com&_nc_gid=CPA7tESzKAy9vVTDiudtng&_nc_ss=7c60f&oh=00_AQQZ2udni2472qZUw1KojiRWZF6AT2uXaxZgP8Q_0xQgEg&oe=6AF594BC"
       }
     },
     {
       "id": "g004",
-      "text": "https://www.instagram.com/reel/DZnL9j9MK6l/?igsh=MTdwaG1ib21tZDBreA==\nHow to inspire without consuming content",
+      "text": "https://www.instagram.com/reel/DZnL9j9MK6l/?igsh=MTdwaG1ib21tZDBreA==\nHow to inspire without consuming content\n1. go on a walk and let your thoughts wander\n2. write a page about \"things i'll probably forget\"\n3. write down thoughts before they fully form let them stay messy and unfinished\n4. pick a random object in your room and imagine its \"backstory\"\n5. create something that has no purpose, no use, no outcome\n",
       "title": "How to inspire without consuming content",
-      "topic": "productivity",
+      "topic": "creativity",
       "planted": "2026-11-06",
-      "tended": "2026-11-06",
+      "tended": "2026-11-07",
       "stage": "growing",
       "nearby": [
-        "g005",
-        "g002"
+        "g003",
+        "g002",
+        "g005"
       ],
       "status": "filed",
       "published": true,
@@ -90,9 +94,9 @@
       "link": {
         "url": "https://www.instagram.com/reel/DZnL9j9MK6l/?igsh=MTdwaG1ib21tZDBreA==",
         "domain": "instagram.com",
-        "title": "Instagram",
-        "description": "Create an account or log in to Instagram - Share what you&#039;re into with the people who get you.",
-        "image": "https://static.cdninstagram.com/rsrc.php/v4/yD/r/R0fBIMurK8v.png"
+        "title": "Marisa Emillie on Instagram: \"I don&#x2019;t think I&#x2019;m uninspired. I think I&#x2019;m just full.\nFull of other people&#x2019;s aesthetics, opinions, versions of &#x201c;how to be.&#x201d; Full of answers to questions I never actually asked myself.\nAnd somewhere between scrolling and saving and comparing, I stopped noticing when my own thoughts got quieter.\nIt&#x2019;s weird&#x2014;there&#x2019;s so much out there, but I feel less like I&#x2019;m creating and more like I&#x2019;m remixing lives that aren&#x2019;t mine.\nMaybe inspiration isn&#x2019;t something I need more of.\nMaybe I just need less noise so I can hear myself again.\n\n#creativegirls #findingmyself #romanticizeyourlife #digitaldetox #hotgirlsummer\"",
+        "description": "I don&#x2019;t think I&#x2019;m uninspired. I think I&#x2019;m just full.\nFull of other people&#x2019;s aesthetics, opinions, versions of &#x201c;how to be.&#x201d; Full of answers to questions I neve",
+        "image": "https://scontent-sea5-2.cdninstagram.com/v/t51.71878-15/724568753_1368391091867789_2365029639321025254_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=107&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=VH5jgLvhKH4Q7kNvwH4Y2px&_nc_oc=AdpaAbX8qd9POzzMF1bP8M0hBkWuPZSlEZc0w76aPAstXXupEem5OEJPtijdLkuwEjU&_nc_zt=23&_nc_ht=scontent-sea5-2.cdninstagram.com&_nc_gid=f86E3yZMVMV9ybkzXa3oIw&_nc_ss=7c60f&oh=00_AQSlrVrJK3DjWiOr5Cc0g5F4k4Y3KSR5NUqBa8MXrFtESQ&oe=6AF59162"
       }
     },
     {
@@ -118,6 +122,31 @@
         "title": "https://www.youtube.com/watch?v=jHbrK-w7ElU",
         "description": "",
         "image": ""
+      }
+    },
+    {
+      "id": "g006",
+      "text": "https://www.instagram.com/reel/DYmlYjbMhm2/?igsh=ZnJ5MjVkanV3eXpt\nJournal prompts for overthinkers\n1. what are you trying to recreate every time you fall in love with a song/movie?\n2. write about the last time the world briefly regained its color\n3. describe the exact kind of attention you've been starving for lately. not \"love\" \n4. what do you keep trying to \"earn\". that maybe should've been given freely?\n5. if you stopped trying to become \"someone interesting,\" who would you naturally be?\n6. when was the last time you felt genuinely calm instead of just distracted? describe the day & events\n7. whats the difference between your intruition and your anxiety? explain the moment when you confused one for the other",
+      "title": "Journal prompts for overthinkers",
+      "topic": "journaling",
+      "planted": "2026-11-07",
+      "tended": "2026-11-07",
+      "stage": "growing",
+      "nearby": [
+        "g003",
+        "g002"
+      ],
+      "status": "filed",
+      "published": true,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden",
+      "link": {
+        "url": "https://www.instagram.com/reel/DYmlYjbMhm2/?igsh=ZnJ5MjVkanV3eXpt",
+        "domain": "instagram.com",
+        "title": "kriti sachan &#x2661; on Instagram: \"some journal prompts i&#x2019;ve used recently that made me notice the tiny lies i tell myself to keep functioning\n\nNOTE: pls be brutally honest with yourself, your journal isn&#x2019;t going to judge you, so try not to lie \n\nleather journal is from &#064;tigermarron &#x1fa77;\n\n#journalprompts #journaling\"",
+        "description": "274K likes, 270 comments - kritiisachan on May 21, 2026: \"some journal prompts i&#x2019;ve used recently that made me notice the tiny lies i tell myself to keep functioning\n\nNOTE: pls be brutally hone",
+        "image": "https://scontent-sea5-1.cdninstagram.com/v/t51.71878-15/704148266_1384042776881125_9082494633397550419_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=101&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=uY4HDwstCz8Q7kNvwHyWagV&_nc_oc=Adqv8UIFgZuJXKLIYzXKCsVE3h409VJb35kHpm00Z_gvctWLeFiN0Bk2PSq1NHdnWzs&_nc_zt=23&_nc_ht=scontent-sea5-1.cdninstagram.com&_nc_gid=lFpkWbB1T884xcdCCg1-2Q&_nc_ss=7c60f&oh=00_AQSRRzj-PR_MUObAH9ixaeXLJqqgrpXg-ZM7VKq9IXoGww&oe=6AF58EBD"
       }
     }
   ],
@@ -166,6 +195,12 @@
     },
     {
       "name": "productivity",
+      "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
+      "mergedFrom": [],
+      "suggested": ""
+    },
+    {
+      "name": "creativity",
       "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
       "mergedFrom": [],
       "suggested": ""
