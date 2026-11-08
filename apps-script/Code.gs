@@ -466,7 +466,7 @@ function fetchLink_(url) {
   const html = res.getContentText().slice(0, 200000);
   const meta = (p) => { const m = html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${p}["'][^>]+content=["']([^"']*)["']`, 'i')) || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+(?:property|name)=["']${p}["']`, 'i')); return m ? decode_(m[1]) : ''; };
   const t = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  return { url, domain: domainOf_(url), title: meta('og:title') || (t ? decode_(t[1].trim()) : ''), description: (meta('og:description') || meta('description')).slice(0, 200), image: meta('og:image') };
+  return { url, domain: domainOf_(url), title: (meta('og:title') || (t ? decode_(t[1].trim()) : '')).slice(0, 140), description: (meta('og:description') || meta('description')).slice(0, 200), image: meta('og:image') };
 }
 
 // Video sites answer "oEmbed" requests with a title, author and thumbnail,
@@ -502,7 +502,13 @@ function bareUrl_(line) {
   return /^https?:\/\/\S+$/i.test(m[1]) ? m[1] : line;
 }
 function domainOf_(u) { const m = String(u).match(/^https?:\/\/([^/]+)/i); return m ? m[1].replace(/^www\./, '') : u; }
-function decode_(s) { return String(s).replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' '); }
+function decode_(s) {
+  return String(s)
+    .replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ').trim();
+}
 
 function parseJson_(s) {
   const m = String(s).match(/\{[\s\S]*\}/);

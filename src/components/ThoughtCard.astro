@@ -37,7 +37,7 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
         </span>
       </a>
     )}
-    {t.excerpt && <p>{t.excerpt}</p>}
+    {t.excerpt && <p class="excerpt">{t.excerpt}</p>}
     {t.filing && <div class="nearby"><span class="lab">nearby:</span><span class="looking">looking for neighbors…</span></div>}
     {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
     {!t.filing && t.topic && near.length > 0 && (

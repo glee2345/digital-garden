@@ -184,6 +184,10 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .thought .topic-tag .arrow { color: var(--muted); }
 .body { display: flex; flex-direction: column; gap: 18px; font-size: 19px; line-height: 1.65; color: var(--body); }
 .body p { margin: 0; }
+.body ul, .body ol { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 6px; }
+.body ul { list-style: none; padding-left: 1.2em; }
+.body ul li { position: relative; }
+.body ul li::before { content: "–"; position: absolute; left: -1.2em; color: var(--muted); }
 .body a { border-bottom: 1px solid #6E7A62; color: var(--text); }
 .body .wiki-missing { border-bottom: 1px dotted #C9B99E; }
 .body figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -454,3 +458,6 @@ body.dark .site-header { border-right-color: var(--line); }
 }
 
 .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+.card .excerpt { white-space: pre-line; }
+.linkcard .lt { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.linkcard .ld { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

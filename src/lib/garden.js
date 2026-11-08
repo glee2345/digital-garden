@@ -51,7 +51,8 @@ export function parseBody(text, thought, byTitle) {
   const lines = String(text || '').replace(/\r/g, '').split('\n');
   const blocks = [];
   let para = [];
-  const flush = () => { if (para.length) { blocks.push({ type: 'p', html: inline(para.join(' '), byTitle) }); para = []; } };
+  const flush = () => { if (para.length) { blocks.push({ type: 'p', html: para.map((l) => inline(l, byTitle)).join('<br>') }); para = []; } };
+  const LI = /^(?:[-*•]|\d+[.)])\s+/;
   for (let i = 0; i < lines.length; i++) {
     const line = bareUrl(lines[i].trim());
     if (!line) { flush(); continue; }
@@ -67,8 +68,16 @@ export function parseBody(text, thought, byTitle) {
     }
     if (URL_RE.test(line)) {
       flush();
-      const link = thought?.link && thought.link.url === line ? thought.link : { url: line, domain: domainOf(line) };
+      const link = thought?.link && thought.link.url === line ? { ...thought.link, title: decodeEntities(thought.link.title), description: decodeEntities(thought.link.description) } : { url: line, domain: domainOf(line) };
       blocks.push({ type: 'link', link });
+      continue;
+    }
+    if (LI.test(line)) {
+      flush();
+      const ordered = /^\d/.test(line);
+      const items = [inline(line.replace(LI, ''), byTitle)];
+      while (i + 1 < lines.length && LI.test(bareUrl(lines[i + 1].trim())) && /^\d/.test(lines[i + 1].trim()) === ordered) items.push(inline(lines[++i].trim().replace(LI, ''), byTitle));
+      blocks.push({ type: 'list', ordered, items });
       continue;
     }
     para.push(line);
@@ -84,6 +93,10 @@ export function bareUrl(line) {
   if (m[2]) return m[2];
   const inner = m[1];
   return /^https?:\/\/\S+$/i.test(inner) ? inner : line;
+}
+
+function decodeEntities(x) {
+  return String(x || '').replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(parseInt(d, 10))).replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 }
 
 function domainOf(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } }
@@ -129,16 +142,25 @@ function stripTags(h) { return h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').
 // What a card shows under the title: the body minus the line the title came
 // from, trimmed to a couple of sentences.
 function excerptOf(t) {
-  const paras = t.body.filter((b) => b.type === 'p').map((b) => stripTags(b.html));
-  if (!paras.length) return '';
-  const title = t.title.toLowerCase().replace(/[.?!]+$/, '');
-  const first = paras[0].toLowerCase().replace(/[.?!]+$/, '');
-  if (first === title) paras.shift();
-  else if (first.startsWith(title)) paras[0] = paras[0].slice(t.title.length).replace(/^[.?!:,\s]+/, '');
-  let out = paras.join(' ').trim();
-  if (out) out = out[0].toUpperCase() + out.slice(1);
-  if (out.length > 240) out = out.slice(0, 240).replace(/\s+\S*$/, '') + '…';
-  return out;
+  // the first few lines of the thought, shape kept (line breaks, list dashes), cut at ~260 chars
+  const titleKey = t.title.toLowerCase().replace(/[.?!…]+$/, '');
+  const lines = [];
+  for (const b of t.body) {
+    if (b.type === 'p') for (const l of b.html.split('<br>')) lines.push(stripTags(l));
+    else if (b.type === 'list') for (const it of b.items) lines.push('– ' + stripTags(it));
+  }
+  while (lines.length && lines[0].toLowerCase().replace(/[.?!]+$/, '') === titleKey) lines.shift();
+  if (lines.length && lines[0].toLowerCase().startsWith(titleKey) && lines[0].length > titleKey.length) lines[0] = lines[0].slice(t.title.length).replace(/^[.?!:,\s]+/, '');
+  const out = [];
+  let len = 0;
+  for (const l of lines) {
+    if (!l.trim()) continue;
+    if (len + l.length > 260) { out.push(l.slice(0, Math.max(0, 260 - len)).replace(/\s+\S*$/, '') + '…'); len = 999; break; }
+    out.push(l); len += l.length;
+    if (out.length >= 6) { if (lines.length > out.length) out.push('…'); break; }
+  }
+  if (out.length && out[0]) out[0] = out[0][0].toUpperCase() + out[0].slice(1);
+  return out.join('\n');
 }
 
 // ---- the garden ----------------------------------------------------------
@@ -176,11 +198,9 @@ export function loadGarden() {
     t.excerpt = excerptOf(t);
     // on the thought page, don't repeat the line the title came from
     t.pageBody = t.body.slice();
-    if (t.pageBody[0]?.type === 'p') {
-      const first = stripTags(t.pageBody[0].html).toLowerCase().replace(/[.?!]+$/, '');
-      const title = t.title.toLowerCase().replace(/[.?!…]+$/, '');
-      if (first === title) t.pageBody.shift();
-    }
+    const titleKey = t.title.toLowerCase().replace(/[.?!…]+$/, '');
+    const idx = t.pageBody.findIndex((b, k) => k < 3 && b.type === 'p' && stripTags(b.html).toLowerCase().replace(/[.?!]+$/, '') === titleKey);
+    if (idx !== -1) t.pageBody.splice(idx, 1);
   }
   // connections go both ways: if A is filed next to B, B is next to A too
   // (also any thought that names another in [[double brackets]])
