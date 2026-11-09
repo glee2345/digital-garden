@@ -61,7 +61,8 @@
       });
       const leaves = small ? [] : Array.from({ length: 1 + Math.round(f) }, () => ({ u: 0.30 + rand() * 0.35, a: rand() * 6.28, len: 0.08 + rand() * 0.05, delay: 1.6 + rand() * 1.4 }));
       // amaranth drapes fall from the binding point, outward then down
-      const drape = small ? { az: 3.5 + (rand() - 0.5) * 1.1, out: 0.2 + rand() * 0.1, drop: 0.5 + rand() * 0.14, swing: rand() * 6.28 } : null;
+      // each small topic hangs from its own spot on the front-left of the bunch
+      const dk = i - 3, drape = small ? { az: 0.1 - dk * 0.45 + (rand() - 0.5) * 0.2, start: 0.2 + dk * 0.09, sag: dk * 0.08, out: 0.04 + rand() * 0.03, drop: 0.62 + rand() * 0.1, swing: rand() * 6.28, strands: [0.02, -(0.03 + rand() * 0.015)] } : null;
       return { tp, i, dir, bendDir, bend, len, delay: rand() * 1.2, blooms, leaves, f, color, species, drape };
     });
     const nS = Math.max(2, Math.round(n / 2));
@@ -77,15 +78,15 @@
     const mk = (nn) => { const az = rand() * 6.28, tilt = 0.2 + rand() * 0.35; return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.55 + rand() * 0.3, delay: 3.6 + rand() * 2, phase: rand() * 6.28, n: nn }; };
     const filler = Math.min(10, Math.round(Math.sqrt(data.extra || 0))); // a little breath only once the garden is big
     const breath = (data.loose || []).slice(0, 6).map(() => mk(3)).concat(Array.from({ length: filler }, () => mk(2)));
-    scene = { stems, sprigs, tendrils, breath, base: [0, 1.14, 0], bind: [0, 0.72, -0.16] };
+    scene = { stems, sprigs, tendrils, breath, base: [0, 1.14, 0], bind: [0, 0.58, -0.18] };
   }
 
   // point along a stem at u, with sway; returns [x, y, z]
   function stemPoint(s, u, sway) {
     if (s.drape) { // out over the edge, then straight down, swinging a little
-      const d = s.drape, o = d.out * Math.sin(Math.min(1, u * 1.6) * 1.5708), fall = d.drop * Math.max(0, u - 0.25) / 0.75;
+      const d = s.drape, o = d.start + d.out * Math.sin(Math.min(1, u * 2.2) * 1.5708), f = Math.max(0, u - 0.06) / 0.94, fall = d.drop * Math.pow(f, 1.05);
       const sw = sway * 1.6 * u;
-      return [scene.bind[0] + Math.cos(d.az) * (o + sw), scene.bind[1] + fall * fall / d.drop + u * 0.04, scene.bind[2] + Math.sin(d.az) * (o + sw)];
+      return [scene.bind[0] + Math.cos(d.az) * (o + sw), scene.bind[1] + d.sag + fall + u * 0.03, scene.bind[2] + Math.sin(d.az) * (o + sw)];
     }
     const b = (s.bend + sway) * Math.sin(u * Math.PI) * s.len;
     return [scene.base[0] + s.dir[0] * s.len * u + s.bendDir[0] * b, scene.base[1] + s.dir[1] * s.len * u, scene.base[2] + s.dir[2] * s.len * u + s.bendDir[2] * b];
@@ -210,9 +211,16 @@
       const pts = []; for (let i = 0; i <= 24; i++) pts.push(project(stemPoint(s, (i / 24) * gr, sway)));
       const mid = pts[12];
       items.push({ z: mid[3] + 0.02, draw() {
-        if (s.drape) { // amaranth: a tapering rope of tiny beads in the topic's colour, deepening to plum
-          const bead = mix(s.color, PLUM, 0.35);
-          for (let i = 1; i < pts.length; i++) { const p = pts[i], w = (2.2 - 1.2 * (i / pts.length)) * p[2]; g.fillStyle = rgb(mix(C.bg, i % 3 ? bead : s.color, fade(p[3]))); g.beginPath(); g.ellipse(p[0], p[1], w, w * 1.3, 0, 0, 6.283); g.fill(); if (i % 2) { g.beginPath(); g.ellipse(p[0] + w * 1.4, p[1] + w * 0.6, w * 0.7, w * 0.9, 0, 0, 6.283); g.fill(); } }
+        if (s.drape) { // amaranth: tapering ropes of tiny beads, deep rose into plum, three strands side by side
+          const bead = mix(s.color, PLUM, 0.3), dark = mix(s.color, PLUM, 0.6);
+          for (const dx of s.drape.strands) {
+            for (let i = 1; i < pts.length; i++) {
+              const p = pts[i], prog = i / pts.length, w = (4.2 - 2.2 * prog) * p[2], ox = dx * u1 * p[2];
+              g.fillStyle = rgb(mix(C.bg, i % 3 === 0 ? dark : bead, fade(p[3])));
+              g.beginPath(); g.ellipse(p[0] + ox, p[1], w, w * 1.35, 0, 0, 6.283); g.fill();
+              g.beginPath(); g.ellipse(p[0] + ox + w * 1.3 * (i % 2 ? 1 : -1), p[1] + w * 0.7, w * 0.75, w, 0, 0, 6.283); g.fill();
+            }
+          }
           return;
         }
         g.strokeStyle = shadeAt(hex(s.f > 0.6 ? C.stem : C.stem2), mid[3]); g.lineWidth = (1.3 + 1.4 * s.f) * mid[2]; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
@@ -233,7 +241,7 @@
           drawFlower(g, s.species, p[0], p[1], R, open, s.color, b.phase, reduce ? 0 : Math.sin(T * 1.1 + b.phase) * 0.05, p[3], p[2]);
         } });
       }
-      s.tip = project(stemPoint(s, 1, sway));
+      s.tip = project(stemPoint(s, s.drape ? 0.1 : 1, sway));
     }
     for (const br of scene.breath) {
       const gr = ease((t - br.delay) / 1.6); if (gr <= 0) continue;
