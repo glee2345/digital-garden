@@ -51,10 +51,12 @@ From then on it tends itself every hour.
 ## Day to day
 
 - **A thought**: type it in column A of `thoughts`. That's it.
-- **A link**: paste the URL on its own line, your notes after it. The site pulls the preview.
+- **A link**: paste the URL on its own line, your notes after it. The site pulls the preview. YouTube, Vimeo and TikTok links get a wide thumbnail with a play mark; Instagram links show the account name and the start of the caption. A link pasted as `[url]()` or `<url>` works too.
+- **Lists and line breaks**: a new line in the cell (⌘/Ctrl+Enter) stays a new line on the site. Lines starting with `-`, `*` or `•` become a bulleted list; `1.` `2.` become a numbered one.
 - **A photo**: drop it in the `images` folder (phone: share → Drive → that folder). It becomes a thought on its own; or mention the filename on its own line inside a thought to place it there. Several filenames in a row make a gallery; a line starting with `—` right after is a caption.
 - **Fix the garden**: type in the cream `title` / `topic` / `stage` columns to override. Untick `published` to keep something off the site.
 - **Topics**: the `topics` tab fills itself. `rename to` renames everywhere (old links redirect). `merge into` folds one into another. `garden suggests` is where it proposes merges — approve by typing the name into `merge into`.
+- **Connections** go both ways: if the garden files B next to A, A's page lists B under "closest to this one" as well. Two or more connections (or an edit) move a thought from seedling to growing; type `evergreen` in `stage` yourself.
 - **Site name, your name, the home-page welcome, and the "about" text**: the `settings` tab. `about` is plain text; a blank line starts a new paragraph. The "how this site was made" section under it is fixed.
 
 ## The pieces
@@ -64,7 +66,8 @@ From then on it tends itself every hour.
 | `apps-script/Code.gs` | the tending script (lives in the sheet; this copy is for reference) |
 | `data/garden.json` | everything the site knows, written by the script |
 | `images/` | originals pushed by the script; the build resizes them |
-| `src/` | the site (Astro). `src/lib/roots.js` grows the roots drawing |
+| `src/` | the site (Astro). `src/lib/asciimap.js` draws the map |
+| `public/flowers.js` | the home-page bouquet: one stem per topic, one bloom per thought, small topics hang as amaranth |
 | `.github/workflows/deploy.yml` | builds and publishes on every change |
 
 ## Working on it locally (optional)
