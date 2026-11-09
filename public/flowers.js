@@ -22,7 +22,7 @@
   const SPECIES = ['peony', 'calla', 'orchid', 'peony', 'calla', 'ranunculus'];
   const PLUM = [74, 28, 44], CREAM = [243, 233, 220];
   const C = { stem: '#5C7A66', stem2: '#4A6454', leaf: '#6B8C76', ruscus: '#4E6B5A', bud: '#7F9C88', core: '#3A2616', eye: '#E9D9A8', stamen: '#F3E6C4', breath: '#E8DDD0', bg: [31, 27, 23] };
-  const RAMP = " .'`,:;-~=+*#";
+  const RAMP = " .'`,:;-~=+*#%@";
 
   function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   const ease = (x) => x <= 0 ? 0 : x >= 1 ? 1 : 1 - Math.pow(1 - x, 3);
@@ -43,7 +43,7 @@
       const small = tp.count <= 2 && i >= 3; // the three biggest topics always get flowers
       // azimuth around the bunch, golden-angle spaced; big topics stand tall and nearly upright
       const az = i * 2.399963 + rand() * 0.3;
-      const tilt = small ? 0.55 + rand() * 0.25 : 0.10 + 0.30 * (1 - f) + rand() * 0.10;
+      const tilt = small ? 0.55 + rand() * 0.25 : 0.16 + 0.42 * (1 - f) + rand() * 0.12;
       const len = small ? 0.30 + rand() * 0.10 : 0.62 + 0.42 * Math.sqrt(f) + (rand() - 0.5) * 0.06;
       const dir = [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)];
       const bendDir = [Math.cos(az + 1.57), 0, Math.sin(az + 1.57)];
@@ -51,9 +51,11 @@
       const color = hex(tp.color || PETALS[i % PETALS.length]);
       const species = small ? 'amaranth' : SPECIES[i % SPECIES.length];
       const blooms = tp.thoughts.slice(0, species === 'amaranth' ? 4 : 3).map((t, k, arr) => {
-        const u = species === 'amaranth' ? 0.45 + (0.5 * k) / Math.max(1, arr.length - 1) : arr.length === 1 ? 1 : 0.7 + (0.3 * k) / (arr.length - 1);
-        const a = rand() * 6.28, r = k === arr.length - 1 || species === 'amaranth' ? 0 : 0.03 + rand() * 0.04;
-        const size = t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.74 : 0.5;
+        // the first (most connected) thought is the head of the stem; the rest are smaller side buds lower down
+        const head = k === 0;
+        const u = species === 'amaranth' ? 0.45 + (0.5 * k) / Math.max(1, arr.length - 1) : head ? 1 : 0.62 + 0.2 * rand();
+        const a = rand() * 6.28, r = head || species === 'amaranth' ? 0 : 0.07 + rand() * 0.05;
+        const size = (t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.74 : 0.5) * (head ? 1 : 0.62);
         const open = t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.62 : 0.08;
         return { t, u, off: [Math.cos(a) * r, -r * 0.5, Math.sin(a) * r], size, open, phase: rand() * 6.28, delay: 3.0 + rand() * 1.6 + (1 - u) * 0.8 };
       });
@@ -93,7 +95,7 @@
   let yaw = 0.4, pitch = 0.18, yawV = 0, dragging = false, lastX = 0, lastY = 0, idleSince = 0;
   const CAM = 2.6; // distance in height units
   let cols = 0, rows = 0, off = null, octx = null, aspect = 1.7;
-  const CW = 3, CHp = 6, FONT = 8.5, LINE = 10.5, CELLW = 5.1;
+  const CW = 3, CHp = 6, FONT = 6.8, LINE = 8.2, CELLW = 4.0;
   function size() {
     cols = Math.max(60, Math.floor(root.clientWidth / CELLW));
     rows = Math.max(28, Math.floor(root.clientHeight / LINE));
@@ -131,15 +133,16 @@
     // petals are drawn a little translucent with a clear seam between them, so the
     // glyphs vary across a bloom instead of filling it solid
     let ringAlpha = 0.95;
+    const seam = rgb(mix(C.bg, mix(col, PLUM, 0.85), k)); // dark petal edges, so each petal reads as a shape
     const E = (cx, cy, rx, ry, a, c) => { g.globalAlpha = ringAlpha; g.fillStyle = c; g.beginPath(); g.ellipse(cx, cy, Math.max(0.6, rx), Math.max(0.6, ry), a, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1;
-      if (rx > 2.5) { g.save(); g.globalCompositeOperation = 'destination-out'; g.strokeStyle = '#000'; g.lineWidth = 1.1; g.stroke(); g.restore(); } };
+      if (rx > 2.5) { g.strokeStyle = seam; g.lineWidth = 1.3; g.stroke(); } };
     const lip = rgb(mix(C.bg, mix(col, [120, 40, 60], 0.45), k));
     const pale = rgb(mix(C.bg, mix(col, [255, 250, 240], 0.55), k));
     const plum = rgb(mix(C.bg, mix(col, PLUM, 0.72), k)), edge = rgb(mix(C.bg, mix(col, CREAM, 0.5), k));
     if (kind === 'peony') {
       // many ruffled layers; outer petals deep, inner ones paler with cream edges
-      const rings = [[11, 1.0, rgb(mix(C.bg, mix(col, PLUM, 0.25), k))], [9, 0.82, petal], [7, 0.6, petal2], [6, 0.4, pale]];
-      rings.forEach(([N, f, c], ri) => { ringAlpha = [0.98, 0.9, 0.78, 0.66][ri]; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + ri * 0.5; const L = R * f * (0.45 + 0.75 * open) * (0.92 + 0.16 * Math.sin(p * 2.3 + ri)); E(x + Math.cos(a) * L * 0.56, y + Math.sin(a) * L * 0.56 * 0.8, L * 0.46, L * 0.2, a + 0.3, c); } });
+      const rings = [[11, 1.0, rgb(mix(C.bg, mix(col, PLUM, 0.3), k))], [9, 0.8, petal], [7, 0.58, rgb(mix(C.bg, mix(col, CREAM, 0.35), k))], [5, 0.36, rgb(mix(C.bg, mix(col, CREAM, 0.6), k))]];
+      rings.forEach(([N, f, c], ri) => { ringAlpha = [1, 0.96, 0.9, 0.84][ri]; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + ri * 0.5; const L = R * f * (0.45 + 0.75 * open) * (0.92 + 0.16 * Math.sin(p * 2.3 + ri)); E(x + Math.cos(a) * L * 0.56, y + Math.sin(a) * L * 0.56 * 0.8, L * 0.46, L * 0.2, a + 0.3, c); } });
       ringAlpha = 0.95; if (open > 0.5) for (let p = 0; p < 6; p++) { const a = phase + p * 1.047; E(x + Math.cos(a) * R * 0.22, y + Math.sin(a) * R * 0.18, R * 0.07, R * 0.05, a, edge); }
     } else if (kind === 'orchid') {
       // three narrow sepals, two broad petals, a plum lip
@@ -160,7 +163,7 @@
       E(x, y, R * 0.3, R * 0.26, 0, core);
     } else if (kind === 'ranunculus') {
       // tight spiral of many small petals
-      const N = 10 + Math.round(14 * open); for (let p = N; p >= 0; p--) { ringAlpha = 0.7 + 0.3 * (p / N); const a = p * 2.399963 + phase + wob; const rr = R * (0.1 + 0.75 * open) * Math.sqrt(p / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.22, R * 0.16, a, p % 2 ? petal : (p % 3 ? petal2 : pale)); }
+      const N = 10 + Math.round(14 * open); for (let p = N; p >= 0; p--) { ringAlpha = 0.85 + 0.15 * (p / N); const a = p * 2.399963 + phase + wob; const rr = R * (0.1 + 0.75 * open) * Math.sqrt(p / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.22, R * 0.16, a, p % 2 ? petal : (p % 3 ? petal2 : pale)); }
     } else if (kind === 'amaranth') {
       // a knot of beads where the thought sits on the drape
       const N = 6 + Math.round(8 * open); for (let p = 0; p < N; p++) { const a = p * 2.399963 + phase; const rr = R * (0.25 + 0.5 * open) * Math.sqrt((p + 1) / N); E(x + Math.cos(a) * rr * 0.8, y + Math.sin(a) * rr, R * 0.13, R * 0.11, 0, p % 3 ? petal : plum); }
@@ -223,8 +226,9 @@
         const sp = stemPoint(s, b.u, sway);
         const wp = [sp[0] + b.off[0] * bg, sp[1] + b.off[1] * bg, sp[2] + b.off[2] * bg];
         const p0 = project(sp), p = project(wp); b.screen = p;
-        const R = (0.03 + 0.062 * b.size) * u1 * bg * p[2];
+        const R = (0.036 + 0.085 * b.size) * u1 * bg * p[2];
         items.push({ z: p[3], draw() {
+          if (open > 0.05) { g.save(); g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000'; g.beginPath(); g.ellipse(p[0], p[1], R * 1.12, R * 1.0, 0, 0, 6.283); g.fill(); g.restore(); }
           if (b.off[0] || b.off[2]) { g.strokeStyle = shadeAt(hex(C.stem2), p[3]); g.lineWidth = 1 * p[2]; g.beginPath(); g.moveTo(p0[0], p0[1]); g.quadraticCurveTo(p0[0], p[1], p[0], p[1]); g.stroke(); }
           drawFlower(g, s.species, p[0], p[1], R, open, s.color, b.phase, reduce ? 0 : Math.sin(T * 1.1 + b.phase) * 0.05, p[3], p[2]);
         } });
@@ -251,7 +255,7 @@
     const dpr = devicePixelRatio;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save(); ctx.globalAlpha = 0.32; ctx.filter = 'blur(9px)'; ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, cols * CELLW, rows * LINE); ctx.restore();
+    ctx.save(); ctx.globalAlpha = 0.28; ctx.filter = 'blur(6px)'; ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, cols * CELLW, rows * LINE); ctx.restore();
     ctx.font = `700 ${FONT}px "IBM Plex Mono", ui-monospace, Menlo, monospace`; ctx.textBaseline = 'middle';
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       let a = 0, R = 0, G = 0, B = 0;
