@@ -17,9 +17,11 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // flower colors, one per topic
-  const PETALS = ['#FF9FA3', '#FFE08A', '#FFB070', '#C9A8FF', '#8FD9FF', '#FFC2E8', '#B8F0A0', '#FFD1A8'];
-  const SPECIES = ['peony', 'orchid', 'calla', 'anemone', 'ranunculus'];
-  const C = { stem: '#4E7A42', stem2: '#3E6436', leaf: '#5E9050', ruscus: '#3F6B3B', bud: '#86B274', core: '#3A2616', eye: '#FFE58A', stamen: '#FFF2C4', breath: '#F6F1E6', bg: [31, 27, 23] };
+  // dusty rose, mauve, plum and sage: muted on purpose
+  const PETALS = ['#E3A4B4', '#CF8C9F', '#C197B8', '#E8B7A6', '#D9A3C4', '#B99BC9', '#E6C5BC', '#C8A0A8'];
+  const SPECIES = ['peony', 'calla', 'orchid', 'peony', 'calla', 'ranunculus'];
+  const PLUM = [74, 28, 44], CREAM = [243, 233, 220];
+  const C = { stem: '#5C7A66', stem2: '#4A6454', leaf: '#6B8C76', ruscus: '#4E6B5A', bud: '#7F9C88', core: '#3A2616', eye: '#E9D9A8', stamen: '#F3E6C4', breath: '#E8DDD0', bg: [31, 27, 23] };
   const RAMP = " .'`,:;-~=+*#";
 
   function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -38,38 +40,51 @@
     const n = topics.length;
     const stems = topics.map((tp, i) => {
       const f = tp.count / maxCount;
-      // azimuth around the bunch, golden-angle spaced; tilt from vertical grows for smaller topics
+      const small = tp.count <= 2 && i >= 3; // the three biggest topics always get flowers
+      // azimuth around the bunch, golden-angle spaced; big topics stand tall and nearly upright
       const az = i * 2.399963 + rand() * 0.3;
-      const tilt = 0.22 + 0.5 * (1 - f) + rand() * 0.12;
-      const len = 0.56 + 0.40 * Math.sqrt(f) + (rand() - 0.5) * 0.05;
+      const tilt = small ? 0.55 + rand() * 0.25 : 0.10 + 0.30 * (1 - f) + rand() * 0.10;
+      const len = small ? 0.30 + rand() * 0.10 : 0.62 + 0.42 * Math.sqrt(f) + (rand() - 0.5) * 0.06;
       const dir = [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)];
       const bendDir = [Math.cos(az + 1.57), 0, Math.sin(az + 1.57)];
-      const bend = (rand() - 0.5) * 0.12;
+      const bend = (rand() - 0.5) * 0.10;
       const color = hex(tp.color || PETALS[i % PETALS.length]);
-      const species = tp.count <= 2 ? 'breath' : SPECIES[i % SPECIES.length];
-      const blooms = tp.thoughts.slice(0, species === 'breath' ? 6 : 4).map((t, k, arr) => {
-        const u = arr.length === 1 ? 1 : 0.6 + (0.4 * k) / (arr.length - 1);
-        const a = rand() * 6.28, r = k === arr.length - 1 ? 0 : 0.035 + rand() * 0.045;
+      const species = small ? 'amaranth' : SPECIES[i % SPECIES.length];
+      const blooms = tp.thoughts.slice(0, species === 'amaranth' ? 4 : 3).map((t, k, arr) => {
+        const u = species === 'amaranth' ? 0.45 + (0.5 * k) / Math.max(1, arr.length - 1) : arr.length === 1 ? 1 : 0.7 + (0.3 * k) / (arr.length - 1);
+        const a = rand() * 6.28, r = k === arr.length - 1 || species === 'amaranth' ? 0 : 0.03 + rand() * 0.04;
         const size = t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.74 : 0.5;
         const open = t.stage === 'evergreen' ? 1 : t.stage === 'growing' ? 0.62 : 0.08;
         return { t, u, off: [Math.cos(a) * r, -r * 0.5, Math.sin(a) * r], size, open, phase: rand() * 6.28, delay: 3.0 + rand() * 1.6 + (1 - u) * 0.8 };
       });
-      const leaves = Array.from({ length: 2 + Math.round(2 * f) }, () => ({ u: 0.28 + rand() * 0.45, a: rand() * 6.28, len: 0.08 + rand() * 0.05, delay: 1.6 + rand() * 1.4 }));
-      return { tp, i, dir, bendDir, bend, len, delay: rand() * 1.2, blooms, leaves, f, color, species };
+      const leaves = small ? [] : Array.from({ length: 1 + Math.round(f) }, () => ({ u: 0.30 + rand() * 0.35, a: rand() * 6.28, len: 0.08 + rand() * 0.05, delay: 1.6 + rand() * 1.4 }));
+      // amaranth drapes fall from the binding point, outward then down
+      const drape = small ? { az: 3.5 + (rand() - 0.5) * 1.1, out: 0.2 + rand() * 0.1, drop: 0.5 + rand() * 0.14, swing: rand() * 6.28 } : null;
+      return { tp, i, dir, bendDir, bend, len, delay: rand() * 1.2, blooms, leaves, f, color, species, drape };
     });
-    const nS = Math.max(5, n + 4);
+    const nS = Math.max(2, Math.round(n / 2));
     const sprigs = Array.from({ length: nS }, (_, i) => {
-      const az = i * 2.399963 + 1.2, tilt = 0.5 + rand() * 0.35;
-      return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.42 + rand() * 0.24, delay: 0.4 + rand() * 1.4, leaves: 5 + Math.floor(rand() * 4), phase: rand() * 6.28, az };
+      const az = i * 2.399963 + 1.2, tilt = 0.35 + rand() * 0.25;
+      return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.5 + rand() * 0.2, delay: 0.4 + rand() * 1.4, leaves: 4 + Math.floor(rand() * 3), phase: rand() * 6.28, az };
     });
-    const mk = (nn) => { const az = rand() * 6.28, tilt = 0.25 + rand() * 0.5; return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.5 + rand() * 0.42, delay: 3.6 + rand() * 2, phase: rand() * 6.28, n: nn }; };
-    const filler = Math.min(40, 4 + n + Math.round(Math.sqrt(data.extra || 0) * 2)); // more thoughts, fuller breath
-    const breath = (data.loose || []).map(() => mk(4)).concat(Array.from({ length: filler }, () => mk(3)));
-    scene = { stems, sprigs, breath, base: [0, 1.14, 0] };
+    // one or two curling tendrils, the tallest things in the bunch
+    const tendrils = Array.from({ length: n >= 4 ? 2 : 1 }, (_, i) => {
+      const az = 0.9 + i * 2.9 + rand() * 0.4, tilt = 0.14 + rand() * 0.1;
+      return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.88 + rand() * 0.08, delay: 1.0 + rand(), phase: rand() * 6.28, turn: i % 2 ? -1 : 1 };
+    });
+    const mk = (nn) => { const az = rand() * 6.28, tilt = 0.2 + rand() * 0.35; return { dir: [Math.sin(tilt) * Math.cos(az), -Math.cos(tilt), Math.sin(tilt) * Math.sin(az)], len: 0.55 + rand() * 0.3, delay: 3.6 + rand() * 2, phase: rand() * 6.28, n: nn }; };
+    const filler = Math.min(10, Math.round(Math.sqrt(data.extra || 0))); // a little breath only once the garden is big
+    const breath = (data.loose || []).slice(0, 6).map(() => mk(3)).concat(Array.from({ length: filler }, () => mk(2)));
+    scene = { stems, sprigs, tendrils, breath, base: [0, 1.14, 0], bind: [0, 0.72, -0.16] };
   }
 
   // point along a stem at u, with sway; returns [x, y, z]
   function stemPoint(s, u, sway) {
+    if (s.drape) { // out over the edge, then straight down, swinging a little
+      const d = s.drape, o = d.out * Math.sin(Math.min(1, u * 1.6) * 1.5708), fall = d.drop * Math.max(0, u - 0.25) / 0.75;
+      const sw = sway * 1.6 * u;
+      return [scene.bind[0] + Math.cos(d.az) * (o + sw), scene.bind[1] + fall * fall / d.drop + u * 0.04, scene.bind[2] + Math.sin(d.az) * (o + sw)];
+    }
     const b = (s.bend + sway) * Math.sin(u * Math.PI) * s.len;
     return [scene.base[0] + s.dir[0] * s.len * u + s.bendDir[0] * b, scene.base[1] + s.dir[1] * s.len * u, scene.base[2] + s.dir[2] * s.len * u + s.bendDir[2] * b];
   }
@@ -111,34 +126,44 @@
     const petal = rgb(mix(C.bg, col, k)), petal2 = rgb(mix(C.bg, mix(col, [255, 255, 255], 0.25), k));
     const core = rgb(mix(C.bg, hex(C.core), k)), eye = rgb(mix(C.bg, hex(C.eye), k));
     // sepals
-    g.fillStyle = shadeAt(hex(C.bud), z); g.beginPath(); g.ellipse(x, y + R * 0.1, R * 0.28, R * 0.42, 0, 0, Math.PI * 2); g.fill();
+    if (kind !== 'amaranth') { g.fillStyle = shadeAt(hex(C.bud), z); g.beginPath(); g.ellipse(x, y + R * 0.1, R * 0.28, R * 0.42, 0, 0, Math.PI * 2); g.fill(); }
     if (open < 0.05) { g.fillStyle = petal; g.beginPath(); g.ellipse(x, y - R * 0.3, R * 0.18, R * 0.24, 0, 0, Math.PI * 2); g.fill(); return; }
-    const E = (cx, cy, rx, ry, a, c) => { g.fillStyle = c; g.beginPath(); g.ellipse(cx, cy, Math.max(0.6, rx), Math.max(0.6, ry), a, 0, Math.PI * 2); g.fill(); };
+    // petals are drawn a little translucent with a clear seam between them, so the
+    // glyphs vary across a bloom instead of filling it solid
+    let ringAlpha = 0.95;
+    const E = (cx, cy, rx, ry, a, c) => { g.globalAlpha = ringAlpha; g.fillStyle = c; g.beginPath(); g.ellipse(cx, cy, Math.max(0.6, rx), Math.max(0.6, ry), a, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1;
+      if (rx > 2.5) { g.save(); g.globalCompositeOperation = 'destination-out'; g.strokeStyle = '#000'; g.lineWidth = 1.1; g.stroke(); g.restore(); } };
     const lip = rgb(mix(C.bg, mix(col, [120, 40, 60], 0.45), k));
     const pale = rgb(mix(C.bg, mix(col, [255, 250, 240], 0.55), k));
+    const plum = rgb(mix(C.bg, mix(col, PLUM, 0.72), k)), edge = rgb(mix(C.bg, mix(col, CREAM, 0.5), k));
     if (kind === 'peony') {
-      // layered round petals, outer ring largest, inner ring paler
-      const rings = [[9, 1.0, petal], [7, 0.7, petal2], [5, 0.42, pale]];
-      rings.forEach(([N, f, c], ri) => { for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + ri * 0.4; const L = R * f * (0.45 + 0.75 * open); E(x + Math.cos(a) * L * 0.58, y + Math.sin(a) * L * 0.58 * 0.8, L * 0.44, L * 0.22, a, c); } });
-      E(x, y, R * 0.12 * open, R * 0.1 * open, 0, eye);
+      // many ruffled layers; outer petals deep, inner ones paler with cream edges
+      const rings = [[11, 1.0, rgb(mix(C.bg, mix(col, PLUM, 0.25), k))], [9, 0.82, petal], [7, 0.6, petal2], [6, 0.4, pale]];
+      rings.forEach(([N, f, c], ri) => { ringAlpha = [0.98, 0.9, 0.78, 0.66][ri]; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob + ri * 0.5; const L = R * f * (0.45 + 0.75 * open) * (0.92 + 0.16 * Math.sin(p * 2.3 + ri)); E(x + Math.cos(a) * L * 0.56, y + Math.sin(a) * L * 0.56 * 0.8, L * 0.46, L * 0.2, a + 0.3, c); } });
+      ringAlpha = 0.95; if (open > 0.5) for (let p = 0; p < 6; p++) { const a = phase + p * 1.047; E(x + Math.cos(a) * R * 0.22, y + Math.sin(a) * R * 0.18, R * 0.07, R * 0.05, a, edge); }
     } else if (kind === 'orchid') {
-      // three narrow sepals, two broad petals, a darker lip
+      // three narrow sepals, two broad petals, a plum lip
       const L = R * (0.5 + 0.8 * open);
       for (const a of [-1.571, 0.524, 2.618]) { const aa = a + phase * 0.2 + wob; E(x + Math.cos(aa) * L * 0.55, y + Math.sin(aa) * L * 0.55 * 0.85, L * 0.5, R * 0.16, aa, petal2); }
       for (const a of [-0.35, 3.49]) { const aa = a + phase * 0.2 + wob; E(x + Math.cos(aa) * L * 0.42, y + Math.sin(aa) * L * 0.42 * 0.85, L * 0.42, R * 0.3, aa, petal); }
-      E(x, y + L * 0.3, R * 0.3, L * 0.32, 0, lip); E(x, y + L * 0.12, R * 0.12, R * 0.1, 0, eye);
+      E(x, y + L * 0.3, R * 0.3, L * 0.32, 0, plum); E(x, y + L * 0.12, R * 0.12, R * 0.1, 0, eye);
     } else if (kind === 'calla') {
-      // one furled spathe with a flared lip and a spadix
-      const L = R * 1.3, sp = 0.5 + 0.5 * open;
-      E(x, y - L * 0.35, R * 0.42 * sp, L * 0.55, 0.18, petal); E(x - R * 0.15, y - L * 0.5, R * 0.36 * sp, L * 0.38, -0.5, petal2);
-      E(x + R * 0.18 * sp, y - L * 0.72, R * 0.3 * sp, R * 0.14, 0.3, pale);
-      if (open > 0.5) E(x + R * 0.05, y - L * 0.55, R * 0.07, L * 0.3, 0.1, eye);
+      // a dark, sleek spathe: long furled cone, flared lip curling back, pale spadix
+      const L = R * 1.45, sp = 0.5 + 0.5 * open, lean = 0.35 + wob;
+      E(x, y - L * 0.3, R * 0.34 * sp, L * 0.5, lean * 0.5, plum);
+      E(x - R * 0.12, y - L * 0.5, R * 0.3 * sp, L * 0.36, lean - 0.6, rgb(mix(C.bg, mix(col, PLUM, 0.55), k)));
+      E(x + R * 0.2 * sp, y - L * 0.74, R * 0.34 * sp, R * 0.12, lean + 0.2, petal);
+      E(x + R * 0.28 * sp, y - L * 0.8, R * 0.14 * sp, R * 0.06, lean + 0.4, edge);
+      if (open > 0.5) E(x + R * 0.04, y - L * 0.56, R * 0.06, L * 0.28, lean * 0.4, eye);
     } else if (kind === 'anemone') {
       const N = 6; for (let p = 0; p < N; p++) { const a = (p / N) * 6.283 + phase + wob; const L = R * (0.5 + 0.8 * open); E(x + Math.cos(a) * L * 0.6, y + Math.sin(a) * L * 0.6 * 0.8, L * 0.5, L * 0.32, a, p % 2 ? petal : petal2); }
-      E(x, y, R * 0.3, R * 0.26, 0, core); if (open > 0.6) for (let q = 0; q < 8; q++) { const a = phase + q * 0.785; E(x + Math.cos(a) * R * 0.34, y + Math.sin(a) * R * 0.28, 1.1, 1.0, 0, rgb(mix(C.bg, [60, 40, 50], k))); }
+      E(x, y, R * 0.3, R * 0.26, 0, core);
     } else if (kind === 'ranunculus') {
       // tight spiral of many small petals
-      const N = 10 + Math.round(14 * open); for (let p = N; p >= 0; p--) { const a = p * 2.399963 + phase + wob; const rr = R * (0.1 + 0.75 * open) * Math.sqrt(p / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.22, R * 0.16, a, p % 2 ? petal : (p % 3 ? petal2 : pale)); }
+      const N = 10 + Math.round(14 * open); for (let p = N; p >= 0; p--) { ringAlpha = 0.7 + 0.3 * (p / N); const a = p * 2.399963 + phase + wob; const rr = R * (0.1 + 0.75 * open) * Math.sqrt(p / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.22, R * 0.16, a, p % 2 ? petal : (p % 3 ? petal2 : pale)); }
+    } else if (kind === 'amaranth') {
+      // a knot of beads where the thought sits on the drape
+      const N = 6 + Math.round(8 * open); for (let p = 0; p < N; p++) { const a = p * 2.399963 + phase; const rr = R * (0.25 + 0.5 * open) * Math.sqrt((p + 1) / N); E(x + Math.cos(a) * rr * 0.8, y + Math.sin(a) * rr, R * 0.13, R * 0.11, 0, p % 3 ? petal : plum); }
     } else { // breath: a spray of tiny blossoms in the topic's tint
       const N = 5 + Math.round(6 * open); for (let p = 0; p < N; p++) { const a = p * 2.399963 + phase; const rr = R * (0.3 + 0.9 * open) * Math.sqrt((p + 1) / N); E(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8, R * 0.12, R * 0.1, 0, p % 2 ? pale : petal2); }
     }
@@ -161,13 +186,33 @@
           g.fillStyle = shadeAt(hex(C.ruscus), p[3]); g.beginPath(); g.ellipse(p[0] + Math.cos(a) * L * 0.5, p[1] + Math.sin(a) * L * 0.5, L * 0.5, L * 0.15, a, 0, 6.283); g.fill(); }
       } });
     }
+    for (const td of scene.tendrils) {
+      const gr = ease((t - td.delay) / 3.0); if (gr <= 0) continue;
+      const sway = reduce ? 0 : Math.sin(T * 0.5 + td.phase) * 0.03;
+      const pts = []; for (let i = 0; i <= 20; i++) { const u = (i / 20) * gr; pts.push(project([scene.base[0] + td.dir[0] * td.len * u + sway * u * u, scene.base[1] + td.dir[1] * td.len * u, scene.base[2] + td.dir[2] * td.len * u])); }
+      const tip = pts[pts.length - 1];
+      items.push({ z: tip[3], draw() {
+        g.strokeStyle = shadeAt(hex(C.stem), tip[3]); g.lineWidth = 0.9 * tip[2]; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
+        if (gr > 0.85) { // the curl: a spiral winding in at the tip
+          const k = (gr - 0.85) / 0.15, r0 = 0.05 * u1 * tip[2], cx = tip[0] + td.turn * r0, cy = tip[1] - r0 * 0.2;
+          g.lineWidth = 1.5 * tip[2]; g.beginPath(); g.moveTo(tip[0], tip[1]);
+          for (let i = 1; i <= 48; i++) { const a = Math.PI + td.turn * (i / 48) * k * 2.4 * 6.283 * 0.5, r = r0 * (1 - 0.75 * (i / 48)); g.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.9); }
+          g.stroke();
+        }
+      } });
+    }
     for (const s of scene.stems) {
       const gr = ease((t - s.delay) / 2.6); if (gr <= 0) continue;
       const sway = reduce ? 0 : (Math.sin(T * 0.7 + s.i) * 0.022 + Math.sin(T * 1.9 + s.i * 2.1) * 0.006);
       const pts = []; for (let i = 0; i <= 24; i++) pts.push(project(stemPoint(s, (i / 24) * gr, sway)));
       const mid = pts[12];
       items.push({ z: mid[3] + 0.02, draw() {
-        g.strokeStyle = shadeAt(hex(s.f > 0.6 ? C.stem : C.stem2), mid[3]); g.lineWidth = (1.5 + 1.6 * s.f) * mid[2]; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
+        if (s.drape) { // amaranth: a tapering rope of tiny beads in the topic's colour, deepening to plum
+          const bead = mix(s.color, PLUM, 0.35);
+          for (let i = 1; i < pts.length; i++) { const p = pts[i], w = (2.2 - 1.2 * (i / pts.length)) * p[2]; g.fillStyle = rgb(mix(C.bg, i % 3 ? bead : s.color, fade(p[3]))); g.beginPath(); g.ellipse(p[0], p[1], w, w * 1.3, 0, 0, 6.283); g.fill(); if (i % 2) { g.beginPath(); g.ellipse(p[0] + w * 1.4, p[1] + w * 0.6, w * 0.7, w * 0.9, 0, 0, 6.283); g.fill(); } }
+          return;
+        }
+        g.strokeStyle = shadeAt(hex(s.f > 0.6 ? C.stem : C.stem2), mid[3]); g.lineWidth = (1.3 + 1.4 * s.f) * mid[2]; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
         for (const l of s.leaves) { const lg = ease((t - l.delay) / 1.3); if (lg <= 0 || l.u > gr) continue; const p = pts[Math.round(l.u * 24)]; const a = l.a + (reduce ? 0 : Math.sin(T * 0.9 + l.u * 7) * 0.06); const L = l.len * u1 * lg * p[2];
           g.fillStyle = shadeAt(hex(C.leaf), p[3]); g.beginPath(); g.moveTo(p[0], p[1]); g.quadraticCurveTo(p[0] + Math.cos(a) * L * 0.5 - Math.sin(a) * L * 0.18, p[1] + Math.sin(a) * L * 0.5 * 0.7 + Math.cos(a) * L * 0.12, p[0] + Math.cos(a) * L, p[1] + Math.sin(a) * L * 0.7); g.quadraticCurveTo(p[0] + Math.cos(a) * L * 0.5 + Math.sin(a) * L * 0.18, p[1] + Math.sin(a) * L * 0.5 * 0.7 - Math.cos(a) * L * 0.12, p[0], p[1]); g.fill(); }
       } });
@@ -206,7 +251,7 @@
     const dpr = devicePixelRatio;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save(); ctx.globalAlpha = 0.4; ctx.filter = 'blur(9px)'; ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, cols * CELLW, rows * LINE); ctx.restore();
+    ctx.save(); ctx.globalAlpha = 0.32; ctx.filter = 'blur(9px)'; ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, cols * CELLW, rows * LINE); ctx.restore();
     ctx.font = `700 ${FONT}px "IBM Plex Mono", ui-monospace, Menlo, monospace`; ctx.textBaseline = 'middle';
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       let a = 0, R = 0, G = 0, B = 0;

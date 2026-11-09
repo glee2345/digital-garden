@@ -9,7 +9,7 @@ const IMAGE_RE = /^[\w.\- ()]+\.(jpe?g|png|gif|webp|heic|heif)$/i;
 const URL_RE = /^https?:\/\/\S+$/i;
 
 // one flower color per topic, in order of size; the bouquet and the map share these
-export const TOPIC_COLORS = ['#FF9FA3', '#FFE08A', '#FFB070', '#C9A8FF', '#8FD9FF', '#FFC2E8', '#B8F0A0', '#FFD1A8'];
+export const TOPIC_COLORS = ['#E3A4B4', '#CF8C9F', '#C197B8', '#E8B7A6', '#D9A3C4', '#B99BC9', '#E6C5BC', '#C8A0A8'];
 
 export function slugify(s) {
   return String(s || '')
