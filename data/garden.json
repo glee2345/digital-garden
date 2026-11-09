@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-08T01:42:12.788Z",
+  "tended": "2026-11-09T01:44:55.286Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -147,6 +147,33 @@
         "title": "kriti sachan &#x2661; on Instagram: \"some journal prompts i&#x2019;ve used recently that made me notice the tiny lies i tell myself to keep functioning\n\nNOTE: pls be brutally honest with yourself, your journal isn&#x2019;t going to judge you, so try not to lie \n\nleather journal is from &#064;tigermarron &#x1fa77;\n\n#journalprompts #journaling\"",
         "description": "274K likes, 270 comments - kritiisachan on May 21, 2026: \"some journal prompts i&#x2019;ve used recently that made me notice the tiny lies i tell myself to keep functioning\n\nNOTE: pls be brutally hone",
         "image": "https://scontent-sea5-1.cdninstagram.com/v/t51.71878-15/704148266_1384042776881125_9082494633397550419_n.jpg?stp=cmp1_dst-jpg_e35_s640x640_tt6&_nc_cat=101&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=uY4HDwstCz8Q7kNvwHyWagV&_nc_oc=Adqv8UIFgZuJXKLIYzXKCsVE3h409VJb35kHpm00Z_gvctWLeFiN0Bk2PSq1NHdnWzs&_nc_zt=23&_nc_ht=scontent-sea5-1.cdninstagram.com&_nc_gid=lFpkWbB1T884xcdCCg1-2Q&_nc_ss=7c60f&oh=00_AQSRRzj-PR_MUObAH9ixaeXLJqqgrpXg-ZM7VKq9IXoGww&oe=6AF58EBD"
+      }
+    },
+    {
+      "id": "g007",
+      "text": "https://youtu.be/JKYHqWYty9w?is=ff7_f7cP7BcyHE9P\nThe art of being passionate",
+      "title": "The art of being passionate",
+      "topic": "creativity",
+      "planted": "2026-11-08",
+      "tended": "2026-11-08",
+      "stage": "growing",
+      "nearby": [
+        "g004",
+        "g002",
+        "g005"
+      ],
+      "status": "filed",
+      "published": true,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden",
+      "link": {
+        "url": "https://youtu.be/JKYHqWYty9w?is=ff7_f7cP7BcyHE9P",
+        "domain": "youtu.be",
+        "title": "The Art of Being Passionate",
+        "description": "by imdanjo",
+        "image": "https://i.ytimg.com/vi/JKYHqWYty9w/hqdefault.jpg",
+        "kind": "video"
       }
     }
   ],
