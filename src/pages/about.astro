@@ -15,15 +15,15 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
 
   <div class="prose how">
     <h2>how this site was made</h2>
-    <p>The short version: I type thoughts into a Google Sheet, and the rest happens on its own.</p>
+    <p>I don't code. I type thoughts into a Google Sheet and the site takes care of the rest.</p>
     <ul class="tldr">
-      <li><strong>Writing.</strong> One column in a Google Sheet. A sentence, a paragraph, a link with notes, a photo dropped in the folder next to it. No titles, no tags.</li>
-      <li><strong>Filing.</strong> Once an hour a small script in the sheet reads what's new and asks an AI model (Gemini) to title it, place it in a topic, pick the most related thoughts, and describe any photo. Topics appear on their own as thoughts cluster. If it files something wrong, I correct it in the sheet and mine wins.</li>
-      <li><strong>Growing.</strong> Each thought starts as a seedling, becomes growing once it's connected to others or I've edited it, and evergreen when I say so.</li>
-      <li><strong>Publishing.</strong> The script hands the result to GitHub, which rebuilds the site. Plain static pages, free to host, nothing running on a server.</li>
-      <li><strong>The bouquet.</strong> Drawn fresh in text characters every time you open the home page. Each topic is a stem, each thought a flower on it, small topics hang as amaranth. The <a href={`${base}/map/`}>map</a> is the same garden flattened out.</li>
+      <li><strong>Writing.</strong> One column in a Google Sheet. I paste in a sentence, some notes, a link, or drop a photo in the folder next to it. No titles or tags.</li>
+      <li><strong>Filing.</strong> Every hour a script in the sheet checks for anything new and has an AI model (Gemini) write a title, put it under a topic, find related thoughts, and describe photos. Topics show up on their own as things pile up. If it gets something wrong I fix it in the sheet.</li>
+      <li><strong>Growing.</strong> New thoughts are seedlings. They become growing once they connect to other thoughts or I edit them, and evergreen when I mark them.</li>
+      <li><strong>Publishing.</strong> The script sends everything to GitHub, which rebuilds the site. It's all static pages, so hosting is free.</li>
+      <li><strong>The bouquet.</strong> Drawn in text characters every time the home page loads. Each topic is a stem, each thought is a flower, and small topics hang down as amaranth. The <a href={`${base}/map/`}>map</a> shows the same thing laid flat.</li>
     </ul>
-    <p>Designed and built with Claude; the code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a>, with a README if you want to grow your own. It takes an afternoon and costs about a domain. Astro, GitHub Pages, Google Sheets, Newsreader. The clover is a scribble.</p>
+    <p>I designed and built it with Claude. The code is <a href="https://github.com/glee2345/digital-garden">on GitHub</a> with a README if you want to make your own. It runs on Astro, GitHub Pages, and Google Sheets. The font is Newsreader.</p>
   </div>
 
   <style>
