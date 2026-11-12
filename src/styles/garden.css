@@ -134,7 +134,13 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .meta .noroot { display: inline-flex; align-items: center; gap: 6px; color: var(--faint); }
 .meta .noroot .mark { color: #C9B99E; }
 .card h2, .card .title { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 23px; line-height: 1.35; }
-.card .title a { color: var(--ink); }
+.card .title a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 5px; text-decoration-thickness: 1px; }
+.card .title a:hover { text-decoration-color: var(--green-ink); }
+.card .title .read { margin-left: 12px; font-size: 15px; font-style: italic; color: var(--muted); text-decoration-color: transparent; white-space: nowrap; }
+.card .title .read:hover { color: var(--text); text-decoration-color: var(--green-ink); }
+.card .linkline { font-size: 16px; color: var(--muted); }
+.card .linkline a { color: var(--body); border-bottom: 1px solid var(--line); }
+.card .linkline .dom { font-style: italic; }
 .card.photo .title { font-size: 21px; }
 .card p { margin: 0; font-size: 18px; line-height: 1.55; color: var(--body); }
 .card p.soft { font-size: 14px; color: var(--faint); font-style: italic; }

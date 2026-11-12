@@ -30,10 +30,24 @@ const DEFAULT_ABOUT = "A digital garden is a personal website for collecting ide
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Garden')
     .addItem('Tend now', 'tendNow')
+    .addItem('Refile everything', 'refileAll')
     .addSeparator()
     .addItem('Set up (first time)', 'setup')
     .addItem('Check connections', 'checkConnections')
     .addToUi();
+}
+
+// Forgets the filing of every thought (titles, topics, nearby, alt text) so the
+// next tend does it again with the current rules. Your own cream columns are kept.
+function refileAll() {
+  const ui = SpreadsheetApp.getUi();
+  if (ui.alert('Refile everything?', 'Every thought will be filed again on the next tend (that is slow on the free tier: about 7 seconds per thought). Titles and topics you typed yourself are kept.', ui.ButtonSet.OK_CANCEL) !== ui.Button.OK) return;
+  ensureStructure_();
+  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_THOUGHTS);
+  const H = headerMap_(sh);
+  const last = sh.getLastRow();
+  if (last > 1 && H['_texthash'] !== undefined) sh.getRange(2, H['_texthash'] + 1, last - 1, 1).clearContent();
+  ui.alert('Marked', 'Run Garden ▸ Tend now, or wait for the hour.', ui.ButtonSet.OK);
 }
 
 function tendNow() {
@@ -400,7 +414,7 @@ function fileThought_(rows, i, col, topics, today) {
     '- "topic": the best existing topic, or a NEW one if none fits. Topic names: 1-2 lowercase words, broad enough to hold many thoughts (e.g. "design", "cooking", "walks"), never a restatement of this one thought. Prefer an existing topic when it fits reasonably; create a new one only when the thought is clearly about something else. If there are no topics yet, invent a good first one.',
     '- "is_new_topic": true/false.',
     '- "same_as": if your new topic is really the same as an existing one spelled differently (e.g. "type" vs "typography"), the existing name; else "".',
-    '- "nearby": up to 5 ids of the most related existing thoughts, most related first (empty list if none are related).',
+    '- "nearby": ids of existing thoughts that have a real connection to this one (same subject, same idea, one builds on the other), most related first, at most 5. Most thoughts have none or one; an empty list is the normal answer. Sharing a topic is not a connection. Never pad the list.',
     '- "alt": for each image, a one-sentence description for someone who cannot see it, as {"filename": "..."}; {} if no images.',
     '- "excerpt": "" (reserved).',
   ].join('\n');

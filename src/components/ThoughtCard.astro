@@ -6,6 +6,7 @@ const near = t.nearbyThoughts.slice(0, 3);
 const extra = t.nearbyThoughts.length - near.length;
 const photo = t.kind === 'photo' && t.firstImage;
 const linkBlock = t.body.find((b) => b.type === 'link');
+const hasBody = t.pageBody.some((b) => b.type !== 'link');
 const showKind = t.kind !== 'text';
 const showStage = t.kind === 'text' && t.stage !== 'growing';
 ---
@@ -26,18 +27,8 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
       {!t.filing && showKind && <span class="stage">{t.kind}</span>}
       {!t.filing && showStage && <span class="stage">{t.stage}</span>}
     </div>
-    <h2 class="title"><a href={t.url}>{t.title}</a></h2>
-    {linkBlock && !photo && (
-      <a class={`linkcard${linkBlock.link.kind === 'video' ? ' video' : ''}`} href={linkBlock.link.url} rel="noopener">
-        {linkBlock.link.image && <span class="pic" style={`background-image:url('${linkBlock.link.image}')`}>{linkBlock.link.kind === 'video' && <span class="play" aria-hidden="true"></span>}</span>}
-        <span class="txt">
-          <span class="dom">{linkBlock.link.domain}</span>
-          <span class="lt">{linkBlock.link.title || linkBlock.link.url}</span>
-          {linkBlock.link.description && <span class="ld">{linkBlock.link.description}</span>}
-        </span>
-      </a>
-    )}
-    {t.excerpt && <p class="excerpt">{t.excerpt}</p>}
+    <h2 class="title"><a href={t.url}>{t.title}</a>{hasBody && <a class="read" href={t.url} aria-label={`Read: ${t.title}`}>read</a>}</h2>
+    {linkBlock && !photo && <p class="linkline"><a href={linkBlock.link.url} rel="noopener">{linkBlock.link.title || linkBlock.link.domain}</a><span class="dom">{`, ${linkBlock.link.kind === 'video' ? 'video on ' : ''}${linkBlock.link.domain}`}</span></p>}
     {t.filing && <div class="nearby"><span class="lab">nearby:</span><span class="looking">looking for neighbors…</span></div>}
     {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
     {!t.filing && t.topic && near.length > 0 && (
