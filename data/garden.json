@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-12T21:53:08.560Z",
+  "tended": "2026-11-12T22:50:13.633Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -183,7 +183,7 @@
       "topic": "",
       "planted": "2026-11-12",
       "tended": "2026-11-12",
-      "stage": "seedling",
+      "stage": "growing",
       "nearby": [],
       "status": "filing",
       "published": true,
@@ -198,7 +198,7 @@
       "topic": "",
       "planted": "2026-11-12",
       "tended": "2026-11-12",
-      "stage": "seedling",
+      "stage": "growing",
       "nearby": [],
       "status": "filing",
       "published": true,
