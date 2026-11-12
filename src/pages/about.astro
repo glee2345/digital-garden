@@ -10,35 +10,28 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
   <div class="prose">
     <h1>about this garden</h1>
     {paras.map((p) => <p set:html={p.replace(/\n/g, '<br>')} />)}
-    <p class="stat">{`${g.stats.thoughts} thoughts · ${g.stats.topics} topics · ${g.stats.connections} connections${g.stats.firstPlanted ? ` · planted since ${fmtDate(g.stats.firstPlanted, { year: true })}` : ''}`}</p>
+    <p class="stat">{`${g.stats.thoughts} thoughts, ${g.stats.topics} topics, ${g.stats.connections} connections${g.stats.firstPlanted ? `, planted since ${fmtDate(g.stats.firstPlanted, { year: true })}` : ''}`}</p>
   </div>
 
   <div class="prose how">
     <h2>how this site was made</h2>
-    <p>Nothing here is typed into a website. The whole garden is a Google Sheet with one column that matters, and a folder of photos next to it. That's the part I touch.</p>
-
-    <h3>Planting</h3>
-    <p>I write a thought in the sheet: a sentence, a paragraph, a link with my notes under it. Photos I drop into the folder from my phone. There's no title field I have to fill in, no tags to pick, no categories to maintain. Column A, done.</p>
-
-    <h3>Tending</h3>
-    <p>Once an hour a small script inside the sheet wakes up and reads what's new. For each thought it asks Claude to do the filing: write a short title, decide which topic it belongs to (or start a new one if none fits), pick the handful of existing thoughts that are most related, and describe any photo for people who can't see it. It writes all of that back into the sheet in its own columns, next to mine. If it gets something wrong, I type the right answer in my column and mine wins.</p>
-    <p>Topics aren't a list I made. They appear when a few thoughts cluster, and the script suggests merging two when they turn out to be the same thing. I can rename or merge any of them from the sheet; old links keep working.</p>
-
-    <h3>Growing</h3>
-    <p>Every thought starts as a <em>seedling</em>. It becomes <em>growing</em> once it's connected to a couple of others or I've come back and edited it, and <em>evergreen</em> only when I say so. The stages are automatic so I never have to think about them.</p>
-
-    <h3>Publishing</h3>
-    <p>When the tending is done, the script hands the result to GitHub, which rebuilds the site and publishes it. The site is plain static pages: fast, free to host, nothing running on a server. The bouquet on the home page is grown fresh every time you open it: each topic becomes a stem whose height comes from how many thoughts it holds, each thought a flower on it, drawn as text characters the way old terminal art was. The <a href={`${base}/map/`}>map</a> places every thought near its topic and draws the connections the script found, in the same characters.</p>
-
-    <h3>Made with</h3>
-    <p>The design was worked out in Claude Design and the site was built with Claude from that design; the code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a>. Under the hood it's Astro for the pages, GitHub Pages for hosting, Google Sheets and Drive for the writing, and Claude for the filing. The typeface is Newsreader. The clover is a scribble.</p>
-    <p>If you want to grow one of your own, the repository's README walks through it. It takes an afternoon and costs about a domain.</p>
+    <p>The short version: I type thoughts into a Google Sheet, and the rest happens on its own.</p>
+    <ul class="tldr">
+      <li><strong>Writing.</strong> One column in a Google Sheet. A sentence, a paragraph, a link with notes, a photo dropped in the folder next to it. No titles, no tags.</li>
+      <li><strong>Filing.</strong> Once an hour a small script in the sheet reads what's new and asks an AI model (Gemini) to title it, place it in a topic, pick the most related thoughts, and describe any photo. Topics appear on their own as thoughts cluster. If it files something wrong, I correct it in the sheet and mine wins.</li>
+      <li><strong>Growing.</strong> Each thought starts as a seedling, becomes growing once it's connected to others or I've edited it, and evergreen when I say so.</li>
+      <li><strong>Publishing.</strong> The script hands the result to GitHub, which rebuilds the site. Plain static pages, free to host, nothing running on a server.</li>
+      <li><strong>The bouquet.</strong> Drawn fresh in text characters every time you open the home page. Each topic is a stem, each thought a flower on it, small topics hang as amaranth. The <a href={`${base}/map/`}>map</a> is the same garden flattened out.</li>
+    </ul>
+    <p>Designed and built with Claude; the code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a>, with a README if you want to grow your own. It takes an afternoon and costs about a domain. Astro, GitHub Pages, Google Sheets, Newsreader. The clover is a scribble.</p>
   </div>
 
   <style>
     .prose + .prose { margin-top: 8px; padding-top: 32px; border-top: 1px solid var(--line); }
     .prose h2 { margin: 0; font-family: var(--serif); font-weight: 300; font-size: 32px; line-height: 1.2; color: var(--ink); }
-    .prose h3 { margin: 10px 0 -8px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+    .prose ul.tldr { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 10px; }
+    .prose ul.tldr li { line-height: 1.55; }
+    .prose ul.tldr strong { font-weight: 500; font-style: italic; color: var(--text); }
     .prose .stat { font-size: 16px; color: var(--muted); }
     .prose a { border-bottom: 1px solid #6E7A62; color: var(--text); }
   </style>
