@@ -1,11 +1,11 @@
 {
-  "tended": "2026-11-09T01:44:55.286Z",
+  "tended": "2026-11-12T21:53:08.560Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
     "tagline": "welcome!",
     "welcome": "hi, i'm grace, a designer and curious overthinker. click around to explore what i'm thinking and learning about in my digital garden.",
-    "about": "A digital garden is a personal website for collecting ideas and letting them grow. It's closer to a notebook than a blog: nothing here is finished, and most of it is still changing. It's also a way of thinking in public without performing! With the increasing pressures of social media, I've come to realize that having a space to myself is cathartic, in a way.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go."
+    "about": "A digital garden is a personal website for collecting ideas and thoughts. It's closer to a notebook or a journal than a blog: nothing here is finished, and most of it is still changing. It's also a way of thinking in public without performing! With the increasing pressures of social media, I've come to realize that having a space to myself is cathartic, in a way.\n\nInstead of a feed, the garden is organized by connection. Every thought is filed next to the ones it's related to, and the topics grow out of the thoughts rather than the other way around. You're meant to wander: follow a nearby thought, follow another, end up somewhere you didn't mean to go."
   },
   "thoughts": [
     {
@@ -175,6 +175,36 @@
         "image": "https://i.ytimg.com/vi/JKYHqWYty9w/hqdefault.jpg",
         "kind": "video"
       }
+    },
+    {
+      "id": "g008",
+      "text": "something i find beautiful: spirals, chipped nailpolish, crescent moon eyes when someone smiles",
+      "title": "",
+      "topic": "",
+      "planted": "2026-11-12",
+      "tended": "2026-11-12",
+      "stage": "seedling",
+      "nearby": [],
+      "status": "filing",
+      "published": true,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden"
+    },
+    {
+      "id": "g009",
+      "text": "cafes to visit in korea: cafe molia",
+      "title": "",
+      "topic": "",
+      "planted": "2026-11-12",
+      "tended": "2026-11-12",
+      "stage": "seedling",
+      "nearby": [],
+      "status": "filing",
+      "published": true,
+      "titleBy": "garden",
+      "topicBy": "garden",
+      "stageBy": "garden"
     }
   ],
   "topics": [
