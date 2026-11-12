@@ -15,23 +15,17 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
 
   <div class="prose how">
     <h2>how this site was made</h2>
-    <p>I don't code. I type thoughts into a Google Sheet and the site takes care of the rest.</p>
-    <ul class="tldr">
-      <li><strong>Writing.</strong> One column in a Google Sheet. I paste in a sentence, some notes, a link, or drop a photo in the folder next to it. No titles or tags.</li>
-      <li><strong>Filing.</strong> Every hour a script in the sheet checks for anything new and has an AI model (Gemini) write a title, put it under a topic, find related thoughts, and describe photos. Topics show up on their own as things pile up. If it gets something wrong I fix it in the sheet.</li>
-      <li><strong>Growing.</strong> New thoughts are seedlings. They become growing once they connect to other thoughts or I edit them, and evergreen when I mark them.</li>
-      <li><strong>Publishing.</strong> The script sends everything to GitHub, which rebuilds the site. It's all static pages, so hosting is free.</li>
-      <li><strong>The bouquet.</strong> Drawn in text characters every time the home page loads. Each topic is a stem, each thought is a flower, and small topics hang down as amaranth. The <a href={`${base}/map/`}>map</a> shows the same thing laid flat.</li>
-    </ul>
-    <p>I designed and built it with Claude. The code is <a href="https://github.com/glee2345/digital-garden">on GitHub</a> with a README if you want to make your own. It runs on Astro, GitHub Pages, and Google Sheets. The font is Newsreader.</p>
+    <p>This is a digital garden: a collection of notes that grow over time, rather than a blog of finished posts. Nothing here is done.</p>
+    <p>I built it with Claude, and the whole thing runs from a Google Sheet. I write a thought in one column, paste in a link, or drop a photo into a folder. That's all I do. There are no titles, tags, or categories to fill in.</p>
+    <p>Once an hour, a script reads the sheet and sends anything new to an AI model (Gemini). It writes a short title, sorts the thought into a topic, finds related thoughts, and writes alt text for photos. New topics appear on their own as thoughts accumulate. When the filing is wrong, I correct it in the sheet.</p>
+    <p>Every thought has a stage. It starts as a seedling, becomes growing once it's linked to other thoughts or I've revised it, and becomes evergreen when I decide it's finished.</p>
+    <p>The bouquet on the home page is drawn from the garden itself, in text characters. Each topic is a stem, each thought is a flower, and small topics trail down as amaranth. The <a href={`${base}/map/`}>map</a> shows the same connections laid out flat.</p>
+    <p>The site is static and hosted for free on GitHub Pages. It's built with Astro and set in Newsreader. The code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a> if you'd like to build your own.</p>
   </div>
 
   <style>
     .prose + .prose { margin-top: 8px; padding-top: 32px; border-top: 1px solid var(--line); }
     .prose h2 { margin: 0; font-family: var(--serif); font-weight: 300; font-size: 32px; line-height: 1.2; color: var(--ink); }
-    .prose ul.tldr { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 10px; }
-    .prose ul.tldr li { line-height: 1.55; }
-    .prose ul.tldr strong { font-weight: 500; font-style: italic; color: var(--text); }
     .prose .stat { font-size: 16px; color: var(--muted); }
     .prose a { border-bottom: 1px solid #6E7A62; color: var(--text); }
   </style>
