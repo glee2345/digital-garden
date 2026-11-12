@@ -15,11 +15,10 @@ const paras = String(g.site.about || '').split(/\n\s*\n/).map((p) => p.trim()).f
 
   <div class="prose how">
     <h2>how this site was made</h2>
-    <p>This is a digital garden: a collection of notes that grow over time, rather than a blog of finished posts. Nothing here is done.</p>
-    <p>I built it with Claude, and the whole thing runs from a Google Sheet. I write a thought in one column, paste in a link, or drop a photo into a folder. That's all I do. There are no titles, tags, or categories to fill in.</p>
-    <p>Once an hour, a script reads the sheet and sends anything new to an AI model (Gemini). It writes a short title, sorts the thought into a topic, finds related thoughts, and writes alt text for photos. New topics appear on their own as thoughts accumulate. When the filing is wrong, I correct it in the sheet.</p>
+    <p>I built it with Claude, and the whole thing runs from a Google Sheet. I write a thought in one column, paste in a link, or drop a photo into a folder. There are no titles, tags, or categories to fill in.</p>
+    <p>Once an hour, a script reads the sheet and sends anything new to an AI model (Gemini), which writes a title, sorts the thought into a topic, links it to related thoughts, and writes alt text for photos. When it gets something wrong, I correct it in the sheet.</p>
     <p>Every thought has a stage. It starts as a seedling, becomes growing once it's linked to other thoughts or I've revised it, and becomes evergreen when I decide it's finished.</p>
-    <p>The bouquet on the home page is drawn from the garden itself, in text characters. Each topic is a stem, each thought is a flower, and small topics trail down as amaranth. The <a href={`${base}/map/`}>map</a> shows the same connections laid out flat.</p>
+    <p>The bouquet on the home page is drawn from the garden in text characters. Each topic is a stem, each thought is a flower, and small topics trail down as amaranth.</p>
     <p>The site is static and hosted for free on GitHub Pages. It's built with Astro and set in Newsreader. The code is <a href="https://github.com/glee2345/digital-garden">open on GitHub</a> if you'd like to build your own.</p>
   </div>
 
