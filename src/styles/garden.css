@@ -139,17 +139,18 @@ main.page { flex: 1; scroll-margin-top: 20px; display: flex; flex-direction: col
 .card .title .read { margin-left: 12px; font-size: 15px; font-style: italic; color: var(--muted); text-decoration-color: transparent; white-space: nowrap; }
 .card .title .read:hover { color: var(--text); text-decoration-color: var(--green-ink); }
 .card .linkline { font-size: 16px; color: var(--muted); }
-.card .linkline a { color: var(--body); border-bottom: 1px solid var(--line); }
+.card .linkline a { color: var(--body); }
+.card .linkline a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--green-ink); }
 .card .linkline .dom { font-style: italic; }
 .card.photo .title { font-size: 21px; }
 .card p { margin: 0; font-size: 18px; line-height: 1.55; color: var(--body); }
 .card p.soft { font-size: 14px; color: var(--faint); font-style: italic; }
-.nearby { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 10px; font-size: 16px; color: var(--muted); padding-top: 4px; }
-.nearby .lab { font-style: italic; color: var(--muted); margin-right: 2px; }
+.nearby { display: block; font-size: 16px; line-height: 1.7; color: var(--muted); padding-top: 4px; }
+.nearby .lab { font-style: italic; color: var(--muted); margin-right: 6px; }
 .nearby .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; align-self: center; }
-.nearby a { color: var(--brown); text-decoration: underline; text-decoration-color: #B8C2A9; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-.nearby a:hover { color: var(--ink); text-decoration-color: var(--green-ink); }
-.nearby a.more { color: var(--muted); font-style: italic; text-decoration-color: var(--line); }
+.nearby a { color: var(--body); }
+.nearby a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--green-ink); }
+.nearby a.more { color: var(--muted); font-style: italic; }
 .nearby .looking { font-style: italic; color: var(--faint); }
 .linkcard { display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; border: 1px solid var(--card-line); border-radius: 3px; overflow: hidden; background: var(--paper-2); color: var(--text); }
 .linkcard .pic { flex: 0 0 120px; min-height: 92px; background: #D8CFBF center/cover no-repeat; }

@@ -1,6 +1,7 @@
 ---
 import { fmtDate } from '../lib/garden.js';
 const { t } = Astro.props;
+const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const near = t.nearbyThoughts.slice(0, 3);
 const extra = t.nearbyThoughts.length - near.length;
@@ -27,25 +28,14 @@ const showStage = t.kind === 'text' && t.stage !== 'growing';
       {!t.filing && showKind && <span class="stage">{t.kind}</span>}
       {!t.filing && showStage && <span class="stage">{t.stage}</span>}
     </div>
-    <h2 class="title"><a href={t.url}>{t.title}</a>{hasBody && <a class="read" href={t.url} aria-label={`Read: ${t.title}`}>read</a>}</h2>
+    <h2 class="title"><a href={t.url}>{t.title}</a></h2>
     {linkBlock && !photo && <p class="linkline"><a href={linkBlock.link.url} rel="noopener">{linkBlock.link.title || linkBlock.link.domain}</a><span class="dom">{`, ${linkBlock.link.kind === 'video' ? 'video on ' : ''}${linkBlock.link.domain}`}</span></p>}
     {t.filing && <div class="nearby"><span class="lab">nearby:</span><span class="looking">looking for neighbors…</span></div>}
     {!t.filing && !t.topic && <p class="soft">On its own for now. When two or three more thoughts land near it, the garden will name the root.</p>}
     {!t.filing && t.topic && near.length > 0 && (
       <nav class="nearby" aria-label="Nearby thoughts">
         <span class="lab" aria-hidden="true">nearby:</span>
-        {near.map((n, i) => (
-          <Fragment>
-            {i !== 0 && <span class="dot" aria-hidden="true"></span>}
-            <a href={n.url}>{n.title}</a>
-          </Fragment>
-        ))}
-        {extra > 0 && (
-          <Fragment>
-            <span class="dot" aria-hidden="true"></span>
-            <a class="more" href={`${base}/map/?t=${t.id}`}>{`${extra} more on the map`}</a>
-          </Fragment>
-        )}
+        <Fragment set:html={near.map((n) => `<a href="${n.url}">${esc(n.title)}</a>`).concat(extra > 0 ? [`<a class="more" href="${base}/map/?t=${t.id}">${extra} more on the map</a>`] : []).join(', ')} />
       </nav>
     )}
   </div>
