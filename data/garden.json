@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-12T22:50:13.633Z",
+  "tended": "2026-11-13T03:54:41.624Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -194,13 +194,13 @@
     {
       "id": "g009",
       "text": "cafes to visit in korea: cafe molia",
-      "title": "",
-      "topic": "",
+      "title": "Cafes to visit in Korea: cafe molia",
+      "topic": "travel",
       "planted": "2026-11-12",
       "tended": "2026-11-12",
       "stage": "growing",
       "nearby": [],
-      "status": "filing",
+      "status": "filed",
       "published": true,
       "titleBy": "garden",
       "topicBy": "garden",
@@ -259,6 +259,12 @@
     {
       "name": "creativity",
       "firstPlanted": "Fri Nov 06 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
+      "mergedFrom": [],
+      "suggested": ""
+    },
+    {
+      "name": "travel",
+      "firstPlanted": "Thu Nov 12 2026 03:00:00 GMT-0500 (Eastern Standard Time)",
       "mergedFrom": [],
       "suggested": ""
     }
