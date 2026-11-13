@@ -1,5 +1,5 @@
 {
-  "tended": "2026-11-13T03:54:41.624Z",
+  "tended": "2026-11-13T04:47:44.982Z",
   "site": {
     "name": "digital garden",
     "author": "grace",
@@ -179,13 +179,13 @@
     {
       "id": "g008",
       "text": "something i find beautiful: spirals, chipped nailpolish, crescent moon eyes when someone smiles",
-      "title": "",
-      "topic": "",
+      "title": "Something I find beautiful",
+      "topic": "journaling",
       "planted": "2026-11-12",
       "tended": "2026-11-12",
       "stage": "growing",
       "nearby": [],
-      "status": "filing",
+      "status": "filed",
       "published": true,
       "titleBy": "garden",
       "topicBy": "garden",
